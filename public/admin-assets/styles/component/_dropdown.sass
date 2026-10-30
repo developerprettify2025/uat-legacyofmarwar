@@ -1,0 +1,122 @@
+@import '../_var'
+
+.dropdown-select
+    & ~ .select2
+        width: auto !important
+        .selection
+            .select2-selection
+                border: none
+                height: auto
+                .select2-selection__rendered
+                    display: inline-block
+                    vertical-align: middle
+                    line-height: 1
+                    color: var(--general-c)
+                    caret-color: transparent
+                    user-select: none
+                    padding: 0
+                    padding-right: 20px
+                    background-image: url(/assets/icon/arrow-down.svg)
+                    background-repeat: no-repeat
+                    white-space: nowrap
+                    background-position: 100% 50%
+                .select2-selection__arrow
+                    display: none
+.dropdown-select-menu
+    .select2-dropdown
+        width: 128px !important
+[data-dropdown]
+    display: inline-block
+    vertical-align: middle
+    position: relative
+    line-height: 0
+    cursor: pointer
+    .title
+        display: inline-block
+        vertical-align: middle
+        line-height: 1
+        background-image: url(/assets/icon/arrow-down.svg)
+        background-repeat: no-repeat
+        white-space: nowrap
+        background-position: 100% 50%
+        overflow: hidden
+        text-overflow: ellipsis
+        width: 100%
+        padding-right: 20px
+        color: var(--general-c)
+        caret-color: transparent
+        user-select: none
+        text-align: left
+    *
+        line-height: 1.1
+    .dropdown-menu
+        position: absolute
+        top: calc(100% + 10px)
+        right: 0
+        width: 200px
+        z-index: 1
+        display: none
+        box-shadow: 0px 1px 4px 0px #15223214
+        background: var(--white)
+        border-radius: 6px
+        ul
+            padding: 10px 0
+            max-height: 200px
+            overflow-y: auto
+            @include scrollbar
+            li
+                text-align: left
+                a
+                    display: inline-flex
+                    width: 100%
+                    gap: 0 12px
+                    padding: 8px 20px
+                    color: var(--general-c)
+                    &:hover
+                        background: var(--primary-h)
+                        color: var(--primary-a)
+        &.notification-menu
+            width: 500px
+            right: 0
+            left: auto
+            .notification-menu-wrap
+                .title-head
+                    @include flex
+                    padding: 15px 20px
+                    align-items: center
+                    border-bottom: 1px solid var(--general-g)
+                    p
+                        flex: 1
+                        text-align: left
+                        @include font(500)
+                    button
+                        color: var(--general-c)
+                menu
+                    li
+                        text-align: left
+                        padding: 10px 20px
+                        &.new
+                            background: var(--general-h)
+                            border-bottom: 1px solid var(--general-g)
+
+
+.dropdown-date
+    display: inline-block
+    vertical-align: middle
+    line-height: 1
+    background-image: url(/assets/icon/arrow-down.svg)
+    background-repeat: no-repeat
+    white-space: nowrap
+    background-position: 100% 50%
+    overflow: hidden
+    text-overflow: ellipsis
+    width: 100px
+    padding-right: 20px
+    color: var(--general-c)
+    caret-color: transparent
+    user-select: none
+    &::placeholder
+        text-transform: capitalize
+        color: var(--general-c)
+
+

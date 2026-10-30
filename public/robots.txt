@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /legacy-of-marwar-admin/
+Disallow: /api/
+Disallow: /*?utm_
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+Disallow: /legacy-of-marwar-home-live
+Disallow: /my-account
+Disallow: /my-order
+Disallow: /my-order-detail
+Disallow: /my-wishlist
+Disallow: /something-went-wrong
+Disallow: /shipping-address
+Disallow: /shopping-cart
+Disallow: /check-out
+
+Sitemap: https://www.legacyofmarwar.com/sitemap.xml

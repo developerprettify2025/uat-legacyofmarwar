@@ -1,0 +1,63 @@
+@import '../_var'
+
+select.form-control
+    &.small
+        & ~ .select2
+            --height: 32px
+    &.medium
+        & ~ .select2
+            --height: 36px
+    &.full
+        & ~ .select2
+            width: 100% !important
+            @include media(1300)
+                min-width: max-content
+                 width: max-content !important
+.select2
+    --height: 48px
+    --padding: 14px
+    --color: var(--general-e)
+    width: 180px !important
+    @include media(1007)
+        width: max-content !important
+    .select2-selection--single
+        border-color: var(--general-i)
+        height: var(--height)
+        .select2-selection__rendered
+            color: var(--color)
+            line-height: var(--height)
+            padding-left: var(--padding)
+            padding-right: calc(var(--padding) + 16px)
+        .select2-selection__arrow
+            height: var(--height)
+            right: var(--padding)
+            b
+                border: none
+                background: #000
+                display: inline-block
+                --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m7 10l5 5l5-5'/%3E%3C/svg%3E")
+                background-color: currentColor
+                -webkit-mask-image: var(--svg)
+                mask-image: var(--svg)
+                -webkit-mask-repeat: no-repeat
+                mask-repeat: no-repeat
+                -webkit-mask-size: 100% 100%
+                mask-size: 100% 100%
+                translate: 0% -50%
+                left: 0
+                width: 22px !important
+                height: 22px !important
+                border-width: 0 !important
+                margin-top: 0 !important
+                margin-left: 0 !important
+
+.select2-container--default
+    .select2-results__option
+        font-size: 12px
+        @include font(500)
+    .select2-results__option[aria-selected=true]
+        background-color: var(--general-g)
+        color: var(--general-a)
+    .select2-results__option--highlighted[aria-selected]
+        background: var(--primary-a)
+        color: var(--white) !important

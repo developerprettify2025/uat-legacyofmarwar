@@ -1,0 +1,36 @@
+@mixin margin-top($margintop)
+  margin-top: $margintop
+@mixin margin-bottom($marginbottom)
+  margin-bottom: $marginbottom
+@mixin margin-left($marginleft)
+  margin-left: $marginleft
+@mixin margin-right($marginright)
+  margin-right: $marginright
+
+@mixin padding-top($paddingtop)
+  padding-top: $paddingtop
+@mixin padding-bottom($paddingbottom)
+  padding-bottom: $paddingbottom
+@mixin padding-left($paddingleft)
+  padding-left: $paddingleft
+@mixin padding-right($paddingright)
+  padding-right: $paddingright
+
+@for $i from 0 through 100
+  .mt-#{$i}
+    @include margin-top($i * 1px)
+  .mb-#{$i}
+    @include margin-bottom($i * 1px)
+  .ml-#{$i}
+    @include margin-left($i * 1px)
+  .mr-#{$i}
+    @include margin-right($i * 1px)
+
+  .pt-#{$i}
+    @include padding-top($i * 1px)
+  .pb-#{$i}
+    @include padding-bottom($i * 1px)
+  .pl-#{$i}
+    @include padding-left($i * 1px)
+  .pr-#{$i}
+    @include padding-right($i * 1px)

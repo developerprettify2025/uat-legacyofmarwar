@@ -1,0 +1,722 @@
+@import './_var'
+@import './component/_variable'
+@import './component/_dropdown'
+@import './component/_model'
+@import './component/_datepicker'
+@import './component/_button'
+@import './component/_input'
+@import './component/_select2'
+@import './component/_tooltip'
+@import './component/_form'
+*,
+*::before,
+*::after
+    padding: 0
+    margin: 0
+    list-style: none
+    box-sizing: border-box
+
+:root
+    --header: 68px
+    --aside: 190px
+    --mainpaddingleftright: 50px
+    --asidemobileheight: 62px
+    --primary-a: #9a7c47
+    --primary-b: #000000ea
+    --primary-c: #000000e5
+    --primary-d: #000000d2
+    --primary-e: #000000c4
+    --primary-f: #000000ad
+    --primary-g: #00000024
+    --primary-h: #f4f4f4
+
+    --secondary-a: #6E0BD4
+    --secondary-b: #8125DF
+    --secondary-c: #9645E9
+    --secondary-d: #A75EF1
+    --secondary-e: #B97FF3
+    --secondary-f: #D8B1FF
+    --secondary-g: #E9D3FF
+    --secondary-h: #F4E9FE
+
+    --general-a: #9a7c47
+    --general-b: #333752
+    --general-c: #5A607F
+    --general-d: #7E84A3
+    --general-e: #A1A7C4
+    --general-f: #D7DBEC
+    --general-g: #E6E9F4
+    --general-h: #F5F6FA
+    --general-i: #D9E1EC
+    --general-j: #E2E6F6
+
+    --grey: #cecece
+    --yellow: #F99600
+    --red: #ff0000
+    --green: #00b100
+    --blue: #0095ff
+    --violet: #db29db
+    --brown: #a52a2a
+    --indigo: #4b0082
+    --greenyellow: #adff2f
+    --orange: #ff4500
+
+    --red-a: #F0142F
+    --red-b: #F12B43
+    --red-c: #F34359
+    --red-d: #F45A6D
+    --red-e: #F8919D
+    --red-f: #FAB3BC
+    --red-g: #FCD5D9
+    --red-h: #FDE7EA
+
+    --green-a: #06A561
+    --green-b: #1FD286
+    --green-c: #25E191
+    --green-d: #48E9A5
+    --green-e: #74EFB9
+    --green-f: #95F6CC
+    --green-g: #C4F8E2
+    --green-h: #DAF9EC
+
+    --yellow-a: #F99600
+    --yellow-b: #FFC700
+    --yellow-c: #FFD613
+    --yellow-d: #FFE45F
+    --yellow-e: #FFE582
+    --yellow-f: #FFECA3
+    --yellow-g: #FFF4C9
+    --yellow-h: #FFF9E1
+
+    --white: #fff
+    --black: #000
+    --text: #666
+    @include media(1300)
+        --mainpaddingleftright: 12px
+    @include media(767)
+        --aside: 100%
+    &.collapse
+        --aside: 80px
+        @include media(767)
+            --aside: 100%
+body,html
+    font-size: 14px
+    line-height: 1.5
+    font-optical-sizing: auto
+    font-style: normal
+    color: var(--general-c)
+    @include font
+
+html
+    height: 100vh
+    overflow: hidden
+
+.overflow-hidden
+    overflow: hidden
+div
+    line-height: normal
+
+li
+    color: var(--general-c)
+p
+    line-height: 1.5
+    @include media(767)
+        font-size: 14px
+a[href]
+    text-decoration: none
+    transition: .5s ease
+img
+    max-width: 100%
+
+[data-icon]
+    font-size: 20px
+$black: #000
+$white: #fff
+$text: #666
+.bor-grey
+    border-bottom: 5px solid var(--grey)
+.grey-bg
+    background-color: #f1eded !important
+.bor-yellow
+    border-bottom: 5px solid var(--yellow)
+.yellow-bg
+    background-color: #ffdfae !important
+.bor-red
+    border-bottom: 5px solid var(--red)
+.red-bg
+    background-color: #ffc6c6 !important
+.bor-green
+    border-bottom: 5px solid var(--green)
+.green-bg
+    background-color: #d1ffd1 !important
+.bor-blue
+    border-bottom: 5px solid var(--blue)
+.blue-bg
+    background-color: #cceaff !important
+.bor-violet
+    border-bottom: 5px solid var(--violet)
+.violet-bg
+    background-color: #ffd9ff !important
+.bor-brown
+    border-bottom: 5px solid var(--brown)
+.brown-bg
+    background-color: #e1b0b0 !important
+.bor-indigo
+    border-bottom: 5px solid var(--indigo)
+.indigo-bg
+    background-color: #c28de9 !important
+.bor-greenyellow
+    border-bottom: 5px solid var(--greenyellow)
+.greenyellow-bg
+    background-color: #e8ffc5 !important
+.bor-orange
+    border-bottom: 5px solid var(--orange)
+.orange-bg
+    background-color: #ffdfd3 !important
+input,button,select
+    font-family: inherit
+    font-size: inherit
+    cursor: pointer
+    border: none
+    border-radius: 0
+    &:focus
+        outline: none
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button
+        -webkit-appearance: none
+        margin: 0
+input[type=number]
+    -moz-appearance: textfield
+button
+    background: none
+    appearance: none
+
+b
+    font-weight: normal
+    @include font(600)
+
+.bold
+    @include font(600)
+
+hr
+    border-style: initial
+    height: 1px
+    background: var(--general-f)
+    margin: 30px 0
+    &.medium
+        margin: 15px 0
+// 
+
+[data-copy]
+    position: relative
+    --icon: 15px
+    padding-right: calc(var(--icon) + 3px)
+    cursor: pointer
+    &::before
+        content: ''
+        position: absolute
+        right: 0
+        bottom: 0
+        height: var(--icon)
+        width: var(--icon)
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 256 256'%3E%3Cpath fill='%237E84A3' d='M216 34H88a6 6 0 0 0-6 6v42H40a6 6 0 0 0-6 6v128a6 6 0 0 0 6 6h128a6 6 0 0 0 6-6v-42h42a6 6 0 0 0 6-6V40a6 6 0 0 0-6-6m-54 176H46V94h116Zm48-48h-36V88a6 6 0 0 0-6-6H94V46h116Z'/%3E%3C/svg%3E")
+        background-repeat: no-repeat
+        background-size: 100% 100%
+// Commom class
+
+.logo
+    display: block
+
+.text-center
+    text-align: center
+
+.text-right
+    text-align: right
+
+.d-block
+    display: block
+
+.flex
+    display: flex
+    flex-wrap: wrap
+
+.flex-gap-1
+    gap: 5px
+.flex-gap-2
+    gap: 8px
+.flex-gap-3
+    gap: 12px
+.flex-gap-4
+    gap: 15px
+
+.flex-1
+    flex: 1
+
+.flex-10
+    flex: 0 1 10%
+    max-width: 10%
+    width: 100%
+.flex-15
+    flex: 0 1 15%
+    max-width: 15%
+    width: 100%
+.flex-20
+    flex: 0 1 20%
+    max-width: 20%
+    width: 100%
+.flex-25
+    flex: 0 1 25%
+    max-width: 25%
+    width: 100%
+.flex-30
+    flex: 0 1 30%
+    max-width: 30%
+    width: 100%
+.flex-35
+    flex: 0 1 35%
+    max-width: 35%
+    width: 100%
+.flex-40
+    flex: 0 1 40%
+    max-width: 40%
+    width: 100%
+.flex-45
+    flex: 0 1 45%
+    max-width: 45%
+    width: 100%
+.flex-50
+    flex: 0 1 50%
+    max-width: 50%
+    width: 100%
+.flex-55
+    flex: 0 1 55%
+    max-width: 55%
+    width: 100%
+.flex-60
+    flex: 0 1 60%
+    max-width: 60%
+    width: 100%
+.flex-65
+    flex: 0 1 65%
+    max-width: 65%
+    width: 100%
+.flex-70
+    flex: 0 1 70%
+    max-width: 70%
+    width: 100%
+.flex-75
+    flex: 0 1 75%
+    max-width: 75%
+    width: 100%
+.flex-80
+    flex: 0 1 80%
+    max-width: 80%
+    width: 100%
+.flex-85
+    flex: 0 1 85%
+    max-width: 85%
+    width: 100%
+.flex-90
+    flex: 0 1 90%
+    max-width: 90%
+    width: 100%
+.flex-95
+    flex: 0 1 95%
+    max-width: 95%
+    width: 100%
+.flex-100
+    flex: 0 1 100%
+    max-width: 100%
+    width: 100%
+
+.inline-flex
+    display: inline-flex
+    gap: 12px
+
+.inline-block
+    display: inline-block
+    vertical-align: middle
+
+.align-center
+    align-items: center
+.align-start
+    align-items: flex-start
+.align-end
+    align-items: flex-end
+
+.justify-center
+    justify-content: center
+.justify-end
+    justify-content: end
+.justify-between
+    justify-content: space-between
+
+.mr-auto
+    margin-right: auto
+.ml-auto
+    margin-left: auto
+
+.f-12
+    font-size: 12px
+.f-13
+    font-size: 13px
+.f-14
+    font-size: 14px
+.f-15
+    font-size: 15px
+.f-16
+    font-size: 16px
+.f-18
+    font-size: 18px
+
+.lh-16
+    line-height: 16px
+.lh-18
+    line-height: 18px
+.lh-20
+    line-height: 20px
+.lh-22
+    line-height: 22px
+.lh-24
+    line-height: 24px
+
+.f-medium
+    @include font(500)
+.f-bold
+    @include font(600)
+.red
+    color: var(--red-a)
+.green
+    color: var(--green-b)
+.yellow
+    color: var(--yellow-a)
+.primary
+    color: var(--primary-a)
+.black
+    color: var(--black)
+.gray
+    color: var(--text)
+.general-a
+    color: var(--general-a)
+.general-b
+    color: var(--general-b)
+.general-c
+    color: var(--general-c)
+.general-d
+    color: var(--general-d)
+.general-e
+    color: var(--general-e)
+.general-f
+    color: var(--general-f)
+.general-g
+    color: var(--general-g)
+.general-h
+    color: var(--general-h)
+
+.red-b
+    color: var(--red-b)
+.green-b
+    color: var(--green-b)
+
+.bg-red-a
+    background: var(--red-a)
+.bg-red-b
+    background: var(--red-b)
+.bg-red-c
+    background: var(--red-c)
+.bg-red-d
+    background: var(--red-d)
+.bg-red-e
+    background: var(--red-e)
+.bg-red-f
+    background: var(--red-f)
+.bg-red-g
+    background: var(--red-g)
+.bg-red-h
+    background: var(--red-h)
+
+.bg-primary-a
+    background: var(--primary-a)
+.bg-primary-b
+    background: var(--primary-b)
+.bg-primary-c
+    background: var(--primary-c)
+.bg-primary-d
+    background: var(--primary-d)
+.bg-primary-e
+    background: var(--primary-e)
+.bg-primary-f
+    background: var(--primary-f)
+.bg-primary-g
+    background: var(--primary-g)
+.bg-primary-h
+    background: var(--primary-h)
+
+.bg-green-a
+    background: var(--green-a)
+.bg-green-b
+    background: var(--green-b)
+.bg-green-c
+    background: var(--green-c)
+.bg-green-d
+    background: var(--green-d)
+.bg-green-e
+    background: var(--green-e)
+.bg-green-f
+    background: var(--green-f)
+.bg-green-g
+    background: var(--green-g)
+.bg-green-h
+    background: var(--green-h)
+
+.bg-red-white
+    background: var(--red-g)
+    color: var(--black)
+tr
+    &.bg-red-white
+        td
+            background: var(--red-g) !important
+            color: var(--black) !important
+            > *
+                color: var(--black) !important
+.bg-green-white
+    background: var(--green-g)
+    color: var(--black)
+tr
+    &.bg-green-white
+        td
+            background: var(--green-g) !important
+            color: var(--black)
+            > *
+                color: var(--black) !important
+.card
+    background: var(--white)
+    box-shadow: 0px 1px 4px 0px #15223214
+    border-radius: 6px
+.card-body
+    padding: 20px
+    @include media(1300)
+        padding: 15px
+        overflow-x: auto
+.border-card
+    border: 1px solid #D7DBEC
+    padding: 10px
+    border-radius: 5px
+//
+
+h3
+    font-size: 32px
+    line-height: 44px
+    color: var(--general-a)
+    @include font(700)
+
+h4
+    font-size: 24px
+    line-height: 36px
+    color: var(--general-a)
+    @include font(700)
+    @include media(767)
+        font-size: 20px
+        line-height: 1.2
+h5
+    font-size: 20px
+    line-height: 28px
+    color: var(--general-a)
+    @include font(700)
+
+h6
+    font-size: 18px
+    line-height: 1.2
+    color: var(--black)
+    @include font(500)
+
+[data-tooltip]
+    position: fixed
+    --background: var(--primary-h)
+    background: var(--background)
+    display: none
+    &::before
+        content: ''
+        position: absolute
+        right: 100%
+        top: 50%
+        translate: 0 -50%
+        width: 0
+        height: 0
+        border-top: 10px solid transparent
+        border-bottom: 10px solid transparent
+        border-right: 10px solid var(--background)
+
+[data-position]
+    &:hover
+        [data-tooltip]
+            display: block
+
+.table
+    width: 100%
+    border-spacing: 0px
+    background: var(--white)
+    border-collapse: collapse
+    td,th
+        padding: 10px 20px
+        text-align: left
+        border-bottom: 1px solid var(--general-j)
+    &.odd-even
+        tr
+            &:nth-child(even)
+                background: var(--general-h)
+    &.space-medium
+        td,th
+            padding: 15px 20px
+    &.center
+        td,th
+            text-align: center
+    &.center-not-first
+        tr
+            td,th
+                &:not(:first-child)
+                    text-align: center
+    &.radius
+        border-radius: 5px
+    &.white-space
+        white-space: nowrap
+.user-ico
+    height: 36px
+    width: 36px
+    border-radius: 50%
+    min-width: 36px
+    overflow: hidden
+    &.green-bg
+        span
+            background: var(--green-g)
+    img
+        width: 100%
+        height: 100%
+        object-fit: cover
+    span
+        border: 1px solid #ccc
+        display: flex
+        height: 100%
+        width: 100%
+        align-items: center
+        justify-content: center
+        border-radius: 50%
+        color: var(--general-c)
+        background: var(--primary-g)
+        @include font(600)
+
+main
+    --tablecustomscrollstrip: 91px
+
+.loader-model
+    position: fixed
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    z-index: 99
+    background: rgb(256 256 256 / .8)
+    display: flex
+    align-items: center
+    justify-content: center
+.loader
+    width: 48px
+    height: 48px
+    display: block
+    color: #FFF
+    box-sizing: border-box
+    animation: rotation 1s linear infinite
+    @keyframes rotation
+        0%
+            transform: rotate(0deg)
+        100%
+            transform: rotate(360deg)
+    &::after,&::before
+        content: ''
+        box-sizing: border-box
+        position: absolute
+        width: 24px
+        height: 24px
+        top: 50%
+        left: 50%
+        transform: scale(0.5) translate(0, 0)
+        background-color: #00e393
+        border-radius: 50%
+        animation: animloader 1s infinite ease-in-out
+        @keyframes animloader
+            50%
+                transform: scale(1) translate(-50%, -50%)
+    &::before
+        background-color: var(--primary-a)
+        transform: scale(0.5) translate(-48px, -48px)
+
+a
+    .iconify
+        color: var(--general-c)
+
+// close btn
+
+.close-medium
+    [data-icon]
+        font-size: 30px
+
+// Record not  found
+
+.record-not-found
+    width: 100%
+    padding: 30px
+    background: var(--white)
+    .rnf-wrap
+        max-width: 400px
+        margin: 0 auto
+        text-align: center
+        color: var(--general-b)
+        [data-icon]
+            font-size: 32px
+            color: var(--red-a)
+        p
+            font-size: 20px
+            @include font(500)
+
+div
+    &:has(>.tjwek)
+        padding-right: 50px
+
+.zpfwd
+    max-width: 500px
+    padding: 10px
+
+.fit-height
+    height: fit-content
+
+.main-container
+    padding: 20px
+    .item-container
+        .item
+            padding: 10px
+            border-radius: 10px
+            p
+                font-size: 14px
+                padding-bottom: 5px
+                b
+                    color: #000
+
+.custom__menu
+    z-index: 100
+.loader-container
+    height: 100vh
+    width: 100%
+    display: flex
+    align-items: center
+    overflow: hidden
+    justify-content: center
+    background: #fff
+    position: relative
+    z-index: 10
+    .spinner
+        border: 6px solid #f3f3f3
+        border-top: 6px solid var(--primary)
+        border-radius: 50%
+        width: 50px
+        height: 50px
+        animation: spin 1s linear infinite

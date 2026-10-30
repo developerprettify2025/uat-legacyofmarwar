@@ -1,0 +1,54 @@
+@import '../_var'
+
+.privacy-secA
+    margin-top: var(--headerheight)
+    padding: 5rem 0 4rem
+    @include media(675)
+        padding: 3rem 0 3rem
+    .website-content
+        h1
+            font-size: 48px
+            margin-bottom: 45px
+            color: var(--black)
+            text-align: center
+            @include media(675)
+                font-size: 34px
+                margin-bottom: 30px
+            @include media(520)
+                font-size: 30px
+                margin-bottom: 25px
+        h2
+            font-size: 34px
+
+            @include media(675)
+                font-size: 24px
+        h3
+            font-size: 28px
+            line-height: 1.21
+
+            @include media(675)
+                font-size: 22px
+        h4
+            font-size: 22px
+
+            @include media(675)
+                font-size: 20px
+        h5
+            font-size: 18px
+
+            @include media(675)
+                font-size: 18px
+        h6
+            font-size: 18px
+
+        h2,h3,h4
+            margin: 40px 0 18px
+            @include media(675)
+                margin: 30px 0 15px
+        h5,h6
+            margin: 28px 0 18px
+            @include media(675)
+                margin: 20px 0 13px
+        a
+            color: $black
+            transition: .4s ease

@@ -1,0 +1,552 @@
+@import '../_var'
+
+header.header-fit 
+    box-shadow: none
+
+section
+    &:has(.checkout_header)
+        margin-top: var(--headerheight)
+    .checkout_header
+        padding: 15px 0
+        border-bottom: 1px solid #F1F1F1
+        ul
+            text-align: center
+            max-width: 514px
+            margin: auto
+            li
+                display: inline-block
+                vertical-align: middle
+                background: $white
+                position: relative
+                &:not(:last-child)
+                    margin-right: 5rem
+                    @include media(540)
+                        margin-right: 3rem
+                    &::before
+                        content: ''
+                        position: absolute
+                        left: calc( 100% + 20px )
+                        bottom: 15%
+                        height: 1px
+                        width: 45px
+                        border: 1px dashed #ccc
+                        @include media(540)
+                            width: 20px
+                            left: calc(100% + 10px)
+                a
+                    display: block
+                    text-align: center
+                    font-size: 14px
+                    text-align: center
+                    color: $text
+                    text-transform: uppercase
+                    @include media(540)
+                        font-size: 12px
+                    .icon
+                        height: 28px
+                        width: 28px
+                        margin: 0 auto 16px
+                        border-radius: 50%
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                        background: linear-gradient(#ECECEC, #ECECEC)
+                        @include media(540)
+                            width: 24px
+                            height: 24px
+                            margin: 0 auto 10px
+                    &.active
+                        color: $secondary
+                        .icon
+                            background: linear-gradient(#BEA16F, #9A7D48)
+
+.checkout-main
+    @include media(540)
+        padding: 30px 0 
+    .container
+        --container: 1000px
+    .main_wrapper
+        display: flex
+        flex-wrap: wrap
+        align-items: start
+        gap: 20px
+        @include media(768) 
+            gap: 30px
+        @include media(540)
+            gap: 20px
+        .colA
+            flex: 1
+            width: 100%
+            max-width: 100%
+            padding: 20px
+            @include media(991)
+                padding: 0
+            @include media(768) 
+                flex: 0 1 100%
+                padding-bottom: 20px
+            .total
+                margin-bottom: 30px
+                @include media(991)
+                    margin-bottom: 25px
+                @include media(540)
+                    margin-bottom: 20px
+                p
+                    font-weight: 400
+                    font-size: 20px
+                    color: $black
+                    @include media(540)
+                        font-size: 18px
+            .top-nav
+                display: flex
+                align-items: center
+                justify-content: space-between
+                gap: 50px
+                margin-bottom: 25px
+                @include media(991)
+                    gap: 20px
+                @include media(540) 
+                    gap: 15px
+                    flex-wrap: wrap
+                    justify-content: center
+                h6
+                    font-family: $euclidflex
+                    font-size: 20px
+                    @include media(540) 
+                        flex: 0 1 100%
+                        text-align: center
+                .btn
+                    font-size: 12px
+                    --height: 32px
+                    --padding: 12px
+                    border-radius: 5px
+            .cart_list
+                .cart_col
+                    border: 1px solid #F1F1F1
+                    border-radius: 5px
+                    padding: 15px
+                    display: flex
+                    flex-wrap: wrap
+                    align-items: start
+                    gap: 30px
+                    @include media(991)
+                        gap: 20px
+                    @include media(540)
+                        text-align: center
+                        gap: 15px
+                    &:not(:last-child)
+                        margin-bottom: 20px
+                    figure, .figure
+                        display: block
+                        line-height: 0
+                        flex: 0 1 120px
+                        width: 100%
+                        max-width: 120px
+                        @include media(991)
+                            flex: 0 1 100px
+                            max-width: 100px
+                        @include media(768) 
+                            flex: 0 1 120px
+                            max-width: 120px
+                        @include media(540)
+                            margin: 0 auto
+                    figcaption
+                        flex: 1
+                        @include media(540)
+                            flex: 0 1 100%
+                        h6, .h6
+                            display: block
+                            font-weight: 400
+                            font-family: $euclidflex
+                            font-size: 16px
+                            color: $text
+                            margin-bottom: 15px
+                            &:hover
+                                color: $secondary
+                            @include media(540)
+                                font-size: 18px
+                        .options_wrap
+                            display: flex
+                            gap: 12px
+                            --height: 34px
+                            @include media(540)
+                                justify-content: center
+                            .color_col
+                                flex: 0 1 auto
+                                background: #F1F1F1
+                                border-radius: 5px
+                                padding: 6px 10px
+                                height: var(--height)
+                                p
+                                    white-space: nowrap
+                                    font-size: 14px
+                                    color: $black 
+                            .quantity_wrap
+                                flex: 1
+                                max-width: 130px
+                                height: var(--height)
+                                display: flex
+                                align-items: center
+                                background: #F1F1F1
+                                border-radius: 5px
+                                padding: 6px 10px
+                                button
+                                    line-height: 1
+                                    flex: 0 1 auto
+                                    width: 18px
+                                    height: 18px
+                                    display: flex
+                                    align-items: center
+                                    justify-content: center
+                                    svg
+                                        width: 100%
+                                        height: 100%
+                                input
+                                    text-align: center
+                                    background: none
+                                    border: none
+                                    outline: none
+                                    flex: 1
+                                    width: 100%
+                                    font-size: 18px
+                                    line-height: 1
+                        .lower-wrap
+                            display: flex
+                            align-items: center
+                            justify-content: space-between
+                            gap: 30px
+                            margin-top: 25px
+                            @include media(991)
+                                flex-wrap: wrap
+                                gap: 8px
+                            @include media(540)
+                                margin-top: 20px
+                                justify-content: center
+                            .price_wrap
+                                display: flex
+                                align-items: center
+                                gap: 10px
+                                p
+                                    font-weight: 400
+                                    font-size: 14px
+                                .sp
+                                    color: $black
+                                .mrp
+                                    text-decoration: line-through
+                            .wishlistBtn
+                                display: flex
+                                align-items: center
+                                gap: 10px
+                                color: $secondary
+                                font-size: 14px
+                                font-weight: 500
+                                transition: .5s ease
+                                @include media(991)
+                                    flex: 0 1 100%
+                                    justify-content: end
+                                @include media(540)
+                                    justify-content: center
+                                &:hover
+                                    color: $red 
+            .address_wrapper
+                .address_col
+                    position: relative
+                    padding: 30px 15px 
+                    display: flex
+                    gap: 10px
+                    border: 1px solid #F3F3F3
+                    border-radius: 5px
+                    margin-bottom: 25px
+                    @include media(991)
+                        padding: 20px 15px
+                    @include media(540) 
+                        padding: 15px 10px
+                        margin-bottom: 20px
+                    &:has(input:checked)
+                        .in-bx
+                            &::before
+                                opacity: 1
+                    &:not(:last-child)
+                        margin-bottom: 20px
+                    input
+                        position: absolute
+                        left: 0 
+                        top: 0
+                        width: 100%
+                        height: 100%
+                        z-index: 1
+                        opacity: 0
+                    .chk-box
+                        flex: 0 1 auto
+                        position: relative
+                        --circle: 18px
+                        @include media(540)
+                            --circle: 16px
+                        .in-bx
+                            width: var(--circle)
+                            height: var(--circle)
+                            border: 1px solid $secondary
+                            border-radius: 50%
+                            position: relative
+                            &::before
+                                content: ""
+                                position: absolute
+                                left: 2px
+                                top: 2px
+                                width: calc( var(--circle) - 6px )
+                                height: calc( var(--circle) - 6px )
+                                background: $secondary 
+                                border-radius: 50%
+                                opacity: 0
+                                transition: .5s ease
+                    .content
+                        flex: 1
+                        .name
+                            font-family: $euclidflex
+                            font-size: 18px
+                            font-weight: 500
+                            line-height: 1
+                            padding-bottom: 10px
+                            @include media(540) 
+                                font-size: 16px
+                        .address
+                            font-size: 14px
+                            color: $text
+                            max-width: 80%
+                            line-height: 1.4
+                            @include media(540) 
+                                max-width: 100%
+                                font-size: 14px
+                                line-height: 1.2
+                        .contact
+                            display: flex
+                            align-items: center
+                            justify-content: space-between
+                            padding-top: 20px
+                            position: relative
+                            z-index: 1
+                            .mob
+                                vertical-align: middle
+                                color: $text
+                                font-size: 14px
+                                @include media(540) 
+                                    font-size: 12px
+                                a
+                                    color: $black
+                            .btn_wrap
+                                display: flex
+                                align-items: center
+                                gap: 20px
+                                @include media(540) 
+                                    gap: 10px
+                                .remove, .edit
+                                    color: $secondary
+                                    font-size: 14px
+                                    text-transform: uppercase
+                                    @include media(540) 
+                                        font-size: 12px
+            .payment_wrapper
+                display: flex
+                gap: 25px
+                .payment_col
+                    position: relative
+                    width: 220px
+                    padding: 25px 20px
+                    background: #F3F3F3
+                    border-radius: 5px
+                    --circle: 18px
+                    display: flex
+                    align-items: center
+                    gap: 13px
+                    &:has(input:checked)
+                        .in-bx
+                            &::before
+                                opacity: 1
+                        span
+                            color: $black
+                    input
+                        position: absolute
+                        left: 0 
+                        top: 0
+                        width: 100%
+                        height: 100%
+                        z-index: 1
+                        opacity: 0
+                    .in-bx
+                        flex: 0 1 auto
+                        width: var(--circle)
+                        height: var(--circle)
+                        border: 1px solid $secondary
+                        border-radius: 50%
+                        position: relative
+                        &::before
+                            content: ""
+                            position: absolute
+                            left: 2px
+                            top: 2px
+                            width: calc( var(--circle) - 6px )
+                            height: calc( var(--circle) - 6px )
+                            background: $secondary 
+                            border-radius: 50%
+                            opacity: 0
+                            transition: .5s ease
+                    span
+                        flex: 1
+                        display: block
+                        color: $text
+                        font-weight: 500
+                        transition: .5s ease
+
+        .colB
+            flex: 0 1 auto
+            width: 400px
+            padding: 20px
+            border-left: 1px solid #F3F3F3
+            @include media(1280)
+                width: 360px
+            @include media(991)
+                width: 320px
+            @include media(768) 
+                width: 100%
+                flex: 0 1 100%
+                border-left: none
+                border-top: 1px solid #F3F3F3
+                padding: 30px 10px 20px
+            @include media(540)
+                padding: 25px 10px 20px
+            .coupon_section
+                h6
+                    font-family: $euclidflex
+                    font-weight: 400
+                    font-size: 16px
+                    margin-bottom: 10px
+                .coupon_wrap
+                    width: 100%
+                    display: flex
+                    flex-wrap: wrap
+                    align-items: center
+                    gap: 10px
+                    @include media(991)
+                        justify-content: space-between
+                    .form-group
+                        flex: 1
+                    .btn
+                        flex: 0 1 auto
+                        --height: 36px
+                        border-radius: 5px
+                        flex: 0 1 auto
+            .product_wrapper
+                padding-bottom: 40px
+                border-bottom: 1px solid #D3D3D3
+                margin-bottom: 25px
+            .product_col
+                display: flex
+                align-items: start
+                gap: 20px
+                &:not(:last-child)
+                    margin-bottom: 25px
+                figure
+                    flex: 0 1 auto
+                    width: 100%
+                    max-width: 95px
+                    height: 85px
+                    border-radius: 5px
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    img
+                        border-radius: inherit
+                figcaption
+                    flex: 1
+                    padding-top: 10px
+                    h6
+                        font-family: $euclidflex
+                        font-weight: 500
+                        font-size: 14px
+                        color: $text
+                    .price_wrap
+                        display: flex
+                        align-items: center
+                        gap: 10px
+                        margin-top: 10px
+                        @include media(540)
+                            gap: 15px
+                        p
+                            font-weight: 400
+                            font-size: 14px
+                        .sp
+                            color: $black
+                        .mrp
+                            text-decoration: line-through
+            .total_products
+                font-size: 14px
+                font-weight: 500
+                color: $black
+            .checkout-list-wrap
+                margin-top: 80px
+                @include media(768) 
+                    margin-top: 50px
+                @include media(540)
+                    margin-top: 40px
+                &.shipping-total
+                    margin-top: 15px
+                .checkout-list
+                    li
+                        display: flex
+                        align-items: center
+                        justify-content: space-between
+                        &:not(:last-child)
+                            margin-bottom: 14px
+                        *
+                            font-size: 14px
+                            line-height: 18px
+                            color: $text
+                .total_amount
+                    border-top: 1px solid #D3D3D3
+                    display: flex
+                    align-items: center
+                    justify-content: space-between
+                    padding: 9px 0
+                    margin: 22px 0
+                    p
+                        color: $black
+                        font-weight: 500
+                .btn
+                    max-width: 100%
+
+    .bottom-wrapper
+        display: flex
+        align-items: center
+        justify-content: space-between
+        gap: 40px
+        margin-top: 55px
+        @include media(768) 
+            flex-wrap: wrap
+            margin-top: 40px
+            justify-content: end
+            gap: 25px
+        @include media(540)
+            margin-top: 30px
+        .bank-list
+            display: flex
+            gap: 8px
+            @include media(768) 
+                flex: 0 1 100%
+            @include media(540)
+                flex-wrap: wrap
+            li
+                display: inline-block
+                vertical-align: middle
+                line-height: 0
+                flex: 0 1 auto
+                width: 50px
+                @include media(991)
+                    width: 45px
+                img
+                    height: auto
+                    object-fit: cover
+        .need-help
+            @include media(540)
+                font-size: 14px
+            &:hover
+                color: $secondary
+                transform: translateX(5px)

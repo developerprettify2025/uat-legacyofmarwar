@@ -1,0 +1,69 @@
+
+.login-wrapper
+    height: 100vh
+    width: 100%
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: bottom
+    display: flex
+    align-items: center
+    justify-content: center
+    background: url(/img/vector-1.svg)
+    background-repeat: repeat-x
+    background-position: 0 100%
+    @include media(767)
+        background: var(--white)
+    .form-wrap
+        max-width: 450px
+        width: 100%
+        padding: 35px 28px
+        border-radius: 5px
+        background: var(--white)
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px
+        @include media(675)
+            max-width: 100%
+            padding: 35px 20px
+            border-radius: 0
+            box-shadow: none
+        .logo
+            line-height: 0
+            text-align: center
+            margin-bottom: 47px
+        .title
+            margin-bottom: 47px
+            p
+                color: var(--general-c)
+        .form
+            --item: 1
+            --gaptb: 18px
+            .form-group
+                label
+                    display: block
+                    line-height: 20px
+                    color: var(--general-c)
+                    margin-bottom: 4px
+                input
+                    width: 100%
+                .password-wrap
+                    position: relative
+                    input
+                        padding-right: 45px
+                    .show-hide-password
+                        position: absolute
+                        top: 50%
+                        translate: 0 -50%
+                        right: 14px
+                        z-index: 1
+                        line-height: 0
+        hr
+            margin: 24px 0
+        .back-to-sign
+            margin-top: 24px
+        .register
+            margin-top: 24px
+            text-align: center
+            &.gray
+                *
+                    color: var(--general-c)
+            *
+                color: var(--primary-a)

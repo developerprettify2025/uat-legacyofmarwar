@@ -1,0 +1,152 @@
+@import '../_var'
+
+.banner.contact-banner
+    &::before
+        background: linear-gradient(0deg, #000 0%, #0000 50%), linear-gradient(#000 0%, #0000 50%)
+    .bg
+        video
+            filter: grayscale(1)
+        .banner-wrapper
+            .heading
+                @include media(540)
+                    max-width: 250px
+
+.contact_wrapper
+    background: #F8F7F2
+    .main_wrapper
+        display: flex
+        flex-wrap: wrap
+        gap: 20px
+        .contact_col
+            flex: 1
+            padding: 40px 50px
+            background: $white
+            border-radius: 10px
+            border: 1px solid #D1D0D0
+            text-align: center
+            @include media(1280)
+                padding: 35px
+            @include media(991)
+                flex: 0 1 calc( 50% - 10px )
+                &:first-child
+                    flex: 0 1 100%
+                @include media(768)
+                    flex: 0 1 100%
+            @include media(540)
+                padding: 20px 20px 30px
+            .icon
+                width: 44px
+                height: 44px
+                margin: 0 auto 15px
+                color: $secondary
+                @include media(540)
+                    width: 38px
+                    height: 38px
+                svg
+                    width: 100%
+                    height: 100%
+            h6
+                font-family: $euclidflex
+                font-weight: 500
+                font-size: 20px
+                color: $black
+            p, a
+                &:not(.get_directions)
+                    display: block
+                    font-weight: 400
+                    color: $text
+                    margin: 15px 0 20px
+                    @include media(540)
+                        margin: 10px 0 15px
+            a
+                &:not(.get_directions)
+                    &:hover
+                        color: $secondary
+            .get_directions
+                display: flex
+                align-items: center
+                justify-content: center
+                gap: 10px
+                color: $secondary
+                font-weight: 500 
+                &:hover
+                    svg
+                        transform: translateX(5px)
+                svg
+                    width: 24px
+                    transition: .5s ease
+            .social_icons
+                display: flex
+                align-items: center
+                justify-content: center
+                gap: 15px
+                li
+                    --icon: 44px
+                    a
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                        width: var(--icon)
+                        height: var(--icon)
+                        color: $secondary
+                        border: 1px solid $secondary
+                        border-radius: 50% 
+                        &:hover
+                            background: $secondary
+                            svg
+                                path 
+                                    fill: $white
+                        svg, img
+                            width: 50%
+                            height: 50%
+                            transition: .5s ease
+
+.contact_form
+    background: var(--primary)
+    --container: 810px
+    padding: 90px 0 100px
+    @include media(1280)
+        padding: 80px 0 90px
+    @include media(991)
+        padding: 60px 0 70px
+    @include media(768)
+        padding: 50px 0 60px
+    @include media(540)
+        padding: 40px 0 50px
+    .heading
+        max-width: 430px
+        margin: 0 auto 50px
+        text-align: center
+        @include media(768)
+            max-width: 360px
+            margin: 0 auto 40px
+        @include media(540)
+            margin: 0 auto 30px
+    .form
+        .form-grid
+            --item: 2
+            @include media(540)
+                --item: 1
+        .btn_wrap
+            margin-top: 50px
+            justify-content: center
+            @include media(768)
+                margin-top: 40px
+            .btn
+                --padding: 30px
+
+.map_section
+    line-height: 0
+    iframe
+        width: 100%
+        height: 600px
+        border: none
+        outline: none
+        filter: grayscale(1)
+        transition: .5s ease
+        @include media(991)
+            height: 550px
+        @include media(540)
+            height: 500px
+        &:hover
+            filter: grayscale(0)

@@ -1,0 +1,1129 @@
+@import '../_var'
+
+[data-dialog]
+    cursor: pointer
+    &:hover
+        color: var(--primary-c)
+
+.notification-model
+    justify-content: flex-end
+    .notification-div-wrap
+        height: 100%
+        background: var(--white)
+        max-width: 750px
+        .ydpqo
+            padding: 10px
+            border-bottom: 1px solid #D7DBEC
+            gap: 15px
+            .colB
+                gap: 15px
+        .tab-nav
+            margin-bottom: 0
+        .ubcnw
+            padding: 20px 15px
+            padding-right: 0
+        .lead-history-list
+            padding-right: 15px
+            height: calc(100vh - 108px)
+            overflow-y: auto
+            @include scrollbar($color: var(--primary-e),$width: 4px)
+
+dialog
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 7
+    background: rgb(0 0 0 / .5)
+    height: 100%
+    width: 100%
+    max-height: 100%
+    max-width: 100%
+    border: none
+    display: flex
+    align-items: center
+    justify-content: center
+    transform: translateY(100%)
+    opacity: 0
+    @include media(767)
+        transition: .5s ease
+        transform: translateY(0%) translateX(100%)
+    &[open]
+        transform: translateY(0%)
+        opacity: 1
+        @include media(767)
+            transform: translateY(0%) translateX(0%)
+        .dialog-wrapper
+            transform: scale(1)
+            opacity: 1
+    &[data-model="byokkl"]
+        @include media(767)
+            display: none
+    &[data-model="show_notification"]
+        &[open]
+            .notification-div-wrap
+                transform: translateX(0%)
+        .notification-div-wrap
+            transform: translateX(100%)
+            transition: 1s ease
+            @include media(767)
+                transform: translateX(0%)
+    &[data-model="show_lead_status"]
+        .dialog-wrapper
+            .lead-status-pop
+                .title-up
+                    flex-wrap: nowrap
+    &[data-model="jweuz"]
+        .dialog-wrapper
+            @include media(767)
+                border-radius: 0
+                height: 100%
+            .model-pop-large
+                @include media(767)
+                    height: 100%
+                .gukqp
+                    @include media(767)
+                        flex-direction: column
+                        height: calc(100% - 55px)
+                    .puzsr
+                        @include media(767)
+                            flex: 0 1 50%
+                            max-width: 100%
+                            height: 100%
+                            max-height: 50%
+                            width: 100%
+                            overflow-y: auto
+            .usvqm
+                p
+                    @include media(365)
+                        font-size: 12px
+    &[data-model="vchqi"]
+        .lead-status-pop
+            @include media(767)
+                display: flex
+                flex-wrap: wrap
+                flex-direction: column
+                height: 100%
+            .title-up
+                @include media(767)
+                    flex: 0 1 auto
+            .form-sec
+                @include media(767)
+                    flex: 0 1 calc(100% - 56px)
+                    min-height: calc(100% - 56px)
+                    height: 100%
+                    overflow-y: auto
+                    padding-bottom: 20px
+            .submt-task-rw
+                @include media(767)
+                    position: absolute
+                    bottom: 0
+                    left: 0
+                    right: 0
+                    z-index: 1
+    &[data-model="add_upd_location"]
+        .dialog-wrapper
+            @include media(767)
+                height: 100%
+                border-radius: 0
+                overflow-y: auto
+    &[data-model="show_user_quick_view"]
+        .dialog-wrapper
+            overflow-y: auto
+            @include media(767)
+                height: 100%
+                border-radius: 0
+            .quick-view-wrap
+                @include media(767)
+                    height: 100%
+                    display: flex
+                    flex-wrap: wrap
+                    flex-direction: column
+                .tab-wrap
+                    @include media(767)
+                        flex: 0 1 calc(100% - 145px)
+                        min-height: calc(100% - 145px)
+                        height: 100%
+                        width: 100%
+                        overflow-y: auto
+                    .table-content
+                        .tabs-gd
+                            @include media(767)
+                                max-height: 100%
+                .upper-sec
+                    @include media(767)
+                        flex: 0 1 auto
+                        width: 100%
+                .btm-wrap
+                    @include media(767)
+                        position: absolute
+                        bottom: 0
+                        left: 0
+                        right: 0
+    &[data-model="show_other_owner_lsit"]
+        .dialog-wrapper
+            .lead-status-pop
+                .wrap-div-sec
+                    @include media(767)
+                        padding: 1rem 12px
+                    .div-sec-lead
+                        @include media(767)
+                            padding-right: 0
+                        &.fzoZiCs
+                            @include media(767)
+                                max-height: calc(100vh - 125px)
+                                gap: 10px
+    &[data-model="add_upd_vendor"],&[data-model="add_upd_vendor_points"]
+        @include media(767)
+            display: block
+            border-radius: 0
+            z-index: 999 !important
+        .dialog-wrapper
+            max-height: 90%
+            overflow-y: auto
+            @include scrollbar($width: 7px,$color: var(--primary-b))
+            @include media(767)
+                max-height: 100%
+                height: 100%
+                overflow: hidden
+                border-radius: 0
+            .model-pop-medium
+                @include media(767)
+                    height: 100%
+                    overflow-y: auto
+                .title
+                    @include media(767)
+                        position: sticky
+                        left: 0
+                        right: 0
+                        top: 0
+                        z-index: 2
+                .hiNEqgQ
+                    @include media(767)
+                        height: 100%
+                .btn-wrap
+                    @include media(767)
+                        position: sticky
+                        left: 0
+                        right: 0
+                        bottom: 0
+                        z-index: 2
+    &[data-model="subscription-pop"]
+        .dialog-wrapper
+            max-height: 90%
+            overflow-y: auto
+            @include scrollbar($width: 7px,$color: var(--primary-b))
+            @include media(767)
+                max-height: 100%
+        .subsc-tab
+            border-bottom: none
+            li
+                border: 1px solid var(--general-g)
+                padding: 8px 20px
+                border-radius: 5px
+                color: var(--primary-a)
+                cursor: pointer
+                &.active
+                    color: var(--white)
+                    background: var(--primary-a)
+                    border-color: var(--primary-a)
+                &:not(:last-child)
+                    margin-right: 1rem
+        .ztvlxz
+            .item
+                height: 100%
+                &.active
+                    .card
+                        background: var(--primary-a)
+                        .upper-title
+                            color: var(--white)
+                        .price-sec
+                            background: var(--green)
+                        .card-info
+                            .plan-desc
+                                color: var(--white)
+                            .btn-pla
+                                .btn
+                                    border-color: var(--white)
+                                    color: var(--white)
+                                    &:hover
+                                        background: var(--white)
+                                        color: var(--primary-a)
+                .card
+                    box-shadow: 0px 10px 15px -3px #0000001A,3px -2px 4.4px -2px #0000000F
+                    background: var(--white)
+                    transition: .5s ease
+                    .upper-title
+                        padding: 20px 0
+                        text-align: center
+                        h4
+                            font-size: 20px
+                            line-height: 1
+                            color: var(--general-a)
+                            @include font(600)
+                            transition: .5s ease
+                            @include media(767)
+                                padding: 12px 0
+                                font-size: 22px
+                    .price-sec
+                        background: var(--general-h)
+                        color: var(--black)
+                        @include font(700)
+                        text-align: center
+                        line-height: 1
+                        padding: 24px 0
+                        transition: .5s ease
+                        position: relative
+                        @include media(767)
+                            padding: 18px 0
+                        sub
+                            font-size: 20px
+                            @include font(700)
+                            vertical-align: baseline
+                            margin-right: 3px
+                            @include media(675)
+                                font-size: 16px
+                        span
+                            font-size: 24px
+                            @include media(1152)
+                                font-size: 22px
+                            @include media(767)
+                                font-size: 20px
+                        .btn
+                            position: absolute
+                            left: calc( 100% - 70px )
+                            top: 50%
+                            translate: 0 -50%
+                            background: var(--green-g)
+                            color: var(--green-a)
+                            white-space: nowrap
+                            font-size: 12px
+                            --padding: 5px
+                            @include media(1152)
+                                font-size: 12px
+                                left: calc( 100% - 75px )
+                            @include media(991)
+                                opacity: 1
+                    .card-info
+                        padding: 32px 24px
+                        @include media(767)
+                            padding: 25px 15px
+                        .plan-desc
+                            margin-bottom: 35px
+                            color: var(--general-a)
+                            ul
+                                padding-left: 30px
+                                li
+                                    list-style: disc
+                                    transition: .5s ease
+                                    color: #666
+                                    @include font(500)
+                                    &:not(:last-child)
+                                        margin-bottom: .5rem
+    .dialog-wrapper
+        background: var(--white)
+        box-shadow: 0px 1px 4px 0px #15223214
+        height: fit-content
+        width: fit-content
+        border-radius: 6px
+        overflow: hidden
+        pointer-events: all
+        transition: .8s ease
+        transform: scale(.8)
+        opacity: 0
+        &.lead-wrapper
+            height: 90%
+            overflow-y: auto
+            @include media(767)
+                height: 100%
+        @include media(767)
+            width: 100%
+            transform: scale(1)
+            opacity: 1
+        &:has(.lead-status-pop)
+            @include media(767)
+                height: 100%
+                border-radius: 0px
+        &.full
+            width: 100%
+            height: 100%
+            border-radius: 0px
+        .lead-status-pop
+            .title-up
+                @include flex
+                align-items: center
+                padding: 10px 22px
+                border-bottom: 1px solid var(--general-f)
+                @include media(767)
+                    padding: 10px
+                p
+                    font-size: 16px
+                    color: var(--general-a)
+                    @include font(700)
+                    @include media(767)
+                        font-size: 14px
+                button
+                    padding-left: 25px
+                    @include media(767)
+                        padding-left: 10px
+                    [data-icon]
+                        font-size: 32px
+                        color: var(--general-c)
+                .col-se
+                    display: flex
+                    align-items: center
+                    margin-left: auto
+                    .select2
+                        color: var(--general-e)
+            .wrap-div-sec
+                padding: 2rem 22px
+                .div-sec-lead
+                    display: grid
+                    grid-template-columns: repeat(6,auto)
+                    grid-gap: 2rem 3rem
+                    max-height: 180px
+                    overflow-y: auto
+                    @include scrollbar($width : 4px)
+                    padding-right: 20px
+                    @include media(991)
+                        grid-template-columns: repeat(3,auto)
+                        grid-gap: 1.5rem 1rem
+                    @include media(767)
+                        grid-template-columns: repeat(2,1fr)
+                        grid-gap: 1.5rem 1rem
+                        max-height: 245px
+                    &.fzoZiCs
+                        gap: 1rem
+                        max-height: 150px
+            .task-wrap-strip
+                background: var(--primary-g)
+                padding: 10px 0
+                .task-wrap-dgl
+                    padding: 0 20px
+                    .flex
+                        justify-content: flex-end
+                        gap: 8px
+            .submt-task-rw
+                background: var(--general-h)
+                .subt-wrp
+                    padding: 15px 20px 30px
+                    @include media(767)
+                        padding: 12px 12px 18px
+                    small
+                        display: block
+                        @include font(500)
+                        line-height: 24px
+                        &.text-color
+                            color: var(--general-d)
+                    textarea
+                        width: 100%
+                        margin: 9px 0
+                    .btn-wrap
+                        .btn
+                            --padding: 25px
+                            &:last-child
+                                margin-left: 10px
+        // 
+        .model-pop-small
+            min-width: 300px
+            max-width: 300px
+            border-radius: 5px
+            @include media(767)
+                min-width: 100%
+                max-width: 100%
+                border-radius: 0
+        .model-pop-medium
+            min-width: 450px
+            max-width: 450px
+            border-radius: 5px
+            @include media(767)
+                min-width: 100%
+                max-width: 100%
+                border-radius: 0
+        .model-pop-large
+            min-width: 900px
+            max-width: 900px
+            @include media(767)
+                min-width: 100%
+                max-width: 100%
+                border-radius: 0
+        .title
+            padding: 10px 20px
+            background: var(--primary-h)
+            border-bottom: 1px solid var(--general-g)
+        .BriSUzA
+            padding: 0 20px
+            max-height: 160px
+            overflow-y: auto
+            margin: 10px
+            margin-left: 0
+            @include scrollbar($color: var(--primary-e))
+            .ld-col
+                padding: 7px 0
+        .hiNEqgQ
+            padding: 20px
+        .btn-wrap
+            text-align: right
+            padding: 10px 20px
+            background: var(--general-h)
+        .atLkMmGm
+            max-width: 300px
+            margin: 18px auto 12px
+        .V0fehGJv
+            margin-top: 25px
+            .channel-partner
+                align-items: center
+                gap: 5%
+                @include media(768)
+                    flex-direction: column
+                    align-items: center
+                    justify-content: center
+                    .tmbYPPJC
+                        flex: 1
+                        width: 100%
+                    .gNdwVfnm
+                        input
+                            width: 100%
+                .tmbYPPJC:last-child
+                    margin-top: 35px
+                    @include media(768)
+                        text-align: center
+        .gNdwVfnm
+            .select2
+                width: 100% !important
+        .tmbYPPJC
+            margin-top: 15px
+        .qtUkpxy1
+            margin: 14px 0
+            .ld-col
+                &:not(:last-child)
+                    margin-bottom: .5rem
+        // 
+        //.quick-detail-wrap
+        //    @include flex
+        //    height: 100%
+        //    @include media(991)
+        //        flex-direction: column
+        //    .qck-dtl-secA
+        //        flex: 1
+        //        height: 100%
+        //        @include media(991)
+        //            flex: 0 1 70%
+        //            max-height: 70%
+        //            height: 100%
+        //            overflow-y: auto
+        //        .bn-pr-ld-sc-inf
+        //            display: grid
+        //            grid-template-columns: repeat(3,1fr)
+        //            @include media(767)
+        //                grid-template-columns: repeat(2,1fr)
+        //            .col-mc
+        //                border: 1px solid #D7DBEC
+        //                border-top: none
+        //                border-right: none
+        //                padding: 9px 17px
+        //                position: relative
+        //                @include media(767)
+        //                    border-right: initial
+        //                    border-left: none
+        //                .yNVN2Wo
+        //                    margin-bottom: 6px
+        //                .l3Z0H40
+        //                    color: var(--general-c)
+        //                    line-height: 20px
+        //                .startus-strip-dg-sf
+        //                    color: var(--text)
+        //                    background: var(--general-h)
+        //                    border-radius: 5px
+        //                    padding: 4px 12px
+        //                    p
+        //                        color: var(--general-c)
+        //                    [data-icon]
+        //                        color: var(--primary-b)
+        //                        font-size: 18px
+        //                    &.new
+        //                        background: var(--green-b)
+        //                    &.warn
+        //                        background: var(--yellow-b)
+        //                    &.urgent
+        //                        background: var(--red-b)
+        //                    &.primary
+        //                        background: var(--primary-b)
+        //                .plu-ico
+        //                    position: absolute
+        //                    right: 17px
+        //                    bottom: 9px
+        //                    color: var(--primary-a)
+        //        .tab-wrap
+        //            .table-content
+        //                .tabs-gd
+        //                    max-height: calc(100vh - 340px)
+        //    .qck-dtl-secB
+        //        flex: 0 1 400px
+        //        max-width: 400px
+        //        height: 100%
+        //        position: relative
+        //        border-left: 1px solid #D7DBEC
+        //        @include media(991)
+        //            flex: 0 1 30%
+        //            max-width: 100%
+        //            max-height: 30%
+        //        .close-dialog
+        //            @include media(991)
+        //                position: fixed
+        //                right: 5px
+        //                top: 5px
+        //        .ttl-kjssoi
+        //            position: absolute
+        //            top: 0
+        //            left: 0
+        //            right: 0
+        //            background: var(--general-h)
+        //            padding: 6px 12px
+        //            display: flex
+        //            align-items: center
+        //            justify-content: space-between
+        //            .LgldxGE
+        //                @include media(767)
+        //                    color: var(--black)
+        //        .lead-history-list
+        //            padding-top: 41px
+        //            height: 100%
+        //            overflow-y: auto
+        .quick-view-wrap
+            min-width: 720px
+            max-width: 720px
+            @include media(720)
+                min-width: 100%
+                max-width: 100%
+        .tab-wrap
+            padding: 15px 20px
+            @include media(767)
+                padding: 12px
+            .table-content
+                .tabs-gd
+                    max-height: 180px
+                    overflow-y: auto
+                    @include scrollbar($width: 4px)
+                    padding-right: 10px
+                    table
+                        border-spacing: 0
+                        border: none
+                        width: 100%
+                        td
+                            width: 50%
+                            padding: 10px
+                            border-bottom: 1px solid var(--general-g)
+                            color: var(--general-c)
+                            overflow: hidden
+                            text-overflow: ellipsis
+                            &:first-child
+                                padding-left: 0
+                            &:last-child
+                                padding-right: 0
+                            &:not(:first-child)
+                                text-align: right
+        .btm-wrap
+            padding: 15px 20px
+            background: var(--general-h)
+            .btn
+                &:not(:last-child)
+                    margin-right: 10px
+    .lead-history-list
+        .lead-his
+            border-bottom: 1px solid var(--general-f)
+            padding: 14px 16px
+            display: flex
+            @include media(767)
+                padding-left: 0
+            svg
+                color: var(--general-d)
+                font-size: 30px
+            .inf,svg
+                display: inline-block
+                vertical-align: top
+            .inf
+                margin-left: 8px
+                .mJomifU
+                    margin-top: 4px
+                span
+                    color: var(--primary-c)
+                    @include font(500)
+            .onqwn
+                @include flex
+                gap: 0 5px
+                margin-top: 10px
+                li
+                    flex: 0 1 auto
+                    font-size: 13px
+.usvqm
+    padding: 10px 20px
+    @include media(767)
+        padding: 10px
+.xyufk
+    gap: 10px
+    @include media(767)
+        gap: 5px
+    .btn
+        @include media(767)
+        --height: 30px
+        --padding: 5px !important
+        --gap: 4px
+        font-size: 12px
+.gukqp
+    .puzsr
+        flex: 0 1 50%
+        max-width: 50%
+        width: 100%
+        &:last-child
+            border-left: 1px solid var(--general-g)
+        .bjbet
+            background: var(--primary-h)
+            padding: 14px 25px
+            position: relative
+            @include media(767)
+                padding: 8px 10px
+            .djegv
+                @include media(767)
+                    top: 5px
+                    right: 5px
+                    --height: 26px
+            ul
+                margin-top: 12px
+                li
+                    display: inline-block
+                    vertical-align: middle
+                    &:not(:last-child)
+                        margin-right: 1rem
+                    [data-icon]
+                        color: var(--primary-a)
+                    a
+                        font-size: 12px
+                        gap: 4px
+                        [data-icon]
+                            font-size: 12px
+            .djegv
+                position: absolute
+                top: 15px
+                right: 20px
+        .olpfz
+            --padding: 2rem
+            --dot: 12px
+            margin-left: 2.5rem
+            max-height: 437px
+            overflow-y: auto
+            @include scrollbar
+            @include media(767)
+                margin-left: 15px
+                --padding: 18px
+            .xrdja
+                position: relative
+                padding-right: 20px
+                padding-left: var(--padding)
+                border-left: 1px solid var(--primary-d)
+                margin-left: calc(var(--dot) / 2)
+                &:first-child
+                    padding-top: var(--padding)
+                    &::before
+                        top: calc(var(--padding))
+                &:last-child
+                    padding-bottom: var(--padding)
+                &:not(:last-child)
+                    padding-bottom: 20px
+                &::before
+                    content: ''
+                    position: absolute
+                    left: calc(var(--dot) / -2)
+                    height: var(--dot)
+                    width: var(--dot)
+                    background: var(--primary-a)
+                    border-radius: 50%
+                    top: 0
+                span
+                    display: block
+                    color: var(--general-b)
+                    @include font(500)
+                    margin-bottom: 6px
+                p
+                    font-size: 13px
+                [data-icon]
+                    display: inline-block
+                    vertical-align: middle
+                    font-size: 16px
+                    margin-left: 2px
+                    color: var(--general-c)
+        .upalj
+            position: sticky
+            top: 0
+            background: var(--general-h)
+            padding: 10px 20px
+        .lead-history-list
+            max-height: 300px
+            overflow-y: auto
+            @include scrollbar($color: var(--primary-c))
+        .add-comment-sec
+            background: var(--general-h)
+            padding: 20px
+.form-sec-crt-tsk
+    .form
+        --gaptb: 16px
+        --gaplr: 10px
+    .zarbx
+        gap: 10px
+        margin-bottom: 1rem
+        .ld-col
+            @include media(767)
+                flex: 0 1 100%
+                max-width: 100%
+.SLerzno
+    background: var(--primary-h)
+    padding: 10px 20px
+    @include media(767)
+        padding: 10px 15px
+    .flex
+        .colA
+            flex: 1
+        .colB
+            flex: 0 1 auto
+            .col-md-dtl-ld
+                p
+                    font-size: 14px
+                    color: var(--general-b)
+                    @include font(400)
+                &:first-child
+                    margin-right: 30px
+                    .btn
+                        --height: 36px
+                        width: 100%
+                .VD9_Xfg
+                    --padding: 12px
+                    margin-bottom: 4px
+    .erp-fgt
+        a
+            width: 100%
+            &:not(.aqMEp58)
+                [data-icon]
+                    font-size: 14px
+        .aqMEp58
+            @include media(767)
+                font-size: 16px
+                @include font(600)
+            svg
+                color: var(--primary-a)
+
+.tab-nav
+    border-bottom: 1px solid var(--general-g)
+    white-space: nowrap
+    width: 100%
+    overflow-x: auto
+    @include scrollbar
+    margin-bottom: 20px
+    &.no-border
+        border-bottom: none
+        margin-bottom: 0
+    .nav-li-tb
+        @include font(500)
+        color: var(--black)
+        padding-bottom: 14px
+        color: var(--general-c)
+        &:not(:last-child)
+            margin-right: 2rem
+        &.active
+            color: var(--primary-a)
+            border-bottom: 1px solid var(--primary-a)
+    &.tvfrtey
+        text-align: center
+        .nav-li-tb
+            border: 1px solid #f3f3f3
+            background: #fbfbfb
+            padding: 10px 12px
+            border-radius: 5px
+            &.active
+                border-color: var(--primary-a)
+                background: var(--primary-a)
+                color: var(--white)
+// message popup
+
+.message-pop
+    position: fixed
+    right: 50%
+    top: 5%
+    z-index: 5
+    background: var(--general-b)
+    padding: 10px 20px
+    color: var(--white)
+    border-radius: 6px
+    @include media(1366)
+        translate: 50% 0
+    &.alert
+        background: var(--yellow-a)
+    &.error
+        background: var(--red-b)
+    &.success
+        background: var(--green-b)
+    &.primary
+        background: var(--primary-b)
+    button
+        position: absolute
+        right: 15px
+        top: 50%
+        translate: 0 -50%
+        color: var(--white)
+        line-height: 0
+    p
+        padding-right: 30px
+        @include font(500)
+        font-size: 16px
+
+
+
+.quick-detail-wrap
+    @include flex
+    height: 100%
+    @include media(991)
+        flex-direction: column
+    .qck-dtl-secA
+        flex: 1
+        height: 100%
+        @include media(991)
+            flex: 0 1 70%
+            max-height: 70%
+            height: 100%
+            overflow-y: auto
+        .bn-pr-ld-sc-inf
+            display: grid
+            grid-template-columns: repeat(3,1fr)
+            @include media(767)
+                grid-template-columns: repeat(2,1fr)
+            .col-mc
+                border: 1px solid #D7DBEC
+                border-top: none
+                border-right: none
+                padding: 9px 17px
+                position: relative
+                @include media(767)
+                    border-right: initial
+                    border-left: none
+                .yNVN2Wo
+                    margin-bottom: 6px
+                .l3Z0H40
+                    color: var(--general-c)
+                    line-height: 20px
+                .startus-strip-dg-sf
+                    color: var(--text)
+                    background: var(--general-h)
+                    border-radius: 5px
+                    padding: 4px 12px
+                    p
+                        color: var(--general-c)
+                    [data-icon]
+                        color: var(--primary-b)
+                        font-size: 18px
+                    &.new
+                        background: var(--green-b)
+                    &.warn
+                        background: var(--yellow-b)
+                    &.urgent
+                        background: var(--red-b)
+                    &.primary
+                        background: var(--primary-b)
+                .plu-ico
+                    position: absolute
+                    right: 17px
+                    bottom: 9px
+                    color: var(--primary-a)
+        .ghomi
+            @include media(767)
+                display: none
+        .tab-wrap
+            .table-content
+                .tabs-gd
+                    max-height: calc(100vh - 340px)
+        .lgfol
+            height: calc( 100% - var(--hdwef))
+            overflow-y: auto
+            @include scrollbar($width: 8px)
+            @include media(767)
+                overflow-x: auto
+            table
+                thead
+                    position: sticky
+                    top: 0
+                    z-index: 2
+                    tr
+                        background: #f5f5f5
+            
+    .qck-dtl-secB
+        flex: 0 1 400px
+        max-width: 400px
+        height: 100%
+        position: relative
+        border-left: 1px solid #D7DBEC
+        @include media(991)
+            flex: 0 1 30%
+            max-width: 100%
+            max-height: 30%
+        @include media(767)
+            flex: 0 1 100%
+            max-width: 100%
+            max-height: 30%
+        .close-dialog
+            @include media(991)
+                position: fixed
+                right: 5px
+                top: 5px
+        .ttl-kjssoi
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            background: var(--general-h)
+            padding: 6px 12px
+            z-index: 1
+            display: flex
+            align-items: center
+            justify-content: space-between
+            .LgldxGE
+                @include media(767)
+                    color: var(--black)
+        .lead-history-list
+            padding-top: 41px
+            height: 100%
+            overflow-y: auto
+
+
+dialog[open] .dialog-wrapper.change_lead_pop  
+    transform: translateY(-50px) scale(1)
+    opacity: 1
+
+.channel-table
+    thead
+        th  
+            @include media(767)
+                min-width: 110px
+
+
+.unit-details-pop
+    .title-up
+        display: flex
+        flex-wrap: wrap
+        align-items: center
+        padding: 10px 22px
+        border-bottom: 1px solid var(--general-f)
+        .plot_title
+            span
+                font-size: 16px
+                line-height: 1.2
+                font-weight: 600
+                color: #000
+            p
+                font-size: 12px
+                color: #666
+                font-weight: 600
+        .col-se
+            display: flex
+            align-items: center
+            margin-left: auto
+            button
+                padding-left: 25px
+                [data-icon] 
+                    font-size: 32px
+                    color: var(--general-c)
+    .unit_container 
+        .unit_more_details
+            padding: 25px 15px
+            text-align: center
+            grid-row-gap: 20px
+            .infor
+                span
+                    font-size: 14px
+                    font-weight: 400
+                    color: #666
+                p
+                    font-size: 16px
+                    font-weight: 600
+                    color: #000
+
+// .collapse
+//     --aside: 80px  
+
+.model
+    position: fixed
+    top: 0
+    bottom: 0
+    z-index: 7
+    background: #fff
+    background-position: 0% 80%
+    background-size: 75%
+    max-width: 435px
+    width: 100%
+    .close
+        &:not(.btn)
+            position: absolute
+            top: 0
+            right: 0
+            top: 40px
+            right: 40px
+            @include media(520)
+                top: 20px
+                right: 20px
+            path
+                stroke: #000
+
+.model.status-pop
+    height: fit-content
+    max-width: 450px 
+    top: unset
+    bottom: 0%
+    left: 50%
+    transform: translate(-50%, 100%)
+    transition: .5s ease
+    &.is-open
+        bottom: 50%
+        transform: translate(-50%, 50%)
+    .close
+        top: 20px
+        right: 20px
+        svg
+            width: 20px
+            height: 20px
+    .model-body
+        padding: 20px 25px
+        h6
+            font-size: 16px
+            font-weight: 700
+            margin-bottom: 15px
+        .form-group
+            select
+                padding: 0px 12px
+
+.overlay
+    position: fixed
+    left: 0
+    right: 0
+    bottom: 0
+    top: 0
+    z-index: 6
+    opacity: 0
+    background: rgb(0 0 0 / 50%)
+    transform: translateY(100%)
+    transition: 0s ease .5s,opacity .5s ease
+    cursor: pointer
+    @include media(991)
+        z-index: 2
+    @include media(540)
+        display: none
+    &.is-open
+        transition: opacity 1s ease
+        opacity: 1
+        transform: translateY(0%)
+
+.manage_user_pop.popup-overlay
+    .popup-box
+        max-width: 600px
+        max-height: 90vh
+        overflow-y: auto
+        .close-btn 
+            top: 10px      
+            right: 10px

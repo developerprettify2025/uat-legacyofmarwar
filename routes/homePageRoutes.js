@@ -1,0 +1,11 @@
+const express = require("express");
+const router = express.Router();
+const verifyToken = require("../middleware/verifyToken");
+const homePageController = require("../API/homePageController");
+router.get("/home-data", verifyToken, homePageController.getHomePageData);
+router.get("/header-data", verifyToken, homePageController.getAllDataOfHeader);
+router.get("/search-products", verifyToken, homePageController.searchProducts);
+router.get("/footer-data", verifyToken, homePageController.getAllDataOfFooter);
+router.get("/product-data", verifyToken, homePageController.getAllDataOfProductListing);
+router.get("/product-details/:ProductID", homePageController.getAllDataOfProductDetails);
+module.exports = router;

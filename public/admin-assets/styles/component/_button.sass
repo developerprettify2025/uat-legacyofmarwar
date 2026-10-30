@@ -1,0 +1,104 @@
+@import '../_var'
+
+.btn
+    --height: 48px
+    --padding: 16px
+    --background: var(--primary-a)
+    --hover: var(--primary-f)
+    --hovercolor: var(--white)
+    --color: var(--white)
+    --gap: 9px
+    --radius: 5px
+    height: var(--height)
+    line-height: var(--height)
+    background: var(--background)
+    color: var(--color)
+    padding: 0 var(--padding)
+    gap: 0 var(--gap)
+    border: 1px solid var(--primary-a)
+    display: inline-flex
+    justify-content: center
+    align-items: center
+    border-radius: var(--radius)
+    @include font
+    transition: .5s ease
+    cursor: pointer
+    &:hover
+        border-color: var(--hover) !important
+        color: var(--hovercolor) !important
+        background: var(--hover) !important
+    &.w-100
+        width: 100%
+    .iconify
+        color: inherit
+    &.box
+        padding: 0
+        width: var(--height)
+    &.btn-btn
+        background: var(--white)
+        border-color: var(--general-f)
+        color: var(--primary-a)
+        --hover: var(--primary-g)
+        --hovercolor: var(--general-a)
+    &.btn-btn-btn
+        background: var(--primary-g)
+        border-color: var(--primary-g)
+        color: var(--primary-a)
+    &.btn-red
+        background: var(--red-g)
+        border-color: var(--red-g)
+        color: var(--red-a)
+        --hovercolor: var(--white)
+        --hover: var(--red-a)
+    &.btn-green
+        background: var(--green-g)
+        border-color: var(--green-g)
+        color: var(--green-a)        
+        --hovercolor: var(--white)
+        --hover: var(--green-a)
+    &.medium
+        --height: 36px
+    &.small
+        --height: 32px
+        --padding: 15px
+        --gap: 6px
+
+.badge
+    display: inline-block
+    --height:  28px
+    --padding: 8px
+    height: var(--height)
+    padding: 0 var(--padding)
+    line-height: var(--height)
+    border-radius: 5px
+    color: var(--white)
+    &.small
+        --height:  24px
+        --padding: 5px
+        font-size: 12px
+    &.green
+        color: var(--green-a)
+        background: var(--green-h)
+    &.red
+        color: var(--red-a)
+        background: var(--red-h)
+    &.yellow
+        color: var(--yellow-a)
+        background: var(--yellow-h)
+    &.blue
+        color: var(--primary-a)
+        background: var(--primary-h)
+    &.gray
+        color: var(--general-a)
+        background: var(--general-h)
+.notification-dot
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    height: 20px
+    width: 20px
+    border-radius: 50%
+    background: var(--green-b)
+    font-size: 10px
+    color: var(--black)
+    @include font(500)

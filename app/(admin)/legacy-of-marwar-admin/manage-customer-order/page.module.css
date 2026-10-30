@@ -1,0 +1,764 @@
+.page {
+  min-height: 100%;
+  padding: 18px;
+  background: #f5f7fb;
+}
+
+.panel {
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .05);
+}
+
+.paymentSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px 16px 0;
+}
+
+.summaryCard {
+  display: grid;
+  gap: 3px;
+  min-height: 70px;
+  align-content: center;
+  padding: 10px 18px;
+  border: 1px solid #e8edf4;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.summaryCard strong {
+  color: #536d82;
+  font-size: 20px;
+}
+
+.summaryCard span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 24px 16px;
+}
+
+.headingActions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 9px;
+}
+
+.heading h1 {
+  margin: 0;
+  color: #64748b;
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.heading p {
+  margin: 6px 0 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.addButton {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 7px;
+  background: #153349;
+  color: white;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.exportButton,
+.invoiceButton {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 7px;
+  background: #153349;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.exportButton:disabled,
+.invoiceButton:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.statusStrip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  padding: 18px 24px 10px;
+}
+
+.statusStripItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+.statusLabel {
+  flex: 1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusStripItem strong {
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.3fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(170px, 1fr) minmax(170px, 1fr) minmax(220px, 1.6fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 0 24px 18px;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.dateRangeWrapper {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.dateRangeTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 12px;
+  border: 1px solid #d9e1ea;
+  border-radius: 7px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dateRangeField {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: left;
+}
+
+.dateRangeLabel {
+  color: #64748b;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.dateRangeSeparator {
+  color: #94a3b8;
+  font-size: 18px;
+}
+
+.datePickerPopover {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(680px, 86vw);
+  padding: 12px;
+  border: 1px solid #dfe7f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+}
+
+.datePickerHeader {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 32px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.datePickerNav {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  color: #475569;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.datePickerGridWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.datePickerGridContainer {
+  min-width: 0;
+}
+
+.datePickerWeekdays,
+.datePickerGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.datePickerWeekdays {
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 11px;
+  text-align: center;
+}
+
+.datePickerGrid {
+  min-height: 180px;
+}
+
+.dateCell {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 30px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #334155;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+
+.dateCellMuted {
+  color: #cbd5e1;
+}
+
+.dateCellSelected {
+  background: #0ea5e9;
+  color: #fff;
+  font-weight: 600;
+}
+
+.dateCellRange {
+  background: rgba(14, 165, 233, 0.12);
+}
+
+.toolbar select,
+.toolbar input,
+.statusControls select {
+  box-sizing: border-box;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid #d9e1ea;
+  border-radius: 7px;
+  background: #fff;
+  color: #64748b;
+  font: inherit;
+  font-size: 13px;
+}
+
+.clearButton {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid #d9e1ea;
+  border-radius: 7px;
+  background: #fff;
+  color: #475569;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.orderList {
+  display: grid;
+  gap: 4px;
+  padding: 24px 12px 8px;
+}
+
+.orderCard {
+  overflow: hidden;
+  border: 1px solid #e6eaf0;
+  border-radius: 7px;
+  background: white;
+  border-left-width: 4px;
+}
+
+.orderTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 54px;
+  padding: 0 16px;
+  background: #f1f2f3;
+}
+
+.orderToggle {
+  display: flex;
+  min-width: 0;
+  min-height: 54px;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.orderToggle:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: -2px;
+}
+
+.orderToggle > span:first-child {
+  display: grid;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.invoiceButton {
+  flex: 0 0 auto;
+  min-height: 31px;
+  background: #153349;
+  font-size: 11px;
+}
+
+.orderNumber {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.orderToggle > span:first-child > span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.orderPreview {
+  min-width: 0;
+  overflow: hidden;
+  color: #718096;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  margin-right: 4px;
+  border-right: 2px solid #718096;
+  border-bottom: 2px solid #718096;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .18s ease;
+}
+
+.chevronExpanded {
+  transform: rotate(225deg) translate(-2px, -1px);
+}
+
+.orderTimelineWrap {
+  padding: 16px 16px 0;
+}
+
+.orderTimeline,
+.orderTimelineSingle {
+  display: grid;
+  width: 100%;
+  padding: 8px 18px 0;
+}
+
+.orderTimeline {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+}
+
+.orderTimelineSingle {
+  grid-template-columns: 1fr;
+  max-width: 180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.timelineStep {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 54px;
+  text-align: center;
+}
+
+.timelineLabel {
+  display: block;
+  margin-bottom: 10px;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.timelineRail {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 3px;
+  margin: 0 auto;
+  background: #dde4ec;
+  border-radius: 999px;
+}
+
+.timelineRailFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: 999px;
+}
+
+.timelineDot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #cbd5e1;
+}
+
+.customerSummary {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 13px 16px;
+  border-bottom: 1px solid #edf0f3;
+}
+
+.avatar {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #d5e6f2;
+  color: #35556a;
+  font-size: 12px;
+}
+
+.customerSummary > div {
+  display: grid;
+  gap: 3px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.customerSummary strong {
+  color: #475569;
+  font-size: 13px;
+}
+
+.deliveryAddress {
+  line-height: 1.5;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  border-bottom: 1px solid #e7ebef;
+}
+
+.productSection,
+.shippingSection {
+  min-width: 0;
+  padding: 14px;
+}
+
+.productSection {
+  border-right: 1px solid #edf0f3;
+}
+
+.productSection h3,
+.shippingSection h3 {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.productRow {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.productImage {
+  display: grid;
+  width: 72px;
+  height: 76px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.productInfo {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.productInfo strong {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.productInfo b {
+  color: #536d82;
+  font-size: 14px;
+}
+
+.shippingCard {
+  display: grid;
+  gap: 10px;
+  min-height: 112px;
+  padding: 14px;
+  border: 1px solid #dce2e8;
+  border-radius: 5px;
+  background: #f2f2f2;
+  color: #718096;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.shippingCard strong {
+  color: #718096;
+}
+
+.orderFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+}
+
+.paymentInfo,
+.statusControls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.paymentInfo span,
+.totalPrice {
+  display: grid;
+  gap: 4px;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.paymentInfo strong,
+.totalPrice strong {
+  color: #647b8d;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.statusControls {
+  gap: 10px;
+}
+
+.statusControls select {
+  min-height: 34px;
+  max-width: 150px;
+  font-size: 11px;
+}
+
+.totalPrice {
+  min-width: 105px;
+  text-align: right;
+}
+
+.totalPrice strong {
+  font-size: 16px;
+}
+
+.count {
+  padding: 12px 24px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.empty,
+.error {
+  padding: 24px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .orderFooter,
+  .paymentInfo,
+  .statusControls {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .productSection {
+    border-right: 0;
+    border-bottom: 1px solid #edf0f3;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 10px;
+  }
+
+  .heading {
+    align-items: flex-start;
+    padding: 18px 14px;
+  }
+
+  .heading,
+  .headingActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .orderTitle {
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .orderToggle {
+    gap: 8px;
+  }
+
+  .orderPreview {
+    display: none;
+  }
+
+  .invoiceButton {
+    max-width: 110px;
+    padding: 0 7px;
+    font-size: 10px;
+    white-space: normal;
+  }
+
+  .paymentSummary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px 10px 0;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+    padding: 0 14px 14px;
+  }
+
+  .orderList {
+    padding: 14px 8px 4px;
+  }
+
+  .orderFooter {
+    flex-direction: column;
+  }
+
+  .paymentInfo {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .statusControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

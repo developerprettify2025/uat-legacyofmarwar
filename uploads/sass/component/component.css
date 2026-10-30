@@ -1,0 +1,231 @@
+@keyframes shine {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+.banner.hero_banner::before {
+  background: linear-gradient(0deg, #000000, rgba(0, 0, 0, 0)), linear-gradient(180deg, #000000, rgba(0, 0, 0, 0));
+}
+.banner.hero_banner .bg {
+  height: calc(100vh - var(--headerfixed));
+}
+@media only screen and (max-width: 768px) {
+  .banner.hero_banner .bg {
+    height: 80vh;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .banner.hero_banner .bg {
+    height: 500px;
+  }
+}
+.banner.hero_banner .banner-wrapper {
+  top: unset;
+  bottom: 15%;
+  translate: 0 15%;
+}
+.banner.hero_banner .banner-wrapper .heading {
+  text-align: center;
+  margin: 0 auto;
+}
+.banner.hero_banner .banner-wrapper .heading h6 {
+  font-size: 30px;
+  color: var(--white);
+  line-height: 1.3;
+}
+@media only screen and (max-width: 991px) {
+  .banner.hero_banner .banner-wrapper .heading h6 {
+    font-size: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .banner.hero_banner .banner-wrapper .heading h6 {
+    font-size: 20px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .banner.hero_banner .banner-wrapper .heading h6 {
+    font-size: 16px;
+  }
+}
+.banner.hero_banner .banner-wrapper .heading p {
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.4;
+}
+.banner.hero_banner .banner-wrapper .heading .btn {
+  margin: 25px auto 0;
+}
+
+.listing_card {
+  position: relative;
+  display: block;
+  background: var(--white);
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(149, 157, 165, 0.2);
+}
+.listing_card:hover .wishlistBtn svg.close path {
+  stroke: white;
+}
+.listing_card:hover figure .hoverImg, .listing_card:hover .figure .hoverImg {
+  transform: scale(1);
+  opacity: 1;
+}
+.listing_card:hover figcaption h6, .listing_card:hover figcaption .h6 {
+  color: var(--secondary);
+}
+.listing_card .wishlistBtn {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+.listing_card .wishlistBtn.active svg:not(.close) path {
+  fill-opacity: 1;
+  fill: var(--secondary);
+}
+.listing_card .wishlistBtn.active svg.close path {
+  stroke: white;
+}
+.listing_card .wishlistBtn .close {
+  width: 35%;
+  height: 35%;
+  transition: 0.5s ease;
+}
+.listing_card .wishlistBtn svg, .listing_card .wishlistBtn img {
+  width: 40%;
+  height: 40%;
+}
+.listing_card figure, .listing_card .figure {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  height: 390px;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  position: relative;
+}
+.listing_card figure::before, .listing_card .figure::before {
+  content: "";
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: white;
+  box-shadow: 0 0 55px 12px white;
+  transform: skewX(-20deg);
+  z-index: 1;
+}
+.listing_card figure:hover::before, .listing_card .figure:hover::before {
+  animation: shine 0.4s linear;
+  animation-fill-mode: none;
+}
+@media only screen and (max-width: 540px) {
+  .listing_card figure, .listing_card .figure {
+    height: auto;
+  }
+}
+.listing_card figure img, .listing_card .figure img {
+  display: block;
+  border-radius: inherit;
+}
+.listing_card figure .hoverImg, .listing_card .figure .hoverImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: 0.6s ease;
+  opacity: 0;
+  transform: scale(1.2);
+}
+.listing_card figcaption {
+  padding: 15px 25px 25px;
+}
+@media only screen and (max-width: 991px) {
+  .listing_card figcaption {
+    padding: 15px 20px 25px;
+  }
+}
+.listing_card figcaption h6, .listing_card figcaption .h6 {
+  display: block;
+  font-family: var(--euclidflex);
+  font-size: 22px;
+  line-height: 1.2;
+  margin-bottom: 3px;
+  color: var(--black) !important;
+  transition: 0.5s ease;
+}
+@media only screen and (max-width: 540px) {
+  .listing_card figcaption h6, .listing_card figcaption .h6 {
+    font-size: 18px;
+  }
+}
+.listing_card figcaption .desc {
+  font-size: 14px;
+  line-height: 1.3;
+  height: 37px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.listing_card figcaption .price {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 5px;
+}
+.listing_card figcaption .price .sp {
+  color: var(--text);
+  font-weight: 400;
+}
+.listing_card figcaption .price .mrp {
+  color: rgba(0, 0, 0, 0.6980392157);
+  font-weight: 300;
+  text-decoration: line-through;
+}
+
+.contact_form {
+  position: sticky;
+  top: var(--headerheight);
+  padding: 20px 35px 40px;
+  box-shadow: 0px 2px 8px 0 rgba(99, 99, 99, 0.2);
+  border-radius: 10px;
+}
+.contact_form .icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+}
+.contact_form .icon img, .contact_form .icon svg {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.contact_form .form-grid {
+  --gaptb: 28px;
+}
+.contact_form .btn_wrap {
+  margin-top: 35px;
+  justify-content: center;
+}
+.contact_form .btn_wrap .btn {
+  --padding: 22px;
+}/*# sourceMappingURL=component.css.map */

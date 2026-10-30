@@ -1,0 +1,282 @@
+.page {
+  min-height: 100%;
+  padding: 22px 26px;
+  background: #f5f7fb;
+}
+
+.panel {
+  width: min(100%, 1060px);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #e8edf4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, .055);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 28px;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.header h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 20px;
+}
+
+.header p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.backButton {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: 0 13px;
+  border: 1px solid #dbe3ed;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.form {
+  display: grid;
+  gap: 22px;
+  padding: 24px 28px 30px;
+}
+
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.section h2 {
+  margin: 0;
+  color: #334155;
+  font-size: 15px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.field label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.field input,
+.field select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dbe3ed;
+  border-radius: 8px;
+  background: #fff;
+  color: #1e293b;
+  font: inherit;
+  font-size: 13px;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: #93c5fd;
+  outline: 3px solid rgba(59, 130, 246, .12);
+}
+
+.field select:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.helpText {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.error,
+.errorBanner {
+  color: #b91c1c;
+  font-size: 12px;
+}
+
+.errorBanner {
+  margin: 18px 28px 0;
+  font-size: 13px;
+}
+
+.addressPreview {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.addressPreview strong {
+  color: #334155;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.addItemButton,
+.removeItemButton {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid #dbe3ed;
+  border-radius: 7px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.addItemButton {
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.addItemButton:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.itemList {
+  display: grid;
+  gap: 12px;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px 120px auto;
+  align-items: end;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #fbfdff;
+}
+
+.itemPrice {
+  display: grid;
+  gap: 7px;
+  min-height: 42px;
+  align-content: center;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.itemPrice strong {
+  color: #334155;
+  font-size: 13px;
+}
+
+.removeItemButton {
+  color: #b91c1c;
+}
+
+.orderTotal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  padding-top: 12px;
+  border-top: 1px solid #e8edf3;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.orderTotal strong {
+  color: #153349;
+  font-size: 19px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.submitButton {
+  min-height: 40px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 8px;
+  background: #153349;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.submitButton:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.loading {
+  padding: 24px 28px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 12px;
+  }
+
+  .header {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .form {
+    padding: 20px 18px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .itemRow {
+    grid-template-columns: 1fr 100px;
+  }
+
+  .itemPrice {
+    grid-column: 1;
+  }
+
+  .removeItemButton {
+    grid-column: 2;
+  }
+}

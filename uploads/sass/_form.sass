@@ -1,0 +1,324 @@
+@import './_var'
+
+.form
+    --inputsize: 48px
+    --labelbefore: var(--text)
+    --labelafter: var(--secondary)
+    --borderbefore: var(--text)
+    --borderafter: var(--secondary)
+    --labelfontbefore: 16px
+    --labelfontafter: 14px
+    --font: 500
+    --inputsize: 42px
+    --color: var(--black)
+    --borderwidth: 1px
+    --labelbackground: none
+    --font: normal
+    --textareaheight: 86px
+    --paddingleftright: 0px
+.form-group
+    position: relative
+    flex: 0 1 100%
+    max-width: 100%
+    width: 100%
+    --selectheight: var(--inputsize)
+    line-height: 0
+    &.active
+        &::after
+            width: 100%
+    &::before,&::after
+        content: ''
+        position: absolute
+        bottom: 0
+        left: 0
+        right: 0
+        height: var(--borderwidth)
+        transition: .5s ease
+    &::before
+        background: var(--borderbefore)
+    &::after
+        width: 0
+        background: var(--borderafter)
+    .error
+        color: red
+        font-size: 12px
+        line-height: normal
+        position: absolute
+        top: calc(100% + 3px)
+        left: 0
+        right: 0
+        &.static
+            position: static
+            margin: 10px 0
+    label
+        font-weight: var(--font)
+        position: absolute
+        top: calc((var(--inputsize) / 2) - (var(--labelfontbefore) / 2))
+        left: var(--paddingleftright)
+        color: var(--labelbefore)
+        line-height: 1
+        font-size: var(--labelfontbefore)
+        background: none
+        transition: .3s ease
+        user-select: none
+        pointer-events: none
+    input,textarea
+        height: calc(var(--inputsize) - var(--borderwidth))
+        border: none
+        resize: none
+        border-radius: 0px !important
+        width: 100%
+        background: none
+        color: var(--color)
+        font-size: inherit
+        font-family: inherit
+        cursor: initial
+        padding: 0 var(--paddingleftright)
+        &:focus,&.valid
+            outline: none
+            & ~ label
+                font-size: var(--labelfontafter)
+                color: var(--labelafter)
+                top: calc(var(--labelfontafter) / -2)
+                // background: var(--labelbackground)
+    textarea
+        height: var(--textareaheight)
+        border: none
+        resize: none
+        border-radius: 0px !important
+        width: 100%
+        background: none
+        color: var(--color)
+        font-size: inherit
+        font-family: inherit
+        line-height: 1.2
+        cursor: initial
+        @include scrollbar(2px,none,$primary,15px)
+        padding: 0 var(--paddingleftright)
+        padding-right: 15px
+        &:focus,&.valid
+            outline: none
+            margin-top: 13px
+            height: calc(var(--textareaheight) - 13px)
+    select
+        &:focus
+            outline: none
+        & ~ label
+            position: absolute
+            top: calc(var(--labelfontafter) / -2)
+            left: var(--paddingleftright)
+            color: var(--labelafter)
+            translate: 0 0
+            font-size: var(--labelfontafter)
+            opacity: 0
+            transition: .6s ease
+        &.valid
+            color: var(--color)
+            & ~ label
+                opacity: 1
+            
+    &.file-input
+        .form-control.valid
+            ~ .file-name
+                --color: var(--black)
+        .file-type
+            color: var(--text)
+            font-size: 12px
+            line-height: normal
+            position: absolute
+            top: calc(100% + 3px)
+            left: 0
+            right: 0
+        input[type="file"]
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            bottom: 0
+            width: 100%
+            height: 100%
+            opacity: 0
+            z-index: 4
+            cursor: pointer
+        .error
+            text-align: right
+        .file-name
+            pointer-events: none
+            height: calc(var(--inputsize) - var(--borderwidth))
+            position: relative
+            --filename: 'Attach Your CV*'
+            --filenameinitial: var(--filename)
+            --color: var(--text)
+            --background: none
+            --image: url(/icon/clip.svg) no-repeat
+            appearance: none
+            line-height: calc(var(--inputsize) - var(--borderwidth))
+            &::before,&::after
+                position: absolute
+                top: 0
+                bottom: 0
+                left: 0
+                right: 0
+            &::before
+                content: var(--filenameinitial)
+                z-index: 2
+                font-family: inherit
+                font-size: inherit
+                line-height: calc(var(--inputsize) - var(--borderwidth))
+                padding-left: var(--paddingleftright)
+                color: var(--color)
+                width: 80%
+                overflow: hidden
+                text-overflow: ellipsis
+                background: none
+            &::after
+                content: ''
+                right: 0
+                background: var(--image)
+                background-repeat: no-repeat
+                z-index: 1
+                background-position: calc(100% - var(--paddingleftright,0)) 50%
+                background-size: auto 50%
+.submit-grp
+    &:not(.text-left)
+        text-align: center
+        margin-top: 23px
+.custom-select
+    max-width: 100%
+    cursor: pointer
+    display: block
+    font-family: inherit
+    height: var(--selectheight)
+    position: relative
+    transition: all .2s ease-in-out
+    user-select: none
+    white-space: nowrap
+    padding: 0 var(--paddingleftright)
+    --arrow: 15px
+    --arrowspace: 8px
+    --paddingleftright: 0
+    &.valid
+        .current
+            color: $black
+    &.has-icon
+        --iconsize: 12px
+        --iconurl: url(/icon/location-gradient.svg)
+        --iconspace: 8px
+        @include after
+        &::after
+            left: 0
+            width: var(--iconsize)
+            background-image: var(--iconurl)
+            background-repeat: no-repeat
+            background-size: 100% auto
+            background-position: 0 50%
+        .current
+            padding-left: calc(var(--iconsize) + var(--iconspace))
+            padding-right: calc(var(--arrow) + var(--iconsize) + var(--arrowspace) + var(--iconspace))
+    &::before
+        content: ''
+        position: absolute
+        top: 0
+        right: var(--paddingleftright)
+        bottom: 0
+        width: var(--arrow)
+        background-image: url(/icon/arrow-down-black.svg)
+        background-position: 0 50%
+        background-repeat: no-repeat
+        background-size: 100% auto
+    .current
+        display: block
+        width: 100%
+        overflow: hidden
+        text-overflow: ellipsis
+        line-height: var(--inputsize)
+        color: var(--text)
+        font-size: var(--labelfontbefore)
+        font-weight: var(--font)
+        padding-right: calc(var(--arrow) + var(--arrowspace))
+        &.selected
+            color: var(--color)
+    .list
+        text-align: left
+        background-color: #fff
+        box-shadow: rgba(0,0,0,.16) 0px 1px 4px
+        overflow: hidden
+        position: absolute
+        top: 100%
+        left: 0
+        right: 0
+        opacity: 0
+        transform-origin: 50% 0
+        z-index: 7
+        max-height: 180px
+        overflow-y: auto
+        border-bottom-left-radius: 10px
+        border-bottom-right-radius: 10px
+        @include scrollbar(4px,none,$text,5px)
+        pointer-events: none
+        li
+            display: block
+            line-height: 1.2
+            padding: 8px 16px
+            white-space: break-spaces
+            font-size: 14px
+            &.selected
+                background: $secondary
+                color: $white
+                &:hover
+                    background: $secondary
+                    color: $white
+            &:hover
+                background: #e2e2e2
+    &.open
+        .list
+            opacity: 1
+            pointer-events: auto
+            transform: scale(1) translateY(0)
+
+.filter-ul
+    li
+        @include checkbox-full
+        &:not(:last-child)
+            margin-bottom: 10px
+        p
+            font-size: 14px
+            color: $text
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active
+    border-radius: 50%
+    background: $black
+    border-color: $black
+    height: 17px
+    width: 17px
+    border: none !important
+    top: 50%
+    translate: 0 -50%
+    &:focus
+        outline: none
+.ui-slider-horizontal
+    height: 2px
+    border: none !important
+.ui-widget-content
+    background: #CECECE
+    border: none !important
+.ui-widget-header
+    background: $black
+
+.checkbox-full
+    @include checkbox-full
+
+.radio-full
+    @include radio-full
+
+.error
+    color: red
+    font-size: 12px
+    line-height: normal
+    position: absolute
+    top: calc(100% + 3px)
+    left: 0
+    right: 0
+    &.static
+        position: static
+        margin: 10px 0

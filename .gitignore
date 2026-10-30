@@ -1,0 +1,11 @@
+.next
+node_modules
+.env
+dist
+build
+db.js
+.htaccess
+uploads/OnlineImages/
+package-lock.json
+next.config.ts
+next-env.d.ts

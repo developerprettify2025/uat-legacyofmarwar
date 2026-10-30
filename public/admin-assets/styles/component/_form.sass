@@ -1,0 +1,170 @@
+@import '../_var'
+
+
+.form-group
+    label
+        display: block
+        line-height: 20px
+        margin-bottom: 4px
+    input,textarea, select
+        width: 100%
+    .select2
+        width: 100% !important
+
+.form
+    --item: 3
+    --gaplr: 16px
+    --gaptb: 24px
+    display: grid
+    grid-template-columns: repeat(var(--item), calc((100% - (var(--gaplr) * (var(--item) - 1))) / var(--item)))
+    gap: var(--gaptb) var(--gaplr)
+    @include media(767)
+        --item: 1
+        --gaptb: 12px
+    &.gap-medium
+        --gaplr: 12px
+        --gaptb: 16px
+    &.gap-equal-1
+        --gaplr: 10px
+        --gaptb: 10px
+    &.gap-equal-2
+        --gaplr: 15px
+        --gaptb: 15px
+    &.gap-equal-3
+        --gaplr: 20px
+        --gaptb: 20px
+    &.form-1
+        --item: 1
+    &.form-2
+        --item: 2
+    &.form-4
+        --item: 4
+        @include media(767)
+            --item: 1
+    &.form-5
+        --item: 5
+        @include media(767)
+            --item: 1
+    .form-title
+        grid-column: span var(--item)
+        display: flex
+        align-items: center
+        justify-content: space-between
+        p
+            color: var(--black)
+            font-size: 16px
+            @include font(600)
+    .full
+        grid-column: span var(--item)
+    .span-2
+        grid-column: span 2
+    .span-3
+        grid-column: span 3
+    .span-4
+        grid-column: span 4
+    .span-5
+        grid-column: span 5
+    .span-6
+        grid-column: span 6
+    
+.form-wrap
+    &:not(:last-child)
+        margin-bottom: 3rem
+        @include media(767)
+            margin-bottom: 1rem
+    & ~ hr
+        margin: 3rem 0
+        @include media(767)
+            margin: 1rem 0
+
+// +++++++++++++++++++++++++++ INFO GRAPHIC SASS +++++++++++++++++++++++++++++++
+@for $col from 1 through 12
+  .grid-#{$col} 
+    display: grid
+    grid-template-columns: repeat(#{$col}, 1fr)
+
+.floor_wrapper
+    .unit_title
+        display: flex
+        justify-content: space-between
+        align-items: center
+        .graphic_info
+            position: relative
+            display: flex
+            align-items: center
+            justify-content: center
+            gap: 10px
+            .info
+                font-size: 14px 
+                font-weight: 500
+                --pl: 20px
+                line-height: 1.2
+                color: #666
+                padding-right: var(--pl)
+                position: relative
+                cursor: pointer
+                &::before
+                    content: ""
+                    position: absolute
+                    width: 15px
+                    height: 15px
+                    border-radius: 50%
+                    left: calc(-1 * var(--pl))
+                    background-color: #000
+                &.av
+                    &::before
+                        background-color: #CBE5A2
+                &.so
+                    &::before
+                        background-color: #FFA3AC
+                &.hd
+                    &::before
+                        background-color: #FEEC80
+    .floor_unit_grid
+        margin: 30px 0 50px
+        grid-gap: 1px
+        max-height: 340px
+        overflow-y: auto
+        &::-webkit-scrollbar
+            width: 4px
+            height: 4px
+            background: none
+        &::-webkit-scrollbar-track
+            box-shadow: none
+        &::-webkit-scrollbar-thumb
+            border-radius: 30px
+            background-color: var(--general-e)
+        .unit_col
+            width: 100%
+            background-color: #CBE5A2
+            border-radius: 5px
+            padding: 10px
+            display: flex
+            flex-direction: column
+            gap: 30px
+            cursor: pointer
+            &:hover
+                opacity: 0.8
+            &.so
+                background-color: #FFA3AC
+            &.hd
+                background-color: #FEEC80
+            .top_bar
+                width: 100%
+                display: flex
+                justify-content: space-between
+                span
+                    font-size: 14px
+                    line-height: 1.2
+                    font-weight: 600
+                    color: #000
+            .bt_bar
+                writing-mode: sideways-lr
+                span
+                    font-size: 14px
+                    font-weight: 400
+                    color: #000000B2
+                p
+                    font-size: 16px
+                    font-weight: 600
+                    color: #000

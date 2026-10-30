@@ -1,0 +1,366 @@
+
+// Font Family
+$antiga: var(--antiga)
+$louizeTrial: var(--louize)
+$sweetSans: var(--sweetsans)
+$euclidflex: var(--euclidflex)
+
+// Color
+
+$primary: var(--primary)
+$secondary: var(--secondary)
+$colortext: var(--colortext)
+$btncolor: var(--btncolor)
+$red: var(--red)
+$green: var(--green)
+$text: var(--text)
+$white: var(--white)
+$black: var(--black)
+$gray: var(--gray)
+
+//fiter
+
+$white-filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(1%) hue-rotate(236deg) brightness(103%) contrast(101%)
+$black-filter: brightness(0) saturate(100%)
+
+//mixins
+
+@mixin text-space($size:16px)
+    font-size: $size
+    line-height: 19.28px
+    letter-spacing: 0.1em
+    text-align: left
+    text-transform: uppercase
+@mixin container
+    max-width: var(--container)
+    width: 100%
+    margin: 0 auto
+    @include media(1300)
+        padding: 0 25px
+    @include media(767)
+        padding: 0 15px
+    @include media(345)
+        padding: 0 13px
+    @include media(320)
+        padding: 0 10px
+    &.container2
+        @include media(675)
+            padding-right: 0
+        .heading
+            @include media(675)
+                padding-right: 15px
+            @include media(345)
+                padding-right: 13px
+            @include media(320)
+                padding-right: 10px
+@mixin media($screen)
+    @media only screen and (max-width: $screen+px)
+        @content
+@mixin media-min($screen)
+    @media only screen and (min-width: $screen+px)
+        @content
+
+@mixin font($weight)
+    font-weight: $weight
+
+@mixin before($background: none)
+    position: relative
+    &::before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        z-index: 0
+        pointer-events: none
+        user-select: none
+        background: $background
+        transition: .5s ease
+
+@mixin after($background: none)
+    &::after
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        z-index: 0
+        pointer-events: none
+        user-select: none
+        background: $background
+        transition: .5s ease
+
+@mixin line-clamp($line: 3)
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: $line
+    text-overflow: ellipsis
+    overflow: hidden
+
+@mixin flex
+    display: flex
+    flex-wrap: wrap
+
+@mixin flex-wrap($item, $gaplr, $gaptb)
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    gap: $gaptb $gaplr
+    > *
+        flex: 0 1 calc((100% - #{$gaplr * ($item - 1)}) / #{$item})
+        max-width: calc((100% - #{$gaplr * ($item - 1)}) / #{$item})
+        width: 100%
+
+@mixin scrollbar($width: 2px,$background: none,$color : rgb(0 0 0 / .3),$radius: 10px)
+    &::-webkit-scrollbar
+        width: $width
+        background: $background
+        height: $width
+    &::-webkit-scrollbar-track
+        box-shadow: none
+    &::-webkit-scrollbar-thumb
+        background-color: $color
+        border-radius: $radius
+
+@mixin size($size)
+    height: $size
+    width: $size
+
+@keyframes shine
+    from
+        opacity: 0
+        left: 0%
+    50%
+        opacity: 1
+    to
+        opacity: 0
+        left: 100%
+
+@mixin shine
+    position: relative
+    &::before
+        content: ""
+        display: block
+        width: 0px
+        height: 86%
+        position: absolute
+        top: 7%
+        left: 0%
+        opacity: 0
+        background: white
+        box-shadow: 0 0 55px 12px white
+        transform: skewX(-20deg)
+        z-index: 1
+    &:hover
+        &::before
+            animation: shine 0.4s linear
+            animation-fill-mode: none
+
+@mixin radio($checkbox: false)
+    --size: 17px
+    display: inline-block
+    height: var(--size)
+    width: var(--size)
+    border: 1px solid $primary
+    border-radius: 50%
+    position: relative
+    appearance: none
+    padding: 0
+    background: transparent
+    @if $checkbox == true
+        &:checked
+            background: $primary
+            outline-offset: -4px
+            outline: 2px solid var(--white)
+
+@mixin checkbox($checkbox: false, $color: null)
+    --size: 20px
+    height: var(--size)
+    width: var(--size)
+    position: relative
+    padding: 0
+    border-radius: 5px
+    background: #D9D9D9
+    pointer-events: none
+    &::before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        z-index: 2
+        background: url(/icon/tick-white.svg) no-repeat
+        background-position: 50% 50%
+        background-size: 10px auto
+        opacity: 0
+    @if $checkbox == true
+        appearance: none
+        pointer-events: all
+        &:checked
+            background: $primary
+            &::before
+                opacity: 1
+    @if $color != null
+        background: $color
+        &:checked
+            background: $primary
+@mixin checkbox-full
+    position: relative
+    --size: 20px
+    display: flex
+    line-height: normal
+    align-items: center
+    &:has(input:checked)
+        .check-span
+            background: $primary
+            &::before
+                opacity: 1
+    input
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        height: 100%
+        width: 100%
+        opacity: 0
+        appearance: none
+        z-index: 2
+    .check-span
+        flex: 0 1 auto
+        display: block
+        @include checkbox
+    p
+        padding-left: 14px
+
+@mixin radio-full
+    position: relative
+    --size: 20px
+    display: flex
+    line-height: normal
+    align-items: center
+    &:has(input:checked)
+        .check-span
+            background: $primary
+            outline-offset: -4px
+            outline: 2px solid var(--white)
+            background: $primary
+    input
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        height: 100%
+        width: 100%
+        opacity: 0
+        appearance: none
+        z-index: 2
+    .check-span
+        flex: 0 1 auto
+        display: block
+        @include radio
+    p
+        padding-left: 14px
+
+@mixin after-blur
+    position: relative
+    z-index: 0
+    &::after
+        content: ""
+        position: absolute
+        width: 200px
+        height: 200px
+        background-color: #FFFFFF26
+        filter: blur(100px)
+        border-radius: 50%
+        z-index: -1
+
+@mixin before-blur
+    position: relative
+    z-index: 0
+    &::before
+        content: ""
+        position: absolute
+        width: 200px
+        height: 200px
+        background-color: #FFFFFF33
+        filter: blur(100px)
+        border-radius: 50%
+        z-index: -1
+
+@mixin border-grad
+    &:hover
+        &::before
+            opacity: 1
+            position: relative
+    &::before
+        content: ""
+        position: absolute
+        inset: 0
+        padding: 3px 0
+        background: linear-gradient(93deg, #030735 25%, #fff 50%, #030735 85%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        z-index: -1
+        opacity: 0
+        transition: .5s ease
+
+@mixin border-grad-after
+    &:hover
+        &::after
+            opacity: 1
+            position: relative
+    &::after
+        content: ""
+        position: absolute
+        inset: 0
+        padding: 3px 0
+        background: linear-gradient(93deg, #030735 25%, #fff 50%, #030735 85%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        z-index: -1
+        opacity: 0
+        transition: .5s ease
+
+@mixin before-border-grad
+    position: relative
+    &::before
+        content: ""
+        position: absolute
+        inset: 0
+        padding-top: 3px
+        background: linear-gradient(93deg, #030735 25%, #fff 50%, #030735 85%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        z-index: 1
+        transition: .5s ease
+
+@mixin after-border-grad
+    position: relative
+    &::after
+        content: ""
+        position: absolute
+        inset: 0
+        padding-bottom: 3px
+        background: linear-gradient(93deg, #030735 25%, #fff 50%, #030735 85%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        z-index: 1
+        transition: .5s ease
+
+@mixin hasDropdown()
+    content: ""
+    background-image: url(/icon/arrow-down-black.svg)
+    background-repeat: no-repeat
+    background-position-y: 50%
+    background-position-x: 100%
+    background-size: var(--arrowsize) auto
+    padding-right: calc(var(--arrowsize) + var(--space))

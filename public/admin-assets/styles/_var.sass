@@ -1,0 +1,57 @@
+@mixin media($screen)
+  @media only screen and (max-width: $screen+px)
+      @content
+
+@mixin font($weight: 400)
+    font-family: "Inter-#{$weight}"
+
+
+@mixin flex
+  display: flex
+  flex-wrap: wrap
+
+
+@mixin scrollbar($width: 3px,$background: none,$color : rgb(0 0 0 / .2),$radius: 10px)
+    &::-webkit-scrollbar
+        width: $width
+        height: $width
+        background: $background
+    &::-webkit-scrollbar-track
+        box-shadow: none
+    &::-webkit-scrollbar-thumb
+        background-color: $color
+        border-radius: $radius
+
+@mixin radio-btn($size: 20px)
+  height: $size
+  width: $size
+  border: 1px solid var(--general-f)
+  border-radius: 50%
+  position: relative
+  appearance: none
+  padding: 0
+  background: var(--white)
+
+@mixin check-box($size: 20px)
+    height: $size
+    width: $size
+    border-color: var(--general-f)
+    position: relative
+    appearance: none
+    padding: 0
+    border: 1px solid var(--general-f)
+    border-radius: 5px
+    &::before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        transition: .2s ease
+        z-index: 2
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAHCAYAAAAxrNxjAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAA9SURBVHgBhc3BDQAgCAPAuon7L+EoHaUS5aVFSQgBjtDwCEk9ysAPRVI7iGyY1xat3TmwqLi+UfHKI4Mtmtl1ka98m+YiAAAAAElFTkSuQmCC')
+        background-position: 50% 55%
+        background-repeat: no-repeat
+        background-size: 10px 7px
+        opacity: 0

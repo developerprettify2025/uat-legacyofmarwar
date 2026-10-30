@@ -1,0 +1,582 @@
+.page {
+  min-height: 100%;
+  padding: 24px 26px;
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(219, 234, 254, 0.45), transparent 35%),
+    #f5f7fb;
+}
+
+.formCard {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: 0 30px 26px;
+  overflow: hidden;
+  border: 1px solid #e8edf4;
+  border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.055);
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding: 24px 0 20px;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+.formHeader h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: #718096;
+  font-size: 13px;
+}
+
+.headerBack,
+.cancelButton {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.headerBack:hover,
+.cancelButton:hover {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.formCard :global(.form-group-row) {
+  gap: 20px;
+}
+
+.formCard :global(.form-group) {
+  min-width: min(250px, 100%);
+  margin-bottom: 19px;
+}
+
+.formCard :global(.form-group label) {
+  margin-bottom: 7px;
+  color: #344256;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.formCard :global(.form-group input:not([type="file"])),
+.formCard :global(.form-group textarea),
+.formCard :global(.form-group select) {
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #dce3ec;
+  border-radius: 9px;
+  background-color: #fff;
+  color: #263449;
+  font-size: 13px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.formCard :global(.form-group input:focus),
+.formCard :global(.form-group textarea:focus),
+.formCard :global(.form-group select:focus) {
+  border-color: #93c5fd;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.uploadRow {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px !important;
+  margin: 3px 0 20px;
+}
+
+.uploadColumn {
+  min-width: 0;
+  padding: 17px 18px 12px;
+  border: 1px solid #e5eaf1;
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.uploadColumn :global(.form-group) {
+  margin: 0;
+}
+
+.fieldHint {
+  margin: -2px 0 10px;
+  color: #8290a3;
+  font-size: 11px;
+}
+
+.occasionSection {
+  margin: 8px 0 22px;
+  padding: 20px;
+  border: 1px solid #e5eaf1;
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.occasionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.occasionHeading h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 17px;
+}
+
+.occasionHeading > span {
+  color: #718096;
+  font-size: 12px;
+}
+
+.occasionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.occasionOption {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #344256;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.occasionOption input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #2563eb;
+}
+
+.productColorSection {
+  margin: 8px 0 22px;
+  padding: 20px;
+  border: 1px solid #e5eaf1;
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.colorSwatch {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+}
+
+.productColorList {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.productColorCard {
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.productColorCard legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 5px;
+  color: #263449;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.productColorFields {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.productColorField {
+  display: grid;
+  gap: 6px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.productColorField input {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid #dce3ec;
+  border-radius: 8px;
+  color: #263449;
+  font-size: 13px;
+}
+
+.productColorField input[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.productColorField select {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid #dce3ec;
+  border-radius: 8px;
+  background: #fff;
+  color: #263449;
+  font-size: 13px;
+}
+
+.fileInput {
+  width: 100%;
+  min-height: 42px;
+  padding: 7px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.imagePreview,
+.bannerPreview {
+  display: block;
+  max-width: 100%;
+  margin-top: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f1f5f9;
+  object-fit: cover;
+}
+
+.imagePreview {
+  width: 140px;
+  height: 92px;
+}
+
+.bannerPreview {
+  width: min(100%, 320px);
+  height: 92px;
+}
+
+.descriptionGroup {
+  margin: 0 0 21px !important;
+}
+
+.editorFrame {
+  overflow: hidden;
+  border: 1px solid #dce3ec;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.editorFrame :global(.sun-editor) {
+  border: 0 !important;
+}
+
+.editorFrame :global(.se-toolbar) {
+  outline: 0;
+}
+
+.formCard :global(.statusac) {
+  display: inline-flex;
+  box-sizing: border-box;
+  height: 42px;
+  align-self: flex-end;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 19px;
+  padding: 0 13px;
+  border: 1px solid #e5eaf1;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.orderStatusRow {
+  align-items: flex-end;
+}
+
+.testimonialDetailsRow {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 250px) auto;
+  align-items: end;
+  gap: 20px !important;
+}
+
+.testimonialVideoField {
+  margin-bottom: 19px !important;
+}
+
+.testimonialDetailsRow .testimonialDescriptionField {
+  min-width: 0;
+  margin-bottom: 19px;
+}
+
+.testimonialDescriptionField textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 76px;
+  padding: 9px 12px;
+  border: 1px solid #dce3ec;
+  border-radius: 9px;
+  background: #fff;
+  color: #263449;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.testimonialDescriptionField textarea:focus {
+  border-color: #93c5fd;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.wordCounter {
+  display: block;
+  margin-top: 5px;
+  color: #718096;
+  font-size: 11px;
+  text-align: right;
+}
+
+.testimonialDetailsRow .testimonialOrderField {
+  min-width: 0;
+}
+
+.formCard :global(.testimonialStatusField) {
+  width: max-content;
+  align-self: end;
+  margin-bottom: 19px;
+}
+
+.formCard :global(.statusac input[type="checkbox"]) {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #2563eb;
+}
+
+.formCard :global(.statusac label) {
+  margin: 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.seoSection {
+  margin: 0 0 20px;
+  padding: 20px;
+  border: 1px solid #e5eaf1;
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.sectionHeading .eyebrow {
+  margin-bottom: 4px;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+  color: #263449;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sectionHeading > span {
+  padding: 5px 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.seoSection :global(.form-group:last-child) {
+  margin-bottom: 0;
+}
+
+.formActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid #edf1f5;
+}
+
+.formActions .cancelButton,
+.saveButton {
+  box-sizing: border-box;
+  width: 112px;
+  height: 42px;
+  min-height: 42px;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.saveButton {
+  border: 0;
+  border-radius: 9px;
+  background: #2563eb;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.saveButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #1d4ed8;
+}
+
+.saveButton:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.headerBack:focus-visible,
+.cancelButton:focus-visible,
+.saveButton:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.25);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 16px;
+  }
+
+  .formCard {
+    padding: 0 18px 20px;
+    border-radius: 14px;
+  }
+
+  .formHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 19px;
+    padding-top: 20px;
+  }
+
+  .formHeader h1 {
+    font-size: 20px;
+  }
+
+  .uploadRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px !important;
+  }
+
+  .testimonialDetailsRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0 !important;
+  }
+
+  .testimonialVideoField {
+    margin-bottom: 19px;
+  }
+
+  .formCard :global(.testimonialStatusField) {
+    margin-bottom: 19px;
+  }
+
+  .seoSection {
+    padding: 16px;
+  }
+
+  .productColorFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .page {
+    padding: 10px;
+  }
+
+  .formCard {
+    padding: 0 14px 16px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+  }
+
+  .formActions > * {
+    width: 100%;
+  }
+
+  .productColorSection {
+    padding: 14px;
+  }
+
+  .productColorFields {
+    grid-template-columns: 1fr;
+  }
+}

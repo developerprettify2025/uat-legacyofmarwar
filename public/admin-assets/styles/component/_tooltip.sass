@@ -1,0 +1,41 @@
+@import '../_var'
+
+[data-tooltip-top],
+[data-tooltip-bottom],
+[data-tooltip-left],
+[data-tooltip-right]
+    position: relative
+    cursor: pointer
+    --color: var(--black)
+    --background: var(--white)
+    --triangle: 5px
+    &::before,&::after
+        content: ''
+        position: absolute
+    &::before
+        background: var(--general-g)
+        font-size: 12px
+        border-radius: 5px
+        max-width: 220px
+        width: max-content
+        text-wrap: wrap
+        z-index: 5
+        padding: 6px 20px
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
+[data-tooltip-top]
+    &::before
+        content: attr(data-tooltip-top)
+        bottom: 100%
+[data-tooltip-bottom]
+    &::before
+        content: attr(data-tooltip-bottom)
+        top: 100%
+[data-tooltip-left]
+    &::before
+        content: attr(data-tooltip-left)
+        top: 0
+        right: 100%
+[data-tooltip-right]
+    &::before
+        content: attr(data-tooltip-right)
+        left: 100%

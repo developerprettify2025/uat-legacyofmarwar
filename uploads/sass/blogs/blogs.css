@@ -1,0 +1,207 @@
+@keyframes shine {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+.blog_listing.hero_banner .banner-wrapper .heading {
+  max-width: 460px;
+}
+
+.blogs_list_sec {
+  background: rgba(245, 235, 215, 0.3607843137);
+  padding: 60px 0 100px;
+}
+.blogs_list_sec .main_wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px;
+}
+@media only screen and (max-width: 991px) {
+  .blogs_list_sec .main_wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 25px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .blogs_list_sec .main_wrapper {
+    grid-gap: 20px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .blogs_list_sec .main_wrapper {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.blogs_col {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 0px 10px rgba(149, 157, 165, 0.2);
+}
+.blogs_col:hover figure img {
+  transform: scale(1.1);
+}
+.blogs_col:hover figcaption h6 {
+  color: var(--secondary);
+}
+.blogs_col figure {
+  line-height: 0;
+  height: 270px;
+  transition: 0.5s ease;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+}
+.blogs_col figure::before {
+  content: "";
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: white;
+  box-shadow: 0 0 55px 12px white;
+  transform: skewX(-20deg);
+  z-index: 1;
+}
+.blogs_col figure:hover::before {
+  animation: shine 0.4s linear;
+  animation-fill-mode: none;
+}
+.blogs_col figure img {
+  border-radius: inherit;
+}
+.blogs_col figcaption {
+  padding: 25px 20px;
+}
+.blogs_col figcaption h6 {
+  font-family: var(--euclidflex);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--black);
+  line-height: 1.3;
+  margin-bottom: 20px;
+  transition: 0.5s ease;
+}
+@media only screen and (max-width: 768px) {
+  .blogs_col figcaption h6 {
+    font-size: 18px;
+  }
+}
+.blogs_col figcaption p {
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.banner.blog-detail-banner .bg {
+  height: calc(100vh - var(--headerfixed));
+}
+@media only screen and (max-width: 768px) {
+  .banner.blog-detail-banner .bg {
+    height: 80vh;
+  }
+}
+.banner.blog-detail-banner .bg .banner-wrapper {
+  top: unset;
+  bottom: 20%;
+  translate: 0 20%;
+}
+@media only screen and (max-width: 540px) {
+  .banner.blog-detail-banner .bg .banner-wrapper {
+    bottom: 30%;
+    translate: 0 30%;
+  }
+}
+.banner.blog-detail-banner .bg .banner-wrapper .container {
+  position: relative;
+}
+.banner.blog-detail-banner .bg .banner-wrapper .container .content {
+  max-width: 700px;
+}
+.banner.blog-detail-banner .bg .banner-wrapper .container .content p {
+  color: var(--white);
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+.banner.blog-detail-banner .bg .banner-wrapper .container .content h1 {
+  font-family: var(--euclidflex);
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 32px;
+  color: var(--white);
+}
+
+.blog_overview .main_wrapper {
+  display: flex;
+  justify-content: center;
+  --gap: 70px;
+  gap: var(--gap);
+}
+.blog_overview .main_wrapper .colA {
+  flex: 1;
+  max-width: 100%;
+  width: 100%;
+}
+.blog_overview .main_wrapper .colB {
+  flex: 0 1 auto;
+  max-width: 380px;
+  width: 100%;
+}
+.blog_overview .main_wrapper .colB .contact_form {
+  background: #FFF;
+}
+
+.more_blogs_sec {
+  background: linear-gradient(0deg, rgba(255, 247, 230, 0), #FFF7E6);
+}
+.more_blogs_sec .heading {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.more_blogs_sec .main_wrapper {
+  position: relative;
+}
+.more_blogs_sec .main_wrapper .more_slider {
+  max-width: 97%;
+  padding: 5px;
+}
+.more_blogs_sec .main_wrapper .more_slider .blogs_col {
+  box-shadow: 0 0px 6px rgba(149, 157, 165, 0.2);
+}
+
+.blog-detail-secA .website-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.blog-detail-secA .website-content h1, .blog-detail-secA .website-content h2, .blog-detail-secA .website-content h3, .blog-detail-secA .website-content h4, .blog-detail-secA .website-content h5, .blog-detail-secA .website-content h6 {
+  text-transform: none;
+}
+
+.more-blogs .heading {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.more-blogs .main_wrapper {
+  position: relative;
+}
+.more-blogs .main_wrapper .more-swiper {
+  max-width: 97%;
+}
+
+.blog_overview {
+  background: rgba(245, 235, 215, 0.3607843137);
+}/*# sourceMappingURL=blogs.css.map */

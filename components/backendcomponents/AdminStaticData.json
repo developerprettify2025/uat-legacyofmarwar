@@ -1,0 +1,146 @@
+{
+  "Menu": {
+    "items": [
+      {
+        "PageID": 1,
+        "title": "Dashbard",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><defs><path id='SVGEuPeJeiy' fill='currentColor' d='M10.75 9.5a1.25 1.25 0 1 1 2.5 0a1.25 1.25 0 0 1-2.5 0'/></defs><path fill='currentColor' d='M18.5 3H16a.5.5 0 0 0-.5.5v.059l3.5 2.8V3.5a.5.5 0 0 0-.5-.5'/><use href='#SVGEuPeJeiy' fill-rule='evenodd' clip-rule='evenodd'/><path fill='currentColor' fill-rule='evenodd' d='m20.75 10.96l.782.626a.75.75 0 0 0 .936-1.172l-8.125-6.5a3.75 3.75 0 0 0-4.686 0l-8.125 6.5a.75.75 0 0 0 .937 1.172l.781-.626v10.29H2a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-1.25zM9.25 9.5a2.75 2.75 0 1 1 5.5 0a2.75 2.75 0 0 1-5.5 0m2.8 3.75c.664 0 1.237 0 1.696.062c.492.066.963.215 1.345.597s.531.853.597 1.345c.058.43.062.96.062 1.573v4.423h-1.5V17c0-.728-.002-1.2-.048-1.546c-.044-.325-.114-.427-.172-.484s-.159-.128-.484-.172c-.347-.046-.818-.048-1.546-.048s-1.2.002-1.546.048c-.325.044-.427.115-.484.172s-.128.159-.172.484c-.046.347-.048.818-.048 1.546v4.25h-1.5v-4.3c0-.664 0-1.237.062-1.696c.066-.492.215-.963.597-1.345s.854-.531 1.345-.597c.459-.062 1.032-.062 1.697-.062z' clip-rule='evenodd'/><use href='#SVGEuPeJeiy' fill-rule='evenodd' clip-rule='evenodd'/></svg>",
+        "url": "/legacy-of-marwar-admin/dashboard",
+        "addurl": "",
+        "Show": "1"
+      },
+      {
+        "PageID": 2,
+        "title": "Mange User",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='currentColor' d='M10 13a1 1 0 1 0 1 1a1 1 0 0 0-1-1m0-4a1 1 0 1 0 1 1a1 1 0 0 0-1-1m4 0a1 1 0 1 0 1 1a1 1 0 0 0-1-1m7 4a1 1 0 0 0 0-2h-2V9h2a1 1 0 0 0 0-2h-2.18A3 3 0 0 0 17 5.18V3a1 1 0 0 0-2 0v2h-2V3a1 1 0 0 0-2 0v2H9V3a1 1 0 0 0-2 0v2.18A3 3 0 0 0 5.18 7H3a1 1 0 0 0 0 2h2v2H3a1 1 0 0 0 0 2h2v2H3a1 1 0 0 0 0 2h2.18A3 3 0 0 0 7 18.82V21a1 1 0 0 0 2 0v-2h2v2a1 1 0 0 0 2 0v-2h2v2a1 1 0 0 0 2 0v-2.18A3 3 0 0 0 18.82 17H21a1 1 0 0 0 0-2h-2v-2Zm-4 3a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1Zm-3-3a1 1 0 1 0 1 1a1 1 0 0 0-1-1'/></svg>",
+        "url": "/legacy-of-marwar-admin/manage-user",
+        "addurl": "/legacy-of-marwar-admin/addupd-user",
+        "Show": "0"
+      },
+      {
+        "PageID": 3,
+        "title": "Product Master",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 16 16'> <path d='M0 0h16v16H0z' fill='none' /> <g fill='currentColor'> <path d='M10.651 5.762a5 5 0 1 1-5.304 0l1.477 1.476A3.002 3.002 0 0 0 8 13a3 3 0 0 0 1.175-5.762z' /> <path d='M9.793 1a.5.5 0 0 1 .354.146L12 3L8 7L4 3l1.854-1.854A.5.5 0 0 1 6.207 1z' /> </g> </svg>",
+        "url": "#",
+        "addurl": "",
+        "Show": "1",
+        "MoreItem": [
+          {
+            "PageID": 4,
+            "title": "Manage Type",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-type",
+            "addurl": "/legacy-of-marwar-admin/addupd-type",
+            "Show": "0"
+          },
+          {
+            "PageID": 5,
+            "title": "Manage Category",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-category",
+            "addurl": "/legacy-of-marwar-admin/addupd-category",
+            "Show": "1"
+          },
+          {
+            "PageID": 6,
+            "title": "Manage Color",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-color",
+            "addurl": "/legacy-of-marwar-admin/addupd-color",
+            "Show": "0"
+          },
+          {
+            "PageID": 7,
+            "title": "Manage Occasion",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-occasion",
+            "addurl": "/legacy-of-marwar-admin/addupd-occasion",
+            "Show": "1"
+          },
+          {
+            "PageID": 8,
+            "title": "Manage Product",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-product",
+            "addurl": "/legacy-of-marwar-admin/addupd-product",
+            "Show": "1"
+          }
+        ]
+      },
+      {
+        "PageID": 9,
+        "title": "Manage Coupon",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 2048 2048'> <path d='M0 0h2048v2048H0z' fill='none' /> <path fill='currentColor' d='M624 832q0 36-14 68t-38 56t-56 38t-68 14t-68-14t-56-38t-38-56t-14-68t14-68t38-56t56-38t68-14t68 14t56 38t38 56t14 68m-176 80q33 0 56-23t24-57q0-33-23-56t-57-24q-33 0-56 23t-24 57q0 33 23 56t57 24m512 128q36 0 68 14t56 38t38 56t14 68t-14 68t-38 56t-56 38t-68 14t-68-14t-56-38t-38-56t-14-68t14-68t38-56t56-38t68-14m0 256q33 0 56-23t24-57q0-33-23-56t-57-24q-33 0-56 23t-24 57q0 33 23 56t57 24M842 640h108l-384 768H458zm566-256l640 640l-640 640H0V384zm-53 1152l512-512l-512-512H128v1024zm181-576q26 0 45 19t19 45t-19 45t-45 19t-45-19t-19-45t19-45t45-19' /> </svg>",
+        "url": "/legacy-of-marwar-admin/manage-coupon",
+        "addurl": "/legacy-of-marwar-admin/addupd-coupon",
+        "Show": "1"
+      },
+      {
+        "PageID": 10,
+        "title": "All Customers",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'> <path d='M0 0h24v24H0z' fill='none' /> <path fill='currentColor' d='M12 2C6.579 2 2 6.579 2 12s4.579 10 10 10s10-4.579 10-10S17.421 2 12 2m0 5c1.727 0 3 1.272 3 3s-1.273 3-3 3c-1.726 0-3-1.272-3-3s1.274-3 3-3m-5.106 9.772c.897-1.32 2.393-2.2 4.106-2.2h2c1.714 0 3.209.88 4.106 2.2C15.828 18.14 14.015 19 12 19s-3.828-.86-5.106-2.228' /> </svg>",
+        "url": "/legacy-of-marwar-admin/manage-customer",
+        "addurl": "/legacy-of-marwar-admin/addupd-customer",
+        "Show": "1"
+      },
+      {
+        "PageID": 11,
+        "title": "All Order",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'> <path d='M0 0h24v24H0z' fill='none' /> <g fill='none' stroke='currentColor' stroke-linejoin='round' stroke-width='2'> <path d='M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608z' /> <path stroke-linecap='round' d='m5 7l-.81-3.243A1 1 0 0 0 3.22 3H2m6 18h2m6 0h2' /> </g> </svg>",
+        "url": "/legacy-of-marwar-admin/manage-customer-order",
+        "addurl": "/legacy-of-marwar-admin/addupd-customer-order",
+        "Show": "1"
+      },
+      {
+        "PageID": 12,
+        "title": "All Wishlist",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'> <path d='M0 0h24v24H0z' fill='none' /> <path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.99.99 0 0 0 1.024 0C21.126 15.395 22 10.157 22 7.95C22 5.216 19.761 3 17 3s-5 3-5 3s-2.239-3-5-3' /> </svg>",
+        "url": "/legacy-of-marwar-admin/manage-customer-wishlist",
+        "addurl": "#",
+        "Show": "1"
+      },
+      {
+        "PageID": 13,
+        "title": "Manage Blogs",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'> <path d='M0 0h24v24H0z' fill='none' /> <g fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'> <path d='M4 10.419c6.068-.32 9.9 3.513 9.582 9.581' /> <circle cx='5' cy='19' r='1' /> <path d='M4 4.03C14.114 3.5 20.501 9.887 19.97 20' /> </g> </svg>",
+        "url": "/legacy-of-marwar-admin/manage-blog",
+        "addurl": "/legacy-of-marwar-admin/addupd-blog",
+        "Show": "1"
+      },
+      {
+        "PageID": 14,
+        "title": "Other Data",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 2048 2048'> <path d='M0 0h2048v2048H0z' fill='none' /> <path fill='currentColor' d='M1024 0q141 0 272 36t245 103t207 160t160 208t103 245t37 272q0 141-36 272t-103 245t-160 207t-208 160t-245 103t-272 37q-141 0-272-36t-245-103t-207-160t-160-208t-103-244t-37-273q0-141 36-272t103-245t160-207t208-160T751 37t273-37m0 1920q123 0 237-32t214-90t182-141t140-181t91-214t32-238q0-123-32-237t-90-214t-141-182t-181-140t-214-91t-238-32q-123 0-237 32t-214 90t-182 141t-140 181t-91 214t-32 238q0 123 32 237t90 214t141 182t181 140t214 91t238 32m597-880l48-144h75l-85 256h-75l-48-144l-48 144h-75l-85-256h75l48 144l48-144h74zm-464-144h75l-85 256h-75l-48-144l-48 144h-75l-85-256h75l48 144l48-144h74l48 144zm-512 0h75l-85 256h-75l-48-144l-48 144h-75l-85-256h75l48 144l48-144h74l48 144z' /> </svg>",
+        "url": "#",
+        "addurl": "#",
+        "Show": "1",
+        "MoreItem": [
+          {
+            "PageID": 15,
+            "title": "Social Media",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-social-media",
+            "addurl": "/legacy-of-marwar-admin/addupd-social-media",
+            "Show": "1"
+          },
+          {
+            "PageID": 16,
+            "title": "Page Meta",
+            "icon": "",
+            "url": "/legacy-of-marwar-admin/manage-page",
+            "addurl": "/legacy-of-marwar-admin/addupd-page",
+            "Show": "1"        
+          }
+        ]
+      },      
+      {
+        "PageID": 17,
+        "title": "Visitor Enquiry",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='currentColor' d='M4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20zm8-7L4 8v10h16V8zm0-2l8-5H4zM4 8V6v12z'/></svg>",
+        "url": "/legacy-of-marwar-admin/manage-visitor-enquiry",
+        "addurl": "#",
+        "Show": "1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,232 @@
+@keyframes shine {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+.banner.contact-banner::before {
+  background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(#000 0%, rgba(0, 0, 0, 0) 50%);
+}
+.banner.contact-banner .bg video {
+  filter: grayscale(1);
+}
+@media only screen and (max-width: 540px) {
+  .banner.contact-banner .bg .banner-wrapper .heading {
+    max-width: 250px;
+  }
+}
+
+.contact_wrapper {
+  background: #F8F7F2;
+}
+.contact_wrapper .main_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.contact_wrapper .main_wrapper .contact_col {
+  flex: 1;
+  padding: 40px 50px;
+  background: var(--white);
+  border-radius: 10px;
+  border: 1px solid #D1D0D0;
+  text-align: center;
+}
+@media only screen and (max-width: 1280px) {
+  .contact_wrapper .main_wrapper .contact_col {
+    padding: 35px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .contact_wrapper .main_wrapper .contact_col {
+    flex: 0 1 calc(50% - 10px);
+  }
+  .contact_wrapper .main_wrapper .contact_col:first-child {
+    flex: 0 1 100%;
+  }
+}
+@media only screen and (max-width: 991px) and (max-width: 768px) {
+  .contact_wrapper .main_wrapper .contact_col {
+    flex: 0 1 100%;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .contact_wrapper .main_wrapper .contact_col {
+    padding: 20px 20px 30px;
+  }
+}
+.contact_wrapper .main_wrapper .contact_col .icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 15px;
+  color: var(--secondary);
+}
+@media only screen and (max-width: 540px) {
+  .contact_wrapper .main_wrapper .contact_col .icon {
+    width: 38px;
+    height: 38px;
+  }
+}
+.contact_wrapper .main_wrapper .contact_col .icon svg {
+  width: 100%;
+  height: 100%;
+}
+.contact_wrapper .main_wrapper .contact_col h6 {
+  font-family: var(--euclidflex);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--black);
+}
+.contact_wrapper .main_wrapper .contact_col p:not(.get_directions), .contact_wrapper .main_wrapper .contact_col a:not(.get_directions) {
+  display: block;
+  font-weight: 400;
+  color: var(--text);
+  margin: 15px 0 20px;
+}
+@media only screen and (max-width: 540px) {
+  .contact_wrapper .main_wrapper .contact_col p:not(.get_directions), .contact_wrapper .main_wrapper .contact_col a:not(.get_directions) {
+    margin: 10px 0 15px;
+  }
+}
+.contact_wrapper .main_wrapper .contact_col a:not(.get_directions):hover {
+  color: var(--secondary);
+}
+.contact_wrapper .main_wrapper .contact_col .get_directions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--secondary);
+  font-weight: 500;
+}
+.contact_wrapper .main_wrapper .contact_col .get_directions:hover svg {
+  transform: translateX(5px);
+}
+.contact_wrapper .main_wrapper .contact_col .get_directions svg {
+  width: 24px;
+  transition: 0.5s ease;
+}
+.contact_wrapper .main_wrapper .contact_col .social_icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+.contact_wrapper .main_wrapper .contact_col .social_icons li {
+  --icon: 44px;
+}
+.contact_wrapper .main_wrapper .contact_col .social_icons li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon);
+  height: var(--icon);
+  color: var(--secondary);
+  border: 1px solid var(--secondary);
+  border-radius: 50%;
+}
+.contact_wrapper .main_wrapper .contact_col .social_icons li a:hover {
+  background: var(--secondary);
+}
+.contact_wrapper .main_wrapper .contact_col .social_icons li a:hover svg path {
+  fill: var(--white);
+}
+.contact_wrapper .main_wrapper .contact_col .social_icons li a svg, .contact_wrapper .main_wrapper .contact_col .social_icons li a img {
+  width: 50%;
+  height: 50%;
+  transition: 0.5s ease;
+}
+
+.contact_form {
+  background: var(--primary);
+  --container: 810px;
+  padding: 90px 0 100px;
+}
+@media only screen and (max-width: 1280px) {
+  .contact_form {
+    padding: 80px 0 90px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .contact_form {
+    padding: 60px 0 70px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .contact_form {
+    padding: 50px 0 60px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .contact_form {
+    padding: 40px 0 50px;
+  }
+}
+.contact_form .heading {
+  max-width: 430px;
+  margin: 0 auto 50px;
+  text-align: center;
+}
+@media only screen and (max-width: 768px) {
+  .contact_form .heading {
+    max-width: 360px;
+    margin: 0 auto 40px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .contact_form .heading {
+    margin: 0 auto 30px;
+  }
+}
+.contact_form .form .form-grid {
+  --item: 2;
+}
+@media only screen and (max-width: 540px) {
+  .contact_form .form .form-grid {
+    --item: 1;
+  }
+}
+.contact_form .form .btn_wrap {
+  margin-top: 50px;
+  justify-content: center;
+}
+@media only screen and (max-width: 768px) {
+  .contact_form .form .btn_wrap {
+    margin-top: 40px;
+  }
+}
+.contact_form .form .btn_wrap .btn {
+  --padding: 30px;
+}
+
+.map_section {
+  line-height: 0;
+}
+.map_section iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+  outline: none;
+  filter: grayscale(1);
+  transition: 0.5s ease;
+}
+@media only screen and (max-width: 991px) {
+  .map_section iframe {
+    height: 550px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .map_section iframe {
+    height: 500px;
+  }
+}
+.map_section iframe:hover {
+  filter: grayscale(0);
+}/*# sourceMappingURL=contact.css.map */
