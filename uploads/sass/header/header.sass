@@ -730,6 +730,8 @@ footer
     transform: translate(-50%, 100vh)
     transition: .8s ease
     z-index: 10
+    overflow-y: auto
+    @include scrollbar($width: 0)
     @include media(540) 
         max-width: 100%
         height: 100%
@@ -895,8 +897,9 @@ footer
                     margin-top: 3px                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
             .otp_wrap
                 position: relative
+                padding: 0
                 .otpInput
-                    padding: 50px 0 60px
+                    padding: 50px 0 40px
                     max-width: 230px
                     margin: 0 auto
                     @include flex
@@ -912,6 +915,11 @@ footer
                         text-align: center
                         &:focus
                             outline: none
+                .enter_new 
+                    margin-bottom: 35px
+                    .form-group-login
+                        &::before
+                            display: none
                 .otp-error
                     color: red
                     position: absolute
@@ -928,7 +936,7 @@ footer
                 text-align: center
                 color: $text
                 @include font(400)
-                margin-top: 46px
+                margin-top: 20px
                 .reg-btn
                     color: $secondary
                     margin-left: 5px

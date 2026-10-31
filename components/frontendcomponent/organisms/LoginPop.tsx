@@ -1,13 +1,24 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useState, type ChangeEvent, type ClipboardEvent, type KeyboardEvent, } from "react";
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ClipboardEvent,
+  type KeyboardEvent,
+} from "react";
 import type { SyntheticEvent, SubmitEvent } from "react";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import { useModal } from "@/hooks/useModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useCheckUserLoginMutation, useSignupCustomerMutation, useLoginByOtpMutation, useCheckUserValidMutation, } from "@/store/backendSlice/customerAPISlice";
+import {
+  useCheckUserLoginMutation,
+  useSignupCustomerMutation,
+  useLoginByOtpMutation,
+  useCheckUserValidMutation,
+} from "@/store/backendSlice/customerAPISlice";
 import { login } from "@/store/slice/authSlice";
 import toast from "react-hot-toast";
 interface userData {
@@ -20,15 +31,17 @@ interface OtpInputProps {
 }
 
 export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
-
   const nameRegex = /^[A-Za-z\s]{2,}$/;
-  const looksLikeEmail = (value : any) => /[a-zA-Z@]/.test(value);
+  const looksLikeEmail = (value: any) => /[a-zA-Z@]/.test(value);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const dispatch = useAppDispatch();
-  const [checkUserLogin, { isLoading: isCheckingLogin }] = useCheckUserLoginMutation();
-  const [signupCustomer, { isLoading: isSigningUp }] = useSignupCustomerMutation();
+  const [checkUserLogin, { isLoading: isCheckingLogin }] =
+    useCheckUserLoginMutation();
+  const [signupCustomer, { isLoading: isSigningUp }] =
+    useSignupCustomerMutation();
   const [loginByOtp, { isLoading: isLoggingIn }] = useLoginByOtpMutation();
-  const [checkUserValid, { isLoading: isCheckingValid }] = useCheckUserValidMutation();
+  const [checkUserValid, { isLoading: isCheckingValid }] =
+    useCheckUserValidMutation();
   const [customerName, setCustomerName] = useState("");
   const [isNewUser, setIsNewUser] = useState(false);
   const [otpError, setOtpError] = useState(false);
@@ -36,8 +49,9 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     CustomerPhoneNo: "",
     CustomerEmailID: "",
   });
-  const isLoading = isCheckingLogin || isSigningUp || isLoggingIn || isCheckingValid;
-  
+  const isLoading =
+    isCheckingLogin || isSigningUp || isLoggingIn || isCheckingValid;
+
   const { closeModal } = useModal();
   const { isModal } = useAppSelector((state) => state.modal);
   const [otp, setOtp] = useState<string[]>(Array(length).fill(""));
@@ -121,8 +135,10 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
 
   const normalizeMobile = (input: string) => {
     let digits = input.replace(/\D/g, "");
-    if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
-    else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+    if (digits.length === 12 && digits.startsWith("91"))
+      digits = digits.slice(2);
+    else if (digits.length === 11 && digits.startsWith("0"))
+      digits = digits.slice(1);
     return digits;
   };
 
@@ -183,12 +199,15 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       return;
     }
 
-    const payload = {CustomerPhoneNo: isEmail ? "" : mobile, CustomerEmailID: isEmail ? email : "",};
+    const payload = {
+      CustomerPhoneNo: isEmail ? "" : mobile,
+      CustomerEmailID: isEmail ? email : "",
+    };
 
     try {
       setIdentifier(payload);
       const result = await checkUserLogin(payload).unwrap();
-      console.log("result", result)
+      console.log("result", result);
       if (result.code === USER_EXISTS_CODE) {
         setLoginActive(true);
         setIsNewUser(true); // see note below
@@ -214,7 +233,6 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       return;
     }
     try {
-
       if (isNewUser === true) {
         const name = customerName.trim();
         if (!name) {
@@ -232,7 +250,9 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
         }
 
         if (!result.alreadyExists) {
-          toast.success("Welcome to the Legacy Of Marwar family! You have signed up successfully.");
+          toast.success(
+            "Welcome to the Legacy Of Marwar family! You have signed up successfully.",
+          );
         }
       }
       await loginAndDispatch(finalOtp);
@@ -276,7 +296,9 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     return fullUser;
   };
 
-  const displayIdentifier = identifier.CustomerEmailID ? identifier.CustomerEmailID : `+91 ${identifier.CustomerPhoneNo}`;
+  const displayIdentifier = identifier.CustomerEmailID
+    ? identifier.CustomerEmailID
+    : `+91 ${identifier.CustomerPhoneNo}`;
 
   return (
     <div
@@ -326,7 +348,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
             onChange={handleMobileChange}
             placeholder="+91 Mobile Number / Email"
             id="user"
-          />          
+          />
           <Button
             classname="solid-primary"
             buttonText={isLoading ? "Please wait..." : "Continue"}
@@ -408,8 +430,10 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           Back
         </button>
         <form action="" className="otp-verify-wrap">
-          <p className="message">Please enter the OTP sent to{" "} <span>{displayIdentifier}</span></p>
-          <div className="otp_wrap">
+          <p className="message">
+            Please enter the OTP sent to <span>{displayIdentifier}</span>
+          </p>
+          <div className="otp_wrap form">
             <div className="otpInput">
               {otp.map((digit, index) => (
                 <input
@@ -433,6 +457,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
             {isNewUser && (
               <Input
                 type="text"
+                classname="enter_new"
                 value={customerName}
                 onChange={(e) => {
                   const value = (e.target as HTMLInputElement).value;
@@ -443,9 +468,18 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
                 id="customerName"
               />
             )}
-           <p className="otp-error" style={{display: otpError ? "block" : "none",}}>The OTP entered is incorrect!</p>
+            <p
+              className="otp-error"
+              style={{ display: otpError ? "block" : "none" }}
+            >
+              The OTP entered is incorrect!
+            </p>
           </div>
-          <Button classname="solid-primary" buttonText={isLoading ? "Please wait..." : "Verify Otp"} onClick={() => void handleVerifyOtp()} />
+          <Button
+            classname="solid-primary"
+            buttonText={isLoading ? "Please wait..." : "Verify Otp"}
+            onClick={() => void handleVerifyOtp()}
+          />
           <p className="register">
             Not recieved your code?{" "}
             <Link className="reg-btn" href="/">

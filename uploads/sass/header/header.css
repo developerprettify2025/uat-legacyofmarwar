@@ -4206,6 +4206,19 @@ footer .lower-footer .container .payment img {
   transform: translate(-50%, 100vh);
   transition: 0.8s ease;
   z-index: 10;
+  overflow-y: auto;
+}
+.model.login-pop::-webkit-scrollbar {
+  width: 0;
+  background: none;
+  height: 0;
+}
+.model.login-pop::-webkit-scrollbar-track {
+  box-shadow: none;
+}
+.model.login-pop::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 }
 @media only screen and (max-width: 540px) {
   .model.login-pop {
@@ -4426,9 +4439,10 @@ footer .lower-footer .container .payment img {
 }
 .model.login-pop .model-body .otp-verify-wrap .otp_wrap {
   position: relative;
+  padding: 0;
 }
 .model.login-pop .model-body .otp-verify-wrap .otp_wrap .otpInput {
-  padding: 50px 0 60px;
+  padding: 50px 0 40px;
   max-width: 230px;
   margin: 0 auto;
   display: flex;
@@ -4448,6 +4462,12 @@ footer .lower-footer .container .payment img {
 .model.login-pop .model-body .otp-verify-wrap .otp_wrap .otpInput input:focus {
   outline: none;
 }
+.model.login-pop .model-body .otp-verify-wrap .otp_wrap .enter_new {
+  margin-bottom: 35px;
+}
+.model.login-pop .model-body .otp-verify-wrap .otp_wrap .enter_new .form-group-login::before {
+  display: none;
+}
 .model.login-pop .model-body .otp-verify-wrap .otp_wrap .otp-error {
   color: red;
   position: absolute;
@@ -4466,7 +4486,7 @@ footer .lower-footer .container .payment img {
   text-align: center;
   color: var(--text);
   font-weight: 400;
-  margin-top: 46px;
+  margin-top: 20px;
 }
 .model.login-pop .model-body .otp-verify-wrap .register .reg-btn {
   color: var(--secondary);
