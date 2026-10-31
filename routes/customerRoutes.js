@@ -27,6 +27,8 @@ router.delete("/:CustomerID", verifyToken, customerController.deleteCustomer);
 router.get("/:CustomerID", verifyToken, customerController.getCustomerById);
 router.post("/check-login", customerController.checkUserLoginOrSignup);
 router.post("/signup", customerController.userSignup);
+router.post("/send-otp", customerController.sendOtpController);
+router.post("/verify-otp", customerController.verifyOtpController);
 router.post("/login-by-otp", customerController.getCustomerByMobileOrEmail);
 router.post("/check-valid", customerController.checkUserValidByCustomerID);
 module.exports = router;

@@ -1,17 +1,32 @@
 const db = require("../db");
 const { randomBytes } = require("crypto");
+const shiprocketService = require("../services/shiprocketService");
+const { sendEmail } = require("../middleware/emailTemplates");
 
 const ORDER_STATUSES = [
   "Pending",
   "Confirmed",
   "Processing",
-  "Packed",
+  "Ready To Ship",
+  "Pickup Booked",
+  "Pickup Scheduled",
+  "Pickup Queued",
+  "Pickup Rescheduled",
+  "Pickup Error",
+  "Out For Pickup",
+  "Pickup Exception",
+  "Pickup",
   "Shipped",
+  "In Transit",
+  "In Transit Overseas",
+  "In Transit-en-Route",
+  "Out for Delivery",
   "Delivered",
   "Cancelled",
+  "Packed",
 ];
 const PAYMENT_STATUSES = ["Pending", "Paid"];
-const ORDER_NO_START = 1000; // top of the file, next to ORDER_STATUSES
+const ORDER_NO_START = 1000;
 const query = (connection, sql, values = []) =>
   new Promise((resolve, reject) => {
     connection.query(sql, values, (error, rows) => {
@@ -19,11 +34,43 @@ const query = (connection, sql, values = []) =>
       else resolve(rows);
     });
   });
-
 const validID = (value) => Number.isInteger(Number(value)) && Number(value) > 0;
+const createTransactionID = (OrderNo) => `LM${OrderNo}`;
+async function sendOrderConfirmationEmail(OrderNo) {
+  const orders = await query(
+    db,
+    `SELECT O.OrderNo, O.CustomerOrderListID, O.OrderTotalAmount,
+            C.CustomerName, C.CustomerEmailID,
+            S.OrderShippingAddressName, S.OrderShippingAddressEmailID
+     FROM mst_customerorderdata O
+     LEFT JOIN mst_customerdata C ON C.CustomerID = O.CustomerID
+     LEFT JOIN mst_ordershippingaddressdata S ON S.OrderNo = O.OrderNo
+     WHERE O.OrderNo = ?
+     ORDER BY S.OrderShippingAddressID DESC
+     LIMIT 1`,
+    [OrderNo],
+  );
+  if (!orders.length) return;
+  const order = orders[0];
+  const recipient = order.CustomerEmailID || order.OrderShippingAddressEmailID;
+  if (!recipient) return;
 
-const createTransactionID = (OrderNo) =>
-  `LM${OrderNo}`;
+  const items = await query(
+    db,
+    `SELECT ProductName, ColorName, ProductQuantity, ProductTotalAmount
+     FROM mst_customerorderhistorydata
+     WHERE OrderNo = ?
+     ORDER BY CustomerOrderHistoryID`,
+    [OrderNo],
+  );
+
+  await sendEmail("order_confirmation", recipient, {
+    CustomerName: order.CustomerName || order.OrderShippingAddressName,
+    OrderNo: order.OrderNo,
+    OrderTotalAmount: order.OrderTotalAmount,
+    items,
+  });
+}
 
 exports.getOrderFormData = (req, res) => {
   db.query(
@@ -32,7 +79,9 @@ exports.getOrderFormData = (req, res) => {
     (customerError, customers) => {
       if (customerError) {
         console.error("Load order customers error:", customerError);
-        return res.status(500).json({ success: false, message: "Failed to load customers." });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to load customers." });
       }
       db.query(
         `SELECT PC.ProductColorID, PC.ProductID, PC.ColorID,
@@ -46,7 +95,9 @@ exports.getOrderFormData = (req, res) => {
         (productError, products) => {
           if (productError) {
             console.error("Load order products error:", productError);
-            return res.status(500).json({ success: false, message: "Failed to load products." });
+            return res
+              .status(500)
+              .json({ success: false, message: "Failed to load products." });
           }
           return res.json({
             success: true,
@@ -66,7 +117,9 @@ exports.getOrderFormData = (req, res) => {
 exports.getCustomerOrderAddresses = (req, res) => {
   const CustomerID = Number(req.params.CustomerID);
   if (!Number.isInteger(CustomerID) || CustomerID < 1) {
-    return res.status(400).json({ success: false, message: "Invalid customer ID." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid customer ID." });
   }
   db.query(
     `SELECT CustomerShippingAddressID, CustomerID, CustomerShippingAddressName,
@@ -80,14 +133,22 @@ exports.getCustomerOrderAddresses = (req, res) => {
     (error, rows) => {
       if (error) {
         console.error("Load order shipping addresses error:", error);
-        return res.status(500).json({ success: false, message: "Failed to load shipping addresses." });
+        return res
+          .status(500)
+          .json({
+            success: false,
+            message: "Failed to load shipping addresses.",
+          });
       }
       return res.json({ success: true, data: rows });
     },
   );
 };
 
-exports.getAllOrders = (req, res) => {
+exports.getAllOrders = async (req, res) => {
+  // NOTE: Auto-sync removed from here to prevent hammering Shiprocket on every page load.
+  // Use the dedicated "Sync Shiprocket" button in the UI (POST /shiprocket/sync) instead.
+
   db.query(
     `SELECT O.CustomerOrderListID, O.OrderNo, O.OrderDate, O.CustomerID,
             O.CouponCode, O.CouponValue, O.TotalUseEarnDiscount, O.TotalEarnPoints,
@@ -113,7 +174,9 @@ exports.getAllOrders = (req, res) => {
     (orderError, orders) => {
       if (orderError) {
         console.error("Load customer orders error:", orderError);
-        return res.status(500).json({ success: false, message: "Failed to load orders." });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to load orders." });
       }
       db.query(
         `SELECT CustomerOrderListID, OrderNo, ProductID, ProductName, ProductURL,
@@ -123,7 +186,9 @@ exports.getAllOrders = (req, res) => {
         (itemError, items) => {
           if (itemError) {
             console.error("Load order items error:", itemError);
-            return res.status(500).json({ success: false, message: "Failed to load order items." });
+            return res
+              .status(500)
+              .json({ success: false, message: "Failed to load order items." });
           }
           const itemsByOrder = new Map();
           items.forEach((item) => {
@@ -131,13 +196,58 @@ exports.getAllOrders = (req, res) => {
             if (!itemsByOrder.has(key)) itemsByOrder.set(key, []);
             itemsByOrder.get(key).push(item);
           });
-          return res.json({
-            success: true,
-            data: orders.map((order) => ({
-              ...order,
-              items: itemsByOrder.get(Number(order.CustomerOrderListID)) || [],
-            })),
-          });
+          db.query(
+            `SELECT CustomerOrderStatusHistoryID, OrderNo, OrderStatus, Remarks, UpdatedBy, UpdatedOn
+             FROM mst_customerorderstatushistorydata
+             ORDER BY CustomerOrderStatusHistoryID ASC`,
+            (historyError, historyRows) => {
+              const historyByOrder = new Map();
+              (historyRows || []).forEach((row) => {
+                const k = Number(row.OrderNo);
+                if (!historyByOrder.has(k)) historyByOrder.set(k, []);
+                historyByOrder.get(k).push(row);
+              });
+
+              return res.json({
+                success: true,
+                data: orders.map((order) => {
+                  const historyList =
+                    historyByOrder.get(Number(order.OrderNo)) || [];
+                  // Scan all remarks (newest first) to find Shiprocket shipment_id / awb_code
+                  let shipment_id = null;
+                  let awb_code = null;
+                  let courier_name = null;
+                  for (let i = historyList.length - 1; i >= 0; i--) {
+                    const remark = String(historyList[i].Remarks || "");
+                    if (!shipment_id) {
+                      const m = remark.match(
+                        /Shipment(?:\s+ID)?:?\s*([A-Za-z0-9_-]+)/i,
+                      );
+                      if (m) shipment_id = m[1];
+                    }
+                    if (!awb_code) {
+                      const m = remark.match(/AWB:?\s*([A-Za-z0-9_-]+)/i);
+                      if (m) awb_code = m[1];
+                    }
+                    if (!courier_name) {
+                      const m = remark.match(/Courier:?\s*([^\|]+)/i);
+                      if (m) courier_name = m[1].trim();
+                    }
+                    if (shipment_id && awb_code) break;
+                  }
+                  return {
+                    ...order,
+                    items:
+                      itemsByOrder.get(Number(order.CustomerOrderListID)) || [],
+                    statusHistory: historyList,
+                    shipment_id,
+                    awb_code,
+                    courier_name: courier_name || null,
+                  };
+                }),
+              });
+            },
+          );
         },
       );
     },
@@ -482,14 +592,20 @@ exports.createOrder = async (req, res) => {
   const isWebsiteOrder = PaymentOption !== "Admin";
   const requestedCoupon =
     typeof req.body.CouponCode === "string" ? req.body.CouponCode.trim() : "";
-  const UpdatedBy = typeof req.body.UpdatedBy === "string"
-    ? req.body.UpdatedBy.trim().slice(0, 50)
-    : "Admin Panel";
+  const UpdatedBy =
+    typeof req.body.UpdatedBy === "string"
+      ? req.body.UpdatedBy.trim().slice(0, 50)
+      : "Admin Panel";
   let items;
   try {
-    items = typeof req.body.items === "string" ? JSON.parse(req.body.items) : req.body.items;
+    items =
+      typeof req.body.items === "string"
+        ? JSON.parse(req.body.items)
+        : req.body.items;
   } catch {
-    return res.status(400).json({ success: false, message: "Invalid order items." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid order items." });
   }
   if (
     !validID(CustomerID) ||
@@ -502,37 +618,42 @@ exports.createOrder = async (req, res) => {
   ) {
     return res.status(400).json({
       success: false,
-      message: "Select a customer, shipping address, valid statuses, and at least one product.",
+      message:
+        "Select a customer, shipping address, valid statuses, and at least one product.",
     });
   }
 
   // 1) storefront cart: ProductColorID na ho to ProductID + ColorID se nikalo
   try {
     for (const item of items) {
-      if (!item || validID(item.ProductColorID) || !validID(item.ProductID)) continue;
+      if (!item || validID(item.ProductColorID) || !validID(item.ProductID))
+        continue;
 
       const productID = Number(item.ProductID);
       const colorID = Number(item.ColorID) || 0;
 
-      const rows = colorID > 0
-        ? await query(
-          db,
-          `SELECT ProductColorID FROM mst_productcolordata
+      const rows =
+        colorID > 0
+          ? await query(
+              db,
+              `SELECT ProductColorID FROM mst_productcolordata
              WHERE ProductID = ? AND ColorID = ? LIMIT 1`,
-          [productID, colorID],
-        )
-        : await query(
-          db,
-          `SELECT ProductColorID FROM mst_productcolordata
+              [productID, colorID],
+            )
+          : await query(
+              db,
+              `SELECT ProductColorID FROM mst_productcolordata
              WHERE ProductID = ? ORDER BY ProductColorID LIMIT 1`,
-          [productID],
-        );
+              [productID],
+            );
 
       if (rows.length) item.ProductColorID = rows[0].ProductColorID;
     }
   } catch (error) {
     console.error("Resolve product variant error:", error);
-    return res.status(500).json({ success: false, message: "Failed to create order." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to create order." });
   }
 
   // 2) items validate (har error ka alag message)
@@ -545,7 +666,8 @@ exports.createOrder = async (req, res) => {
     if (!validID(ProductColorID)) {
       return res.status(400).json({
         success: false,
-        message: "A product in your cart could not be matched. Please remove it and add it again.",
+        message:
+          "A product in your cart could not be matched. Please remove it and add it again.",
       });
     }
     if (
@@ -553,7 +675,9 @@ exports.createOrder = async (req, res) => {
       ProductQuantity < 1 ||
       ProductQuantity > 2147483647
     ) {
-      return res.status(400).json({ success: false, message: "Invalid product quantity." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid product quantity." });
     }
     if (seenVariants.has(ProductColorID)) {
       return res.status(400).json({
@@ -575,7 +699,9 @@ exports.createOrder = async (req, res) => {
 
   try {
     connection = await new Promise((resolve, reject) =>
-      db.getConnection((error, result) => (error ? reject(error) : resolve(result))),
+      db.getConnection((error, result) =>
+        error ? reject(error) : resolve(result),
+      ),
     );
     const lockRows = await query(
       connection,
@@ -589,7 +715,9 @@ exports.createOrder = async (req, res) => {
     }
     lockAcquired = true;
     await new Promise((resolve, reject) =>
-      connection.beginTransaction((error) => (error ? reject(error) : resolve())),
+      connection.beginTransaction((error) =>
+        error ? reject(error) : resolve(),
+      ),
     );
     transactionStarted = true;
 
@@ -601,7 +729,9 @@ exports.createOrder = async (req, res) => {
     if (!customerRows.length) {
       await rollback();
       transactionStarted = false;
-      return res.status(404).json({ success: false, message: "Customer not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Customer not found." });
     }
     const addressRows = await query(
       connection,
@@ -622,7 +752,9 @@ exports.createOrder = async (req, res) => {
       });
     }
 
-    const variantIDs = normalizedItems.map(({ ProductColorID }) => ProductColorID);
+    const variantIDs = normalizedItems.map(
+      ({ ProductColorID }) => ProductColorID,
+    );
     const placeholders = variantIDs.map(() => "?").join(",");
     const variantRows = await query(
       connection,
@@ -666,7 +798,9 @@ exports.createOrder = async (req, res) => {
     const OrderNo = Number(orderNoRows[0]?.nextOrderNo);
     const CustomerOrderListID = Number(listIDRows[0]?.nextListID);
     let nextItemID = Number(itemIDRows[0]?.nextItemID);
-    const nextStatusHistoryID = Number(statusHistoryIDRows[0]?.nextStatusHistoryID);
+    const nextStatusHistoryID = Number(
+      statusHistoryIDRows[0]?.nextStatusHistoryID,
+    );
     if (
       !Number.isInteger(OrderNo) ||
       OrderNo < 1 ||
@@ -681,7 +815,9 @@ exports.createOrder = async (req, res) => {
       nextStatusHistoryID < 1 ||
       nextStatusHistoryID > 2147483647
     ) {
-      throw new Error("The order number sequence has exceeded the supported range.");
+      throw new Error(
+        "The order number sequence has exceeded the supported range.",
+      );
     }
 
     const productRowsByID = new Map(
@@ -731,12 +867,16 @@ exports.createOrder = async (req, res) => {
       if (!coupon) {
         await rollback();
         transactionStarted = false;
-        return res.status(400).json({ success: false, message: "Invalid coupon code." });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid coupon code." });
       }
       if (!expiry || Number.isNaN(expiry.getTime()) || new Date() > expiry) {
         await rollback();
         transactionStarted = false;
-        return res.status(400).json({ success: false, message: "This coupon has expired." });
+        return res
+          .status(400)
+          .json({ success: false, message: "This coupon has expired." });
       }
       if (subTotal < Number(coupon.CouponMinAmount || 0)) {
         await rollback();
@@ -844,7 +984,9 @@ exports.createOrder = async (req, res) => {
         nextStatusHistoryID,
         OrderNo,
         OrderStatus,
-        isWebsiteOrder ? "Order placed from website." : "Order created by admin.",
+        isWebsiteOrder
+          ? "Order placed from website."
+          : "Order created by admin.",
         UpdatedBy || "Admin Panel",
       ],
     );
@@ -869,14 +1011,19 @@ exports.createOrder = async (req, res) => {
     console.error("Create customer order error:", error);
     return res.status(500).json({
       success: false,
-      message: error.message.includes("supported") || error.message.includes("configured")
-        ? error.message
-        : "Failed to create order.",
+      message:
+        error.message.includes("supported") ||
+        error.message.includes("configured")
+          ? error.message
+          : "Failed to create order.",
     });
   } finally {
     if (connection && lockAcquired) {
       try {
-        await query(connection, "SELECT RELEASE_LOCK('legacy_marwar_customer_order_number')");
+        await query(
+          connection,
+          "SELECT RELEASE_LOCK('legacy_marwar_customer_order_number')",
+        );
       } catch (error) {
         console.error("Release order number lock error:", error);
       }
@@ -887,17 +1034,81 @@ exports.createOrder = async (req, res) => {
 
 exports.updateOrderStatus = async (req, res) => {
   const OrderNo = Number(req.params.OrderNo);
-  const { OrderStatus, TransactionStatus, UpdatedBy, Remarks } = req.body;
-  const updatedBy = typeof UpdatedBy === "string" && UpdatedBy.trim()
-    ? UpdatedBy.trim().slice(0, 100)
-    : "Admin Panel";
+  const { OrderStatus, UpdatedBy, Remarks } = req.body;
+  let { TransactionStatus } = req.body;
+
+  // Normalize TransactionStatus — Razorpay may send "success"/"completed"/etc.
+  const PAID_STATUSES = ["paid", "success", "completed", "done"];
+  if (typeof TransactionStatus === "string") {
+    if (PAID_STATUSES.includes(TransactionStatus.toLowerCase())) {
+      TransactionStatus = "Paid";
+    } else if (!PAYMENT_STATUSES.includes(TransactionStatus)) {
+      TransactionStatus = "Pending";
+    }
+  } else {
+    TransactionStatus = "Pending";
+  }
+
+  const updatedBy =
+    typeof UpdatedBy === "string" && UpdatedBy.trim()
+      ? UpdatedBy.trim().slice(0, 100)
+      : "Admin Panel";
   if (
     !Number.isInteger(OrderNo) ||
     OrderNo < 1 ||
-    !ORDER_STATUSES.includes(OrderStatus) ||
-    !PAYMENT_STATUSES.includes(TransactionStatus)
+    !ORDER_STATUSES.includes(OrderStatus)
   ) {
-    return res.status(400).json({ success: false, message: "Select valid order and payment statuses." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Select a valid order status." });
+  }
+
+  // Auto-hit Shiprocket when status is set to Processing
+  let shiprocketInfo = null;
+  if (OrderStatus === "Processing") {
+    try {
+      const orderData = await query(
+        db,
+        `SELECT O.CustomerOrderListID, O.OrderNo, O.OrderDate, O.CustomerID,
+                O.CouponValue, O.TotalShippingAmount, O.OrderTotalAmount,
+                O.PaymentOption, O.PaymentID, O.TransactionID, O.TransactionStatus, O.OrderStatus,
+                C.CustomerName, C.CustomerEmailID, C.CustomerPhoneNo
+         FROM mst_customerorderdata O
+         LEFT JOIN mst_customerdata C ON C.CustomerID = O.CustomerID
+         WHERE O.OrderNo = ? LIMIT 1`,
+        [OrderNo],
+      );
+      const addressData = await query(
+        db,
+        `SELECT OrderShippingAddressName, OrderShippingAddressPhoneNo,
+                OrderShippingAddressEmailID, OrderShippingAddressPinCode,
+                OrderShippingAddressFullAddress, OrderShippingAddressLocality,
+                OrderShippingAddressCity, OrderShippingAddressState
+         FROM mst_ordershippingaddressdata
+         WHERE OrderNo = ?
+         ORDER BY OrderShippingAddressID DESC LIMIT 1`,
+        [OrderNo],
+      );
+      const itemData = await query(
+        db,
+        `SELECT CustomerOrderHistoryID, ProductID, ProductName, ColorName,
+                ProductQuantity, ProductSalePrice, ProductTotalAmount
+         FROM mst_customerorderhistorydata
+         WHERE CustomerOrderListID = ?
+         ORDER BY CustomerOrderHistoryID`,
+        [orderData[0]?.CustomerOrderListID],
+      );
+
+      if (orderData.length) {
+        shiprocketInfo = await shiprocketService.createShiprocketOrder({
+          order: orderData[0],
+          items: itemData,
+          address: addressData[0] || {},
+        });
+      }
+    } catch (sErr) {
+      console.error("Auto-hit Shiprocket on Processing error:", sErr.message);
+    }
   }
 
   let connection;
@@ -905,7 +1116,9 @@ exports.updateOrderStatus = async (req, res) => {
   let transactionStarted = false;
   try {
     connection = await new Promise((resolve, reject) =>
-      db.getConnection((error, result) => (error ? reject(error) : resolve(result))),
+      db.getConnection((error, result) =>
+        error ? reject(error) : resolve(result),
+      ),
     );
     const lockRows = await query(
       connection,
@@ -919,7 +1132,9 @@ exports.updateOrderStatus = async (req, res) => {
     }
     lockAcquired = true;
     await new Promise((resolve, reject) =>
-      connection.beginTransaction((error) => (error ? reject(error) : resolve())),
+      connection.beginTransaction((error) =>
+        error ? reject(error) : resolve(),
+      ),
     );
     transactionStarted = true;
     const rows = await query(
@@ -932,9 +1147,12 @@ exports.updateOrderStatus = async (req, res) => {
         connection.rollback((error) => (error ? reject(error) : resolve())),
       );
       transactionStarted = false;
-      return res.status(404).json({ success: false, message: "Order not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found." });
     }
-    const statusChanged = rows[0].OrderStatus !== OrderStatus;
+    const statusChanged =
+      rows[0].OrderStatus !== OrderStatus || Boolean(shiprocketInfo);
     const TransactionID =
       TransactionStatus === "Paid"
         ? rows[0].TransactionID || createTransactionID(OrderNo)
@@ -947,7 +1165,14 @@ exports.updateOrderStatus = async (req, res) => {
            DeliveryDate = CASE WHEN ? = 'Delivered' AND DeliveryDate IS NULL
                                THEN NOW() ELSE DeliveryDate END
        WHERE OrderNo = ?`,
-      [OrderStatus, TransactionStatus, TransactionID, updatedBy, OrderStatus, OrderNo],
+      [
+        OrderStatus,
+        TransactionStatus,
+        TransactionID,
+        updatedBy,
+        OrderStatus,
+        OrderNo,
+      ],
     );
     if (statusChanged) {
       const idRows = await query(
@@ -956,12 +1181,21 @@ exports.updateOrderStatus = async (req, res) => {
          FROM mst_customerorderstatushistorydata`,
       );
       const historyID = Number(idRows[0]?.nextID);
-      if (!Number.isInteger(historyID) || historyID < 1 || historyID > 2147483647) {
-        throw new Error("The order status history sequence has exceeded the supported range.");
+      if (
+        !Number.isInteger(historyID) ||
+        historyID < 1 ||
+        historyID > 2147483647
+      ) {
+        throw new Error(
+          "The order status history sequence has exceeded the supported range.",
+        );
       }
-      const remarks = typeof Remarks === "string" && Remarks.trim()
-        ? Remarks.trim().slice(0, 2000)
-        : "Order status updated by admin.";
+      const remarks = shiprocketInfo?.shipment_id
+        ? `Shiprocket Order Created | Shipment ID: ${shiprocketInfo.shipment_id}${shiprocketInfo.awb_code ? " | AWB: " + shiprocketInfo.awb_code : ""}${shiprocketInfo.courier_name ? " | Courier: " + shiprocketInfo.courier_name : ""}`
+        : typeof Remarks === "string" && Remarks.trim()
+          ? Remarks.trim().slice(0, 2000)
+          : `Order status updated to ${OrderStatus}.`;
+
       await query(
         connection,
         `INSERT INTO mst_customerorderstatushistorydata
@@ -976,19 +1210,27 @@ exports.updateOrderStatus = async (req, res) => {
     transactionStarted = false;
     return res.json({
       success: true,
-      message: "Order updated successfully.",
+      message: shiprocketInfo?.shipment_id
+        ? `Order set to Processing & created on Shiprocket! Shipment ID: ${shiprocketInfo.shipment_id}`
+        : "Order updated successfully.",
       TransactionID,
+      shiprocket: shiprocketInfo,
     });
   } catch (error) {
     if (transactionStarted && connection) {
       await new Promise((resolve) => connection.rollback(() => resolve()));
     }
     console.error("Update order status error:", error);
-    return res.status(500).json({ success: false, message: "Failed to update order." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to update order." });
   } finally {
     if (connection && lockAcquired) {
       try {
-        await query(connection, "SELECT RELEASE_LOCK('legacy_marwar_customer_order_number')");
+        await query(
+          connection,
+          "SELECT RELEASE_LOCK('legacy_marwar_customer_order_number')",
+        );
       } catch (error) {
         console.error("Release order number lock error:", error);
       }
@@ -1010,7 +1252,9 @@ exports.updateOrderPaymentStatus = async (req, res) => {
   } = req.body;
 
   if (!Number.isInteger(OrderNo) || OrderNo < 1) {
-    return res.status(400).json({ success: false, message: "Valid Order number is required." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Valid Order number is required." });
   }
 
   const updatedBy =
@@ -1024,7 +1268,9 @@ exports.updateOrderPaymentStatus = async (req, res) => {
 
   try {
     connection = await new Promise((resolve, reject) =>
-      db.getConnection((error, result) => (error ? reject(error) : resolve(result))),
+      db.getConnection((error, result) =>
+        error ? reject(error) : resolve(result),
+      ),
     );
 
     const lockRows = await query(
@@ -1038,37 +1284,37 @@ exports.updateOrderPaymentStatus = async (req, res) => {
       });
     }
     lockAcquired = true;
-
     await new Promise((resolve, reject) =>
-      connection.beginTransaction((error) => (error ? reject(error) : resolve())),
+      connection.beginTransaction((error) =>
+        error ? reject(error) : resolve(),
+      ),
     );
     transactionStarted = true;
-
     const rows = await query(
       connection,
       "SELECT OrderStatus, TransactionStatus, TransactionID, PaymentID FROM mst_customerorderdata WHERE OrderNo = ? LIMIT 1",
       [OrderNo],
     );
-
     if (!rows.length) {
       await new Promise((resolve, reject) =>
         connection.rollback((error) => (error ? reject(error) : resolve())),
       );
       transactionStarted = false;
-      return res.status(404).json({ success: false, message: "Order not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found." });
     }
-
     const currentOrder = rows[0];
-
-    // Normalize transaction status
     const isPaid =
       TransactionStatus &&
-      ["paid", "success"].includes(String(TransactionStatus).trim().toLowerCase());
+      ["paid", "success"].includes(
+        String(TransactionStatus).trim().toLowerCase(),
+      );
     const finalTransactionStatus = isPaid
       ? "Paid"
       : TransactionStatus && PAYMENT_STATUSES.includes(TransactionStatus)
         ? TransactionStatus
-        : (currentOrder.TransactionStatus || "Paid");
+        : currentOrder.TransactionStatus || "Paid";
 
     // Order status: if explicitly passed and valid, use it; if paid and pending, move to Confirmed
     let finalOrderStatus = currentOrder.OrderStatus;
@@ -1090,8 +1336,10 @@ exports.updateOrderPaymentStatus = async (req, res) => {
       typeof TransactionID === "string" && TransactionID.trim()
         ? TransactionID.trim().slice(0, 150)
         : finalPaymentID ||
-        currentOrder.TransactionID ||
-        (finalTransactionStatus === "Paid" ? createTransactionID(OrderNo) : null);
+          currentOrder.TransactionID ||
+          (finalTransactionStatus === "Paid"
+            ? createTransactionID(OrderNo)
+            : null);
 
     const finalPaymentOption =
       typeof PaymentOption === "string" && PaymentOption.trim()
@@ -1146,6 +1394,15 @@ exports.updateOrderPaymentStatus = async (req, res) => {
     );
     transactionStarted = false;
 
+    const justPaid =
+      finalTransactionStatus === "Paid" &&
+      String(currentOrder.TransactionStatus || "") !== "Paid";
+    if (justPaid) {
+      sendOrderConfirmationEmail(OrderNo).catch((mailErr) =>
+        console.error("Order confirmation email failed:", mailErr),
+      );
+    }
+
     return res.json({
       success: true,
       message: "Order payment status updated successfully.",
@@ -1162,11 +1419,16 @@ exports.updateOrderPaymentStatus = async (req, res) => {
       await new Promise((resolve) => connection.rollback(() => resolve()));
     }
     console.error("Update order payment status error:", error);
-    return res.status(500).json({ success: false, message: "Failed to update payment status." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to update payment status." });
   } finally {
     if (connection && lockAcquired) {
       try {
-        await query(connection, "SELECT RELEASE_LOCK('legacy_marwar_customer_order_number')");
+        await query(
+          connection,
+          "SELECT RELEASE_LOCK('legacy_marwar_customer_order_number')",
+        );
       } catch (error) {
         console.error("Release order number lock error:", error);
       }
@@ -1269,8 +1531,7 @@ exports.getCustomerOrders = (req, res) => {
         success: true,
         data: orders.map((order) => ({
           ...order,
-          items:
-            itemsByOrder.get(Number(order.CustomerOrderListID)) || [],
+          items: itemsByOrder.get(Number(order.CustomerOrderListID)) || [],
         })),
       });
     });
@@ -1315,7 +1576,9 @@ exports.getCustomerOrderDetail = async (req, res) => {
     );
 
     if (!orders.length) {
-      return res.status(404).json({ success: false, message: "Order not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found." });
     }
     const order = orders[0];
 
@@ -1353,3 +1616,189 @@ exports.getCustomerOrderDetail = async (req, res) => {
   }
 };
 
+exports.createShiprocketOrder = async (req, res) => {
+  const OrderNo = Number(req.params.OrderNo);
+  if (!validID(OrderNo)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid order number." });
+  }
+
+  try {
+    const orders = await query(
+      db,
+      `SELECT O.CustomerOrderListID, O.OrderNo, O.OrderDate, O.CustomerID,
+              O.CouponValue, O.TotalShippingAmount, O.OrderTotalAmount,
+              O.PaymentOption, O.PaymentID, O.TransactionID, O.TransactionStatus, O.OrderStatus,
+              C.CustomerName, C.CustomerEmailID, C.CustomerPhoneNo
+       FROM mst_customerorderdata O
+       LEFT JOIN mst_customerdata C ON C.CustomerID = O.CustomerID
+       WHERE O.OrderNo = ? LIMIT 1`,
+      [OrderNo],
+    );
+
+    if (!orders.length) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found." });
+    }
+    const order = orders[0];
+
+    const addressRows = await query(
+      db,
+      `SELECT OrderShippingAddressName, OrderShippingAddressPhoneNo,
+              OrderShippingAddressEmailID, OrderShippingAddressPinCode,
+              OrderShippingAddressFullAddress, OrderShippingAddressLocality,
+              OrderShippingAddressCity, OrderShippingAddressState
+       FROM mst_ordershippingaddressdata
+       WHERE OrderNo = ?
+       ORDER BY OrderShippingAddressID DESC LIMIT 1`,
+      [OrderNo],
+    );
+    const address = addressRows[0] || {};
+
+    const items = await query(
+      db,
+      `SELECT CustomerOrderHistoryID, ProductID, ProductName, ColorName,
+              ProductQuantity, ProductSalePrice, ProductTotalAmount
+       FROM mst_customerorderhistorydata
+       WHERE CustomerOrderListID = ?
+       ORDER BY CustomerOrderHistoryID`,
+      [order.CustomerOrderListID],
+    );
+
+    const shiprocketResult = await shiprocketService.createShiprocketOrder({
+      order,
+      items,
+      address,
+    });
+
+    const shipmentId = shiprocketResult.shipment_id || "";
+    const awbCode = shiprocketResult.awb_code || "";
+    const courierName = shiprocketResult.courier_name || "";
+    const newStatus = "Processing";
+
+    await query(
+      db,
+      `UPDATE mst_customerorderdata
+       SET OrderStatus = ?, UpdatedBy = ?, UpdatedOn = NOW()
+       WHERE OrderNo = ?`,
+      [newStatus, "Shiprocket API", OrderNo],
+    );
+
+    const idRows = await query(
+      db,
+      "SELECT COALESCE(MAX(CustomerOrderStatusHistoryID), 0) + 1 AS nextID FROM mst_customerorderstatushistorydata",
+    );
+    const historyID = Number(idRows[0]?.nextID) || 1;
+    const remark = `Shiprocket Order Created | Shipment ID: ${shipmentId}${awbCode ? " | AWB: " + awbCode : ""}${courierName ? " | Courier: " + courierName : ""}`;
+
+    await query(
+      db,
+      `INSERT INTO mst_customerorderstatushistorydata
+       (CustomerOrderStatusHistoryID, OrderNo, OrderStatus, Remarks, UpdatedBy, UpdatedOn)
+       VALUES (?, ?, ?, ?, ?, NOW())`,
+      [historyID, OrderNo, newStatus, remark, "Shiprocket API"],
+    );
+
+    return res.json({
+      success: true,
+      message: `Shiprocket order created successfully! Shipment ID: ${shipmentId || "Generated"}`,
+      data: {
+        OrderNo,
+        OrderStatus: newStatus,
+        shipment_id: shipmentId,
+        awb_code: awbCode,
+        courier_name: courierName,
+      },
+    });
+  } catch (error) {
+    console.error("Create Shiprocket order error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to create order on Shiprocket.",
+    });
+  }
+};
+
+exports.syncShiprocketOrders = async (req, res) => {
+  try {
+    const shiprocketOrders = await shiprocketService.getShiprocketOrders(15);
+    let updatedCount = 0;
+
+    for (const sOrder of shiprocketOrders) {
+      const orderNo = Number(sOrder.order_no);
+      if (!orderNo || isNaN(orderNo)) continue;
+
+      const currentRows = await query(
+        db,
+        "SELECT OrderStatus FROM mst_customerorderdata WHERE OrderNo = ? LIMIT 1",
+        [orderNo],
+      );
+
+      if (currentRows.length) {
+        const currentStatus = currentRows[0].OrderStatus;
+        const newStatus = sOrder.status;
+
+        if (newStatus && currentStatus !== newStatus) {
+          await query(
+            db,
+            `UPDATE mst_customerorderdata
+             SET OrderStatus = ?, UpdatedBy = ?, UpdatedOn = NOW(),
+                 DeliveryDate = CASE WHEN ? = 'Delivered' AND DeliveryDate IS NULL THEN NOW() ELSE DeliveryDate END
+             WHERE OrderNo = ?`,
+            [newStatus, "Shiprocket Sync", newStatus, orderNo],
+          );
+
+          const idRows = await query(
+            db,
+            "SELECT COALESCE(MAX(CustomerOrderStatusHistoryID), 0) + 1 AS nextID FROM mst_customerorderstatushistorydata",
+          );
+          const historyID = Number(idRows[0]?.nextID) || 1;
+          const remark = `Shiprocket Sync | Status: ${newStatus} | Raw: ${sOrder.raw_status}${sOrder.shipment_id ? " | Shipment: " + sOrder.shipment_id : ""}${sOrder.awb_code ? " | AWB: " + sOrder.awb_code : ""}`;
+
+          await query(
+            db,
+            `INSERT INTO mst_customerorderstatushistorydata
+             (CustomerOrderStatusHistoryID, OrderNo, OrderStatus, Remarks, UpdatedBy, UpdatedOn)
+             VALUES (?, ?, ?, ?, ?, NOW())`,
+            [historyID, orderNo, newStatus, remark, "Shiprocket Sync"],
+          );
+
+          updatedCount++;
+        }
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: `Shiprocket sync complete. Updated ${updatedCount} orders.`,
+      updatedCount,
+      totalFetched: shiprocketOrders.length,
+    });
+  } catch (error) {
+    console.error("Sync Shiprocket orders error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to sync orders with Shiprocket.",
+    });
+  }
+};
+
+exports.trackShiprocketOrder = async (req, res) => {
+  const OrderNo = Number(req.params.OrderNo);
+  if (!validID(OrderNo)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid order number." });
+  }
+  try {
+    const tracking = await shiprocketService.trackShiprocketOrder(OrderNo);
+    return res.json({ success: true, data: tracking });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to retrieve tracking details.",
+    });
+  }
+};

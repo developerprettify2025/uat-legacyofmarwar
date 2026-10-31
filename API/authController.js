@@ -284,7 +284,7 @@ exports.checkLogin = (req, res) => {
   }
   const user = req.user;
   const loginID = user.loginID;
-  
+
   if (loginID === 1) {
     const permissions = getAllPermissions(AdminStaticData.Menu.items);
     return res.json({
