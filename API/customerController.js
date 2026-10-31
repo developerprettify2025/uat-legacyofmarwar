@@ -1,6 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const db = require("../db");
+const { sendEmail } = require("../middleware/emailTemplates");
+
+const otpStore = {};
 
 const customerImageDirectory = path.resolve(
   __dirname,
@@ -376,7 +379,27 @@ exports.userSignup = (req, res) => {
         console.error("Customer signup error:", insertError);
         return res.status(500).json({ success: false, message: "Failed to register customer." });
       }
-
+      const registeredDate = new Date().toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+      });
+      if (CustomerEmailID) {
+        sendEmail("user_welcome", CustomerEmailID, {
+          CustomerName: CustomerName || "there",
+        }).then((r) => {
+          if (!r.success) console.error("Welcome email failed:", r.error);
+        }).catch((e) => console.error("Welcome email error:", e));
+      }
+      const adminEmail = process.env.ADMIN_EMAIL;
+      if (adminEmail) {
+        sendEmail("admin_new_user", adminEmail, {
+          CustomerName: CustomerName || "Not provided",
+          CustomerEmailID: CustomerEmailID || "Not provided",
+          CustomerPhoneNo: CustomerPhoneNo || "Not provided",
+          RegisteredDate: registeredDate,
+        }).then((r) => {
+          if (!r.success) console.error("Admin new user email failed:", r.error);
+        }).catch((e) => console.error("Admin new user email error:", e));
+      }
       return res.status(201).json({
         success: true,
         code: 1,
@@ -462,5 +485,83 @@ exports.checkUserValidByCustomerID = (req, res) => {
       data: rows[0],
       message: "Customer is valid.",
     });
+  });
+};
+
+exports.sendOtpController = async (req, res) => {
+  const CustomerEmailID = String(req.body.CustomerEmailID || "")
+    .trim()
+    .toLowerCase();
+  if (!CustomerEmailID || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(CustomerEmailID)) {
+    return res.status(400).json({
+      success: false,
+      message: "A valid email is required to send OTP.",
+    });
+  }
+  try {
+    const customer = await new Promise((resolve, reject) => {
+      db.query(
+        `SELECT CustomerName FROM mst_customerdata WHERE CustomerEmailID = ? LIMIT 1`,
+        [CustomerEmailID],
+        (err, results) => (err ? reject(err) : resolve(results[0] || null)),
+      );
+    });
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    otpStore[CustomerEmailID] = {
+      otp,
+      expiry: Date.now() + 5 * 60 * 1000,
+    };
+    const emailResult = await sendEmail("otp", CustomerEmailID, {
+      CustomerName: customer?.CustomerName || "there",
+      otp,
+    });
+    if (!emailResult.success) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send OTP email.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent to your email.",
+    });
+  } catch (error) {
+    console.error("Send OTP error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
+  }
+};
+
+exports.verifyOtpController = (req, res) => {
+  const CustomerEmailID = String(req.body.CustomerEmailID || "")
+    .trim()
+    .toLowerCase();
+  const otp = String(req.body.otp || "").trim();
+  const record = otpStore[CustomerEmailID];
+  if (!record) {
+    return res.status(400).json({
+      success: false,
+      message: "No OTP found for this email.",
+    });
+  }
+  if (Date.now() > record.expiry) {
+    delete otpStore[CustomerEmailID];
+    return res.status(400).json({
+      success: false,
+      message: "OTP expired.",
+    });
+  }
+  if (String(record.otp) !== otp) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid OTP.",
+    });
+  }
+  delete otpStore[CustomerEmailID];
+  return res.status(200).json({
+    success: true,
+    message: "OTP verified successfully.",
   });
 };

@@ -1,4 +1,5 @@
 const db = require('../db');
+const { sendEmail } = require('../middleware/emailTemplates');
 const LEAD_STATUSES = ["New", "Open", "Closed", "Fake"];
 
 exports.getAllLeads = (req, res) => {
@@ -54,7 +55,7 @@ exports.saveNewEnquiry = (req, res) => {
     PageName, currentTime, IsRead, LeadStatus
   ];
 
-  db.query(insertSql, values, (err, result) => {
+  db.query(insertSql, values, async (err, result) => {
     if (err) {
       console.error("DB Error:", err);
       return res.status(500).json({
@@ -62,6 +63,39 @@ exports.saveNewEnquiry = (req, res) => {
         message: "Failed to save enquiry",
         error: err.message
       });
+    }
+
+    const postedDate = currentTime.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+    });
+    const userEmailData = {
+      FullName,
+      EmailID,
+      PhoneNo,
+      Message,
+      CountryName,
+      PageName,
+    };
+    const adminEmailData = {
+      FullName,
+      EmailID,
+      PhoneNo,
+      Message,
+      EnquiryType,
+      EnquiryFor,
+      CountryName,
+      PageName,
+      PostedDate: postedDate,
+    };
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+
+    try {
+      await Promise.all([
+        EmailID ? sendEmail("user_enquiry", EmailID, userEmailData) : Promise.resolve(),
+        adminEmail ? sendEmail("admin_enquiry", adminEmail, adminEmailData) : Promise.resolve(),
+      ]);
+    } catch (mailErr) {
+      console.error("Enquiry email notification failed:", mailErr);
     }
 
     res.json({
