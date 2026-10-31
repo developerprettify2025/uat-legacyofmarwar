@@ -1,4 +1,3 @@
-
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const username = process.env.NEXT_PUBLIC_BASIC_AUTH_USER;
@@ -62,6 +61,7 @@ export const customerOrderAPISlice = createApi({
       }),
       invalidatesTags: [{ type: "CustomerOrder", id: "LIST" }],
     }),
+
     updateCustomerOrderPaymentStatus: builder.mutation({
       query: ({ OrderNo, ...payload }) => ({
         url: `/${OrderNo}/payment-status`,
@@ -73,15 +73,38 @@ export const customerOrderAPISlice = createApi({
         { type: "CustomerOrder", id: OrderNo },
       ],
     }),
-    // NEW: Get orders customer-wise
+
+    // Get orders customer-wise
     getCustomerOrders: builder.query({
       query: (customerID) => `/customer/${customerID}`,
       providesTags: (result, error, customerID) => [
         { type: "CustomerOrder", id: `CUSTOMER-${customerID}` },
       ],
     }),
+
     getCustomerOrderDetail: builder.query({
       query: ({ CustomerID, OrderNo }) => `customer-order/detail/${CustomerID}/${OrderNo}`,
+    }),
+
+    // Shiprocket Actions
+    createShiprocketOrder: builder.mutation({
+      query: (OrderNo) => ({
+        url: `/${OrderNo}/shiprocket/create`,
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "CustomerOrder", id: "LIST" }],
+    }),
+
+    syncShiprocketOrders: builder.mutation({
+      query: () => ({
+        url: "/shiprocket/sync",
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "CustomerOrder", id: "LIST" }],
+    }),
+
+    trackShiprocketOrder: builder.query({
+      query: (OrderNo) => `/${OrderNo}/shiprocket/track`,
     }),
   }),
 });
@@ -93,7 +116,10 @@ export const {
   useCreateCustomerOrderMutation,
   useUpdateCustomerOrderStatusMutation,
   useUpdateCustomerOrderPaymentStatusMutation,
-  // NEW hook
   useGetCustomerOrdersQuery,
-  useGetCustomerOrderDetailQuery
+  useGetCustomerOrderDetailQuery,
+  // Shiprocket hooks
+  useCreateShiprocketOrderMutation,
+  useSyncShiprocketOrdersMutation,
+  useTrackShiprocketOrderQuery,
 } = customerOrderAPISlice;

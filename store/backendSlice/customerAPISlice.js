@@ -86,6 +86,20 @@ export const customerAPISlice = createApi({
       }),
       invalidatesTags: [{ type: "Customer", id: "LIST" }],
     }),
+    sendOtp: builder.mutation({
+      query: (data) => ({
+        url: "/send-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: "/verify-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
     // 3. Login by OTP / Get Customer by Mobile or Email
     loginByOtp: builder.mutation({
       query: (data) => ({
@@ -112,6 +126,8 @@ export const {
   useDeleteCustomerMutation,
   useCheckUserLoginMutation,
   useSignupCustomerMutation,
+  useSendOtpMutation,
+  useVerifyOtpMutation,
   useLoginByOtpMutation,
   useCheckUserValidMutation,
 } = customerAPISlice;

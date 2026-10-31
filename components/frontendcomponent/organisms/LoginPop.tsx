@@ -13,12 +13,8 @@ import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import { useModal } from "@/hooks/useModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  useCheckUserLoginMutation,
-  useSignupCustomerMutation,
-  useLoginByOtpMutation,
-  useCheckUserValidMutation,
-} from "@/store/backendSlice/customerAPISlice";
+import { useCheckUserLoginMutation, useSignupCustomerMutation, useLoginByOtpMutation, useCheckUserValidMutation, useSendOtpMutation, useVerifyOtpMutation, } from "@/store/backendSlice/customerAPISlice";
+
 import { login } from "@/store/slice/authSlice";
 import toast from "react-hot-toast";
 interface userData {
@@ -40,8 +36,9 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
   const [signupCustomer, { isLoading: isSigningUp }] =
     useSignupCustomerMutation();
   const [loginByOtp, { isLoading: isLoggingIn }] = useLoginByOtpMutation();
-  const [checkUserValid, { isLoading: isCheckingValid }] =
-    useCheckUserValidMutation();
+  const [checkUserValid, { isLoading: isCheckingValid }] = useCheckUserValidMutation();
+  const [sendOtp, { isLoading: isSendingOtp }] = useSendOtpMutation();
+  const [verifyEmailOtp, { isLoading: isVerifyingEmailOtp }] = useVerifyOtpMutation();
   const [customerName, setCustomerName] = useState("");
   const [isNewUser, setIsNewUser] = useState(false);
   const [otpError, setOtpError] = useState(false);
@@ -49,8 +46,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     CustomerPhoneNo: "",
     CustomerEmailID: "",
   });
-  const isLoading =
-    isCheckingLogin || isSigningUp || isLoggingIn || isCheckingValid;
+  const isLoading = isCheckingLogin || isSigningUp || isLoggingIn || isCheckingValid || isSendingOtp || isVerifyingEmailOtp;
 
   const { closeModal } = useModal();
   const { isModal } = useAppSelector((state) => state.modal);
@@ -146,8 +142,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     const e = error as { data?: { message?: string }; message?: string };
     return e?.data?.message ?? e?.message ?? "Please try again.";
   };
-  const OTP_LENGTH = 4;
-  const MOCK_OTP = "1234"; // TODO: remove, verify on the server
+  const MOCK_OTP = "1234"; // phone login still uses a local OTP until SMS is wired
 
   const parseIdentifier = (rawInput: any) => {
     const value = rawInput.trim();
@@ -199,24 +194,36 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       return;
     }
 
-    const payload = {
-      CustomerPhoneNo: isEmail ? "" : mobile,
-      CustomerEmailID: isEmail ? email : "",
-    };
+    const payload = { CustomerPhoneNo: isEmail ? "" : mobile, CustomerEmailID: isEmail ? email : "", };
 
     try {
       setIdentifier(payload);
       const result = await checkUserLogin(payload).unwrap();
-      console.log("result", result);
-      if (result.code === USER_EXISTS_CODE) {
-        setLoginActive(true);
-        setIsNewUser(true); // see note below
-      } else {
-        setIsNewUser(false); // see note below
+      setIsNewUser(result.code === USER_EXISTS_CODE);
+      if (isEmail) {
+        await sendOtp({ CustomerEmailID: email }).unwrap();
+        toast.success("OTP sent to your email!");
       }
+      setOtp(Array(length).fill(""));
+      setOtpError(false);
       setLoginActive(false);
     } catch (error) {
       toast.error(`Login failed. ${getErrorMessage(error)}`);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!identifier.CustomerEmailID) {
+      toast.error("Resend is available for email login only.");
+      return;
+    }
+    try {
+      await sendOtp({ CustomerEmailID: identifier.CustomerEmailID }).unwrap();
+      setOtp(Array(length).fill(""));
+      setOtpError(false);
+      toast.success("OTP sent to your email!");
+    } catch (error) {
+      toast.error(`Failed to resend OTP. ${getErrorMessage(error)}`);
     }
   };
   const handleVerifyOtp = async () => {
@@ -227,12 +234,18 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       toast.error("Please enter the complete 4-digit OTP.");
       return;
     }
-    if (finalOtp !== MOCK_OTP) {
-      setOtpError(true);
-      toast.error("Please enter valid OTP.");
-      return;
-    }
     try {
+      if (identifier.CustomerEmailID) {
+        await verifyEmailOtp({
+          CustomerEmailID: identifier.CustomerEmailID,
+          otp: finalOtp,
+        }).unwrap();
+      } else if (finalOtp !== MOCK_OTP) {
+        setOtpError(true);
+        toast.error("Please enter valid OTP.");
+        return;
+      }
+
       if (isNewUser === true) {
         const name = customerName.trim();
         if (!name) {
@@ -256,10 +269,8 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
         }
       }
       await loginAndDispatch(finalOtp);
-      toast.success("OTP verified.");
       closeModal();
       return;
-      // close the popup / router.push("/dashboard")
     } catch (error) {
       setOtpError(true);
       toast.error(`Verification failed. ${getErrorMessage(error)}`);
@@ -351,7 +362,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           />
           <Button
             classname="solid-primary"
-            buttonText={isLoading ? "Please wait..." : "Continue"}
+            buttonText={isLoading ? "Please wait..." : mobileNo.includes("@") ? "Continue" : "Continue"}
             onClick={handleContinue}
             disabled={isLoading}
           />
@@ -482,10 +493,14 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           />
           <p className="register">
             Not recieved your code?{" "}
-            <Link className="reg-btn" href="/">
-              {" "}
+            <button
+              type="button"
+              className="reg-btn"
+              onClick={() => void handleResendOtp()}
+              disabled={isLoading}
+            >
               Resend Code
-            </Link>
+            </button>
           </p>
         </form>
       </div>

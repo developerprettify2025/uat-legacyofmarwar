@@ -762,3 +762,130 @@
     justify-content: space-between;
   }
 }
+
+
+.syncButton {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 13px;
+  border: 1px solid #7c3aed;
+  border-radius: 7px;
+  background: #f5f3ff;
+  color: #7c3aed;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.syncButton:hover:not(:disabled) {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.syncButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shiprocketButton {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #7c3aed;
+  color: #fff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.shiprocketButton:hover:not(:disabled) {
+  background: #6d28d9;
+}
+
+.shiprocketButton:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.shiprocketBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid #ddd6fe;
+  border-radius: 6px;
+  background: #f5f3ff;
+  color: #6d28d9;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.shiprocketBadge strong {
+  color: #4c1d95;
+}
+
+.shiprocketSection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #faf5ff;
+  border-top: 1px dashed #e9d5ff;
+  border-bottom: 1px dashed #e9d5ff;
+}
+
+.shiprocketDetails {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  color: #6b21a8;
+}
+
+.shiprocketDetails span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.shiprocketActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trackButton {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid #c084fc;
+  border-radius: 5px;
+  background: #fff;
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.trackButton:hover {
+  background: #f3e8ff;
+}

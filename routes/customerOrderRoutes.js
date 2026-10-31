@@ -12,4 +12,10 @@ router.patch("/:OrderNo/payment-status", verifyToken, orderController.updateOrde
 router.put("/:OrderNo/payment-status", verifyToken, orderController.updateOrderPaymentStatus);
 router.get("/customer/:CustomerID", verifyToken, orderController.getCustomerOrders);
 router.get("/customer-order/detail/:CustomerID/:OrderNo", verifyToken, orderController.getCustomerOrderDetail);
+
+// Shiprocket Integration Routes (static routes must come before dynamic :OrderNo routes)
+router.post("/shiprocket/sync", verifyToken, orderController.syncShiprocketOrders);
+router.post("/:OrderNo/shiprocket/create", verifyToken, orderController.createShiprocketOrder);
+router.get("/:OrderNo/shiprocket/track", verifyToken, orderController.trackShiprocketOrder);
+
 module.exports = router;
