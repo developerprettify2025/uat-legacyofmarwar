@@ -20,8 +20,6 @@ import { useSelector } from "react-redux";
 import SilverStory from "./SilverStory";
 import SpecialOccasions from "./SpecialOccasions";
 
-
-
 export default function HomePage() {
   const {
     user,
@@ -59,7 +57,7 @@ export default function HomePage() {
   const onlyProducts = homePageData?.onlyProducts ?? [];
   const occasions = homePageData?.occasions ?? [];
   const homeProducts = homePageData?.homeProducts ?? [];
-  console.log('the homeProducts', homeProducts);
+  console.log("the homeProducts", homeProducts);
   const media = homePageData?.media ?? [];
   console.log("All Products", products);
   const discoverCollectionData = useMemo(() => {
@@ -237,57 +235,57 @@ export default function HomePage() {
     };
   }, [occasions]);
 
- const featuredProductData = useMemo(() => {
-  return homeProducts.map((product: any) => ({
-    sno: product.ProductID,
-    ProductID: product.ProductID,
-    CategoryID: product.CategoryID,
-    CategoryName: product.CategoryName,
-    CategoryNameURL: product.CategoryNameURL,
-    ColorName: product.ColorName,
+  const featuredProductData = useMemo(() => {
+    return homeProducts.map((product: any) => ({
+      sno: product.ProductID,
+      ProductID: product.ProductID,
+      CategoryID: product.CategoryID,
+      CategoryName: product.CategoryName,
+      CategoryNameURL: product.CategoryNameURL,
+      ColorName: product.ColorName,
 
-    linkHref: product.ProductNameURL
-      ? `/${product.ProductNameURL}`
-      : "/products",
-    imgSrc: product.ProductImage
-      ? `/OnlineImages/ProductImages/${product.ProductImage}`
-      : "/images/other/ring1.png",
-    imghoverSrc: product.ProductBannerImage4
-      ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
-      : product.ProductImage
+      linkHref: product.ProductNameURL
+        ? `/${product.ProductNameURL}`
+        : "/products",
+      imgSrc: product.ProductImage
         ? `/OnlineImages/ProductImages/${product.ProductImage}`
         : "/images/other/ring1.png",
-    title: product.ProductName,
-    sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString("en-IN")}.00`,
-    isWishlisted: Number(product.IsWishlisted ?? 0),
-    itemID: Number(product.ItemID ?? 0),
-    desc: product.ProductTagline ?? "",
-  }));
-}, [homeProducts]);
+      imghoverSrc: product.ProductBannerImage4
+        ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
+        : product.ProductImage
+          ? `/OnlineImages/ProductImages/${product.ProductImage}`
+          : "/images/other/ring1.png",
+      title: product.ProductName,
+      sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString("en-IN")}.00`,
+      isWishlisted: Number(product.IsWishlisted ?? 0),
+      itemID: Number(product.ItemID ?? 0),
+      desc: product.ProductTagline ?? "",
+    }));
+  }, [homeProducts]);
 
-const homeProductsByCategory = useMemo(() => {
-  const uniqueCategories = Array.from(
-    new Map(
-      homeProducts.map((p: any) => [
-        p.CategoryID,
-        {
-          CategoryID: p.CategoryID,
-          CategoryName: p.CategoryName,
-          CategoryNameURL: p.CategoryNameURL,
-        },
-      ]),
-    ).values(),
-  );
+  const homeProductsByCategory = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Map(
+        homeProducts.map((p: any) => [
+          p.CategoryID,
+          {
+            CategoryID: p.CategoryID,
+            CategoryName: p.CategoryName,
+            CategoryNameURL: p.CategoryNameURL,
+          },
+        ]),
+      ).values(),
+    );
 
-  return uniqueCategories.map((category: any) => ({
-    label: category.CategoryName,
-    url: `/products/${category.CategoryNameURL}`,
+    return uniqueCategories.map((category: any) => ({
+      label: category.CategoryName,
+      url: `/products/${category.CategoryNameURL}`,
 
-    productItem: featuredProductData.filter(
-      (item: any) => String(item.CategoryID) === String(category.CategoryID),
-    ),
-  }));
-}, [homeProducts, featuredProductData]);
+      productItem: featuredProductData.filter(
+        (item: any) => String(item.CategoryID) === String(category.CategoryID),
+      ),
+    }));
+  }, [homeProducts, featuredProductData]);
 
   if (isLoading) {
     return <Loading />;
