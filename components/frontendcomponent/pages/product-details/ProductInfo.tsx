@@ -641,7 +641,7 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                         alt="icon"
                       ></Image>
                     </div>
-                    <p>Free Shipping In Worldwide</p>
+                    <p>Free Shipping</p>
                   </div>
                   <div className="option_col">
                     <div className="icon">
@@ -663,7 +663,7 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                         alt="icon"
                       ></Image>
                     </div>
-                    <p>925 Pure Silver</p>
+                    <p>925 Silver</p>
                   </div>
                 </div>
               </div>
