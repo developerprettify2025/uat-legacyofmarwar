@@ -57,124 +57,64 @@ export default function HomePage() {
   const onlyProducts = homePageData?.onlyProducts ?? [];
   const occasions = homePageData?.occasions ?? [];
   const homeProducts = homePageData?.homeProducts ?? [];
-  console.log("the homeProducts", homeProducts);
   const media = homePageData?.media ?? [];
-  console.log("All Products", products);
-  const discoverCollectionData = useMemo(() => {
-    const uniqueCategories = Array.from(
-      new Map(
-        products.map((product: any) => [
-          product.CategoryID,
-          {
-            CategoryID: product.CategoryID,
-            CategoryName: product.CategoryName,
-            CategoryNameURL: product.CategoryNameURL,
-            CategoryVideo: product.CategoryVideo,
-          },
-        ]),
-      ).values(),
-    );
-    console.log("Unique Categoruies", uniqueCategories);
-
-    return {
+  const categoryProductSections = useMemo(() => {
+    const categories = new Map<string, any>();
+    products.forEach((product: any) => {
+      const categoryKey = String(product.CategoryID);
+      if (!categories.has(categoryKey)) {
+        categories.set(categoryKey, {
+          CategoryID: product.CategoryID,
+          CategoryName: product.CategoryName,
+          CategoryNameURL: product.CategoryNameURL,
+          CategoryVideo: product.CategoryVideo,
+        });
+      }
+    });
+    return Array.from(categories.values()).map((category: any, index) => ({
       classname: "discover_collection",
-      heading: `<span class='italic'>Sandook</span> - Our First Collection`,
-      mediaSrc: "/images/home/collection.mp4",
+      heading:
+        index === 0
+          ? " Adaa - The Earring Collection"
+          : index === 1
+            ? "Sandook - Our First Collection"
+            : `${category.CategoryName} Collection`,
+      mediaSrc: `/OnlineImages/CategoryImages/${category.CategoryVideo}`,
       linkHref: "/products",
-
-      tavNav: uniqueCategories.map((category: any) => ({
-        label: category.CategoryName,
-        url: `/products/${category.CategoryNameURL}`,
-
-        videoSrc: category.CategoryVideo
-          ? `/OnlineImages/CategoryImages/${category.CategoryVideo}`
-          : "/images/home/collection.mp4",
-
-        productItem: products
-          .filter(
-            (product: any) =>
-              String(product.CategoryID) === String(category.CategoryID),
-          )
-          .map((product: any) => ({
-            sno: product.ProductID,
-            ProductID: product.ProductID,
-            linkHref: `/${product.ProductNameURL}`,
-
-            imgSrc: product.ProductImage
-              ? `/OnlineImages/ProductImages/${product.ProductImage}`
-              : "/images/other/ring1.png",
-            imghoverSrc: product.ProductBannerImage4
-              ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
-              : "/images/other/ring1.png",
-            title: product.ProductName,
-
-            sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString(
-              "en-IN",
-            )}.00`,
-            isWishlisted: Number(product.IsWishlisted ?? 0),
-            itemID: Number(product.ItemID ?? 0),
-            desc: product.ProductTagline,
-          })),
-      })),
-    };
-  }, [products]);
-
-  const earringsData = useMemo(() => {
-    const uniqueCategories = Array.from(
-      new Map(
-        products.map((product: any) => [
-          product.CategoryID,
-          {
-            CategoryID: product.CategoryID,
-            CategoryName: product.CategoryName,
-            CategoryNameURL: product.CategoryNameURL,
-            CategoryVideo: product.CategoryVideo,
-          },
-        ]),
-      ).values(),
-    );
-
-    return {
-      classname: "discover_collection earrings",
-      heading: `<span class='italic'>Adaa</span> - The Earring Collection`,
-      mediaSrc: "/images/home/collection.mp4",
-      linkHref: "/products",
-
-      tavNav: uniqueCategories.map((category: any) => ({
-        label: category.CategoryName,
-        url: `/products/${category.CategoryNameURL}`,
-
-        videoSrc: category.CategoryVideo
-          ? `/OnlineImages/CategoryImages/${category.CategoryVideo}`
-          : "/images/home/collection.mp4",
-
-        productItem: products
-          .filter(
-            (product: any) =>
-              String(product.CategoryID) === String(category.CategoryID),
-          )
-          .map((product: any) => ({
-            sno: product.ProductID,
-            ProductID: product.ProductID,
-            linkHref: `/${product.ProductNameURL}`,
-
-            imgSrc: product.ProductImage
-              ? `/OnlineImages/ProductImages/${product.ProductImage}`
-              : "/images/other/ring1.png",
-            imghoverSrc: product.ProductBannerImage4
-              ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
-              : "/images/other/ring1.png",
-            title: product.ProductName,
-
-            sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString(
-              "en-IN",
-            )}.00`,
-            isWishlisted: Number(product.IsWishlisted ?? 0),
-            itemID: Number(product.ItemID ?? 0),
-            desc: product.ProductTagline,
-          })),
-      })),
-    };
+      tavNav: [
+        {
+          label: category.CategoryName,
+          url: `/products/${category.CategoryNameURL}`,
+          videoSrc: `/OnlineImages/CategoryImages/${category.CategoryVideo}`,
+          productItem: products
+            .filter(
+              (product: any) =>
+                String(product.CategoryID) === String(category.CategoryID),
+            )
+            .map((product: any) => ({
+              sno: product.ProductID,
+              ProductID: product.ProductID,
+              CategoryID: product.CategoryID,
+              linkHref: product.ProductNameURL
+                ? `/${product.ProductNameURL}`
+                : "/products",
+              imgSrc: product.ProductImage
+                ? `/OnlineImages/ProductImages/${product.ProductImage}`
+                : "/images/other/ring1.png",
+              imghoverSrc: product.ProductBannerImage4
+                ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
+                : "/images/other/ring1.png",
+              title: product.ProductName,
+              sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString(
+                "en-IN",
+              )}.00`,
+              isWishlisted: Number(product.IsWishlisted ?? 0),
+              itemID: Number(product.ItemID ?? 0),
+              desc: product.ProductTagline ?? "",
+            })),
+        },
+      ],
+    }));
   }, [products]);
 
   const specialNewOccasionsData = useMemo(() => {
@@ -306,12 +246,13 @@ export default function HomePage() {
         linkHref="/products"
       />
 
-      {earringsData.tavNav.length > 0 && (
-        <ProductListingSlider data={earringsData} isLegacy={false} />
-      )}
-      {discoverCollectionData.tavNav.length > 0 && (
-        <ProductListingSlider data={discoverCollectionData} isLegacy={false} />
-      )}
+      {categoryProductSections.map((section) => (
+        <ProductListingSlider
+          key={section.tavNav[0].label}
+          data={section}
+          isLegacy={false}
+        />
+      ))}
 
       {/* {categories.length > 0 && <DiscoverCategory data={categories} />} */}
 

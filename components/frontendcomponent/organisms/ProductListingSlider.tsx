@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
@@ -48,6 +48,7 @@ export default function ProductListingSlider({
   data,
   isLegacy = true,
 }: ProductProps) {
+  const sliderId = useId();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const activeCategory = data.tavNav?.[activeIndex];
@@ -60,6 +61,7 @@ export default function ProductListingSlider({
   return (
     <section>
       <div
+        data-product-slider={sliderId}
         className={`product_listing_slider sec-pad-all ${data.classname ?? ""}`}
       >
         <div className="container">
@@ -96,8 +98,8 @@ export default function ProductListingSlider({
           <div className="main_wrapper">
             <figure className="display_media">
               <video
-                key={activeCategory?.videoSrc || data.mediaSrc}
-                src={activeCategory?.videoSrc || data.mediaSrc}
+                key={activeCategory?.videoSrc}
+                src={activeCategory?.videoSrc}
                 autoPlay
                 muted
                 loop
@@ -117,8 +119,8 @@ export default function ProductListingSlider({
                 className="product_slider"
                 speed={1000}
                 navigation={{
-                  prevEl: ".product-prev",
-                  nextEl: ".product-next",
+                  prevEl: `[data-product-slider="${sliderId}"] .product-prev`,
+                  nextEl: `[data-product-slider="${sliderId}"] .product-next`,
                 }}
                 breakpoints={{
                   0: {

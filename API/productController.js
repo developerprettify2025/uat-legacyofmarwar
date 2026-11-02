@@ -52,7 +52,12 @@ exports.getProductById = (req, res) => {
       [ProductID],
       (occasionError, occasionRows) => {
         if (occasionError) {
-          return res.status(500).json({ success: false, message: "Failed to load product occasions" });
+          return res
+            .status(500)
+            .json({
+              success: false,
+              message: "Failed to load product occasions",
+            });
         }
         db.query(
           `SELECT ProductColorID, ColorID, ProductMRP, ProductSalePrice,
@@ -62,7 +67,12 @@ exports.getProductById = (req, res) => {
           (colorError, colorRows) => {
             if (colorError) {
               console.error("Load product colors error:", colorError);
-              return res.status(500).json({ success: false, message: "Failed to load product colors" });
+              return res
+                .status(500)
+                .json({
+                  success: false,
+                  message: "Failed to load product colors",
+                });
             }
             return res.json({
               success: true,
@@ -78,7 +88,6 @@ exports.getProductById = (req, res) => {
     );
   });
 };
-
 
 exports.saveOrUpdateProduct = async (req, res) => {
   const {
@@ -106,11 +115,16 @@ exports.saveOrUpdateProduct = async (req, res) => {
   const currentTime = new Date();
 
   const ProductImage = req?.files?.ProductImage?.[0]?.filename || null;
-  const ProductBannerImage = req?.files?.ProductBannerImage?.[0]?.filename || null;
-  const ProductBannerImage1 = req?.files?.ProductBannerImage1?.[0]?.filename || null;
-  const ProductBannerImage2 = req?.files?.ProductBannerImage2?.[0]?.filename || null;
-  const ProductBannerImage3 = req?.files?.ProductBannerImage3?.[0]?.filename || null;
-  const ProductBannerImage4 = req?.files?.ProductBannerImage4?.[0]?.filename || null;
+  const ProductBannerImage =
+    req?.files?.ProductBannerImage?.[0]?.filename || null;
+  const ProductBannerImage1 =
+    req?.files?.ProductBannerImage1?.[0]?.filename || null;
+  const ProductBannerImage2 =
+    req?.files?.ProductBannerImage2?.[0]?.filename || null;
+  const ProductBannerImage3 =
+    req?.files?.ProductBannerImage3?.[0]?.filename || null;
+  const ProductBannerImage4 =
+    req?.files?.ProductBannerImage4?.[0]?.filename || null;
 
   const normalizedCategoryID = Number(CategoryID);
 
@@ -134,8 +148,8 @@ exports.saveOrUpdateProduct = async (req, res) => {
 
   const normalizedProductSmallDescription =
     typeof ProductSmallDescription === "string"
-    ? ProductSmallDescription.trim()
-    : "";
+      ? ProductSmallDescription.trim()
+      : "";
 
   // const normalizedProductSmallDescription= typeof ProductSmallDescription === "string" ? ProductSmallDescription.trim() : "";
   // if (normalizedProductSmallDescription.length > 255) {
@@ -147,8 +161,8 @@ exports.saveOrUpdateProduct = async (req, res) => {
   // DisplayOnExclusive: 0 or 1
   const normalizedExclusive =
     DisplayOnExclusive === undefined ||
-      DisplayOnExclusive === null ||
-      DisplayOnExclusive === ""
+    DisplayOnExclusive === null ||
+    DisplayOnExclusive === ""
       ? 0
       : DisplayOnExclusive === true || DisplayOnExclusive === "true"
         ? 1
@@ -166,8 +180,8 @@ exports.saveOrUpdateProduct = async (req, res) => {
   // DisplayOnHome: 0 or 1
   const normalizedDisplayOnHome =
     DisplayOnHome === undefined ||
-      DisplayOnHome === null ||
-      DisplayOnHome === ""
+    DisplayOnHome === null ||
+    DisplayOnHome === ""
       ? 0
       : DisplayOnHome === true || DisplayOnHome === "true"
         ? 1
@@ -239,14 +253,12 @@ exports.saveOrUpdateProduct = async (req, res) => {
         seenColorIDs.has(ColorID) ||
         [ProductMRP, ProductSalePrice, ProductNewStock].some(
           (value) =>
-            !Number.isInteger(value) ||
-            value < 0 ||
-            value > MAX_SQL_INT
+            !Number.isInteger(value) || value < 0 || value > MAX_SQL_INT,
         ) ||
         ![0, 1].includes(ProductOutOfStock)
       ) {
         throw new Error(
-          "ProductColors contains invalid color, price, or stock values"
+          "ProductColors contains invalid color, price, or stock values",
         );
       }
 
@@ -264,12 +276,13 @@ exports.saveOrUpdateProduct = async (req, res) => {
     if (
       productColors.some(
         ({ ProductMRP, ProductSalePrice }) =>
-          ProductSalePrice >= ProductMRP
+          Number(ProductSalePrice) > Number(ProductMRP),
       )
     ) {
       return res.status(400).json({
         success: false,
-        message: "Sale price must be less than MRP for every selected color.",
+        message:
+          "Sale price cannot be greater than MRP for every selected color.",
       });
     }
   } catch {
@@ -296,7 +309,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
   try {
     connection = await new Promise((resolve, reject) => {
       db.getConnection((error, conn) =>
-        error ? reject(error) : resolve(conn)
+        error ? reject(error) : resolve(conn),
       );
     });
 
@@ -307,7 +320,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
     // Validate category
     const [[category]] = await queries.query(
       "SELECT CategoryID FROM mst_categorydata WHERE CategoryID = ? LIMIT 1",
-      [normalizedCategoryID]
+      [normalizedCategoryID],
     );
 
     if (!category) {
@@ -327,7 +340,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
         `SELECT OccasionID
          FROM mst_occasiondata
          WHERE OccasionID IN (${occasionIDs.map(() => "?").join(",")})`,
-        occasionIDs
+        occasionIDs,
       );
 
       if (validOccasions.length !== occasionIDs.length) {
@@ -348,7 +361,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
         `SELECT ColorID
          FROM mst_colordata
          WHERE ColorID IN (${productColors.map(() => "?").join(",")})`,
-        productColors.map(({ ColorID }) => ColorID)
+        productColors.map(({ ColorID }) => ColorID),
       );
 
       if (validColors.length !== productColors.length) {
@@ -364,10 +377,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
     }
 
     // Check duplicate name or URL
-    const [duplicates] = await queries.query(
-      checkDuplicateSql,
-      checkParams
-    );
+    const [duplicates] = await queries.query(checkDuplicateSql, checkParams);
 
     if (duplicates.length) {
       await queries.rollback();
@@ -409,7 +419,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
          FROM mst_productdata
          WHERE ProductID = ?
          LIMIT 1`,
-        [ProductID]
+        [ProductID],
       );
 
       if (!oldProducts.length) {
@@ -486,7 +496,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
           UpdatedBy,
           currentTime,
           ProductID,
-        ]
+        ],
       );
     } else {
       // ==========================================
@@ -545,18 +555,18 @@ exports.saveOrUpdateProduct = async (req, res) => {
           currentTime,
           UpdatedBy,
           currentTime,
-        ]
+        ],
       );
 
       savedProductID = insertResult.insertId;
 
       ProductCode = `LM${savedProductID}C${normalizedCategoryID}${getProductNameInitials(
-        ProductName
+        ProductName,
       )}`;
 
       await queries.query(
         "UPDATE mst_productdata SET ProductCode = ? WHERE ProductID = ?",
-        [ProductCode, savedProductID]
+        [ProductCode, savedProductID],
       );
     }
 
@@ -566,7 +576,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
     if (shouldUpdateOccasions) {
       await queries.query(
         "DELETE FROM mst_productoccasiondata WHERE ProductID = ?",
-        [savedProductID]
+        [savedProductID],
       );
 
       if (occasionIDs.length) {
@@ -574,10 +584,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
           `INSERT INTO mst_productoccasiondata
            (ProductID, OccasionID)
            VALUES ${occasionIDs.map(() => "(?, ?)").join(", ")}`,
-          occasionIDs.flatMap((occasionID) => [
-            savedProductID,
-            occasionID,
-          ])
+          occasionIDs.flatMap((occasionID) => [savedProductID, occasionID]),
         );
       }
     }
@@ -591,33 +598,27 @@ exports.saveOrUpdateProduct = async (req, res) => {
          FROM mst_productcolordata
          WHERE ProductID = ?
          FOR UPDATE`,
-        [savedProductID]
+        [savedProductID],
       );
 
       const currentStockByColor = new Map(
         currentProductColors.map(({ ColorID, ProductTotalStock }) => [
           Number(ColorID),
           Number(ProductTotalStock),
-        ])
+        ]),
       );
 
       const colorRows = productColors.map((color) => {
-        const previousStock =
-          currentStockByColor.get(color.ColorID) || 0;
+        const previousStock = currentStockByColor.get(color.ColorID) || 0;
 
         return {
           ...color,
           ProductOldStock: previousStock,
-          ProductTotalStock:
-            previousStock + color.ProductNewStock,
+          ProductTotalStock: previousStock + color.ProductNewStock,
         };
       });
 
-      if (
-        colorRows.some(
-          (color) => color.ProductTotalStock > MAX_SQL_INT
-        )
-      ) {
+      if (colorRows.some((color) => color.ProductTotalStock > MAX_SQL_INT)) {
         await queries.rollback();
         connection.release();
         connection = null;
@@ -630,7 +631,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
 
       await queries.query(
         "DELETE FROM mst_productcolordata WHERE ProductID = ?",
-        [savedProductID]
+        [savedProductID],
       );
 
       if (colorRows.length) {
@@ -647,8 +648,8 @@ exports.saveOrUpdateProduct = async (req, res) => {
              UpdatedOn
            )
            VALUES ${colorRows
-            .map(() => "(?, ?, ?, ?, ?, ?, ?, NOW(), NOW())")
-            .join(", ")}`,
+             .map(() => "(?, ?, ?, ?, ?, ?, ?, NOW(), NOW())")
+             .join(", ")}`,
           colorRows.flatMap((color) => [
             savedProductID,
             color.ColorID,
@@ -657,7 +658,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
             color.ProductOldStock,
             color.ProductTotalStock,
             color.ProductOutOfStock,
-          ])
+          ]),
         );
       }
     }
@@ -682,10 +683,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
       ];
 
       oldImages.forEach((oldImage, index) => {
-        if (
-          uploadedImages[index] &&
-          oldImage !== uploadedImages[index]
-        ) {
+        if (uploadedImages[index] && oldImage !== uploadedImages[index]) {
           deleteOldImage(oldImage);
         }
       });
@@ -705,10 +703,7 @@ exports.saveOrUpdateProduct = async (req, res) => {
       try {
         await connection.promise().rollback();
       } catch (rollbackError) {
-        console.error(
-          "Product save rollback failed:",
-          rollbackError
-        );
+        console.error("Product save rollback failed:", rollbackError);
       }
 
       connection.release();
@@ -722,7 +717,6 @@ exports.saveOrUpdateProduct = async (req, res) => {
     });
   }
 };
-
 
 /*exports.saveOrUpdateProduct = async (req, res) => {
   const {
@@ -1148,12 +1142,16 @@ exports.getMaxDisplayOrder = (req, res) => {
 exports.deleteProduct = async (req, res) => {
   const ProductID = Number(req.params.ProductID);
   if (!Number.isInteger(ProductID) || ProductID < 1) {
-    return res.status(400).json({ success: false, message: "Invalid product ID." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid product ID." });
   }
   let connection;
   try {
     connection = await new Promise((resolve, reject) => {
-      db.getConnection((error, conn) => (error ? reject(error) : resolve(conn)));
+      db.getConnection((error, conn) =>
+        error ? reject(error) : resolve(conn),
+      );
     });
     const queries = connection.promise();
     await queries.beginTransaction();
@@ -1165,17 +1163,27 @@ exports.deleteProduct = async (req, res) => {
     );
     if (!products.length) {
       await queries.rollback();
-      return res.status(404).json({ success: false, message: "Product not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found." });
     }
-    await queries.query("DELETE FROM mst_productcolordata WHERE ProductID = ?", [ProductID]);
-    await queries.query("DELETE FROM mst_productoccasiondata WHERE ProductID = ?", [ProductID]);
+    await queries.query(
+      "DELETE FROM mst_productcolordata WHERE ProductID = ?",
+      [ProductID],
+    );
+    await queries.query(
+      "DELETE FROM mst_productoccasiondata WHERE ProductID = ?",
+      [ProductID],
+    );
     const [deletedProduct] = await queries.query(
       "DELETE FROM mst_productdata WHERE ProductID = ?",
       [ProductID],
     );
     if (!deletedProduct.affectedRows) {
       await queries.rollback();
-      return res.status(404).json({ success: false, message: "Product not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found." });
     }
     await queries.commit();
     const {
@@ -1188,7 +1196,12 @@ exports.deleteProduct = async (req, res) => {
     } = products[0];
     if (ProductImage) deleteOldImage(ProductImage);
     if (ProductBannerImage) deleteOldImage(ProductBannerImage);
-    [ProductBannerImage1, ProductBannerImage2, ProductBannerImage3, ProductBannerImage4].forEach(deleteOldImage);
+    [
+      ProductBannerImage1,
+      ProductBannerImage2,
+      ProductBannerImage3,
+      ProductBannerImage4,
+    ].forEach(deleteOldImage);
     return res.json({ success: true, message: "Product deleted successfully" });
   } catch (error) {
     if (connection) {
@@ -1199,7 +1212,9 @@ exports.deleteProduct = async (req, res) => {
       }
     }
     console.error("Delete product error:", error);
-    return res.status(500).json({ success: false, message: "Failed to delete product." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to delete product." });
   } finally {
     if (connection) connection.release();
   }
@@ -1289,10 +1304,14 @@ exports.getProductDataBySlug = (req, res) => {
       [product.ProductID],
       (occasionError, occasionResults) => {
         if (occasionError) {
-          return res.status(500).json({ success: false, error: occasionError.message });
+          return res
+            .status(500)
+            .json({ success: false, error: occasionError.message });
         }
         product.Occasions = occasionResults;
-        product.OccasionIDs = occasionResults.map(({ OccasionID }) => OccasionID);
+        product.OccasionIDs = occasionResults.map(
+          ({ OccasionID }) => OccasionID,
+        );
         db.query(
           `SELECT pc.ColorID, c.ColorName, c.ColorCode,
                   pc.ProductMRP, pc.ProductSalePrice, pc.ProductOldStock,
@@ -1304,7 +1323,9 @@ exports.getProductDataBySlug = (req, res) => {
           [product.ProductID],
           (colorError, colorResults) => {
             if (colorError) {
-              return res.status(500).json({ success: false, error: colorError.message });
+              return res
+                .status(500)
+                .json({ success: false, error: colorError.message });
             }
             product.ProductColors = colorResults;
             const sqlMoreProducts = `
@@ -1320,18 +1341,25 @@ exports.getProductDataBySlug = (req, res) => {
           ORDER BY ProductID DESC
           LIMIT 10
         `;
-            db.query(sqlMoreProducts, [product.ProductID], (err2, moreResults) => {
-              if (err2) {
-                return res.status(500).json({ success: false, error: err2.message });
-              }
-              product.moreProducts = moreResults || [];
-              return res.json({
-                success: true,
-                type: "product",
-                data: product,
-              });
-            });
-          });
+            db.query(
+              sqlMoreProducts,
+              [product.ProductID],
+              (err2, moreResults) => {
+                if (err2) {
+                  return res
+                    .status(500)
+                    .json({ success: false, error: err2.message });
+                }
+                product.moreProducts = moreResults || [];
+                return res.json({
+                  success: true,
+                  type: "product",
+                  data: product,
+                });
+              },
+            );
+          },
+        );
       },
     );
   });

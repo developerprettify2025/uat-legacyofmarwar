@@ -10,7 +10,11 @@ import { useCheckLoginQuery } from "../../../../store/backendSlice/authAPISlice"
 import { useGetAllCategorysQuery } from "@/store/backendSlice/categoryAPISlice";
 import { useGetAllOccasionsQuery } from "@/store/backendSlice/occasionAPISlice";
 import { useGetAllColorsQuery } from "@/store/backendSlice/colorAPISlice";
-import { useGetProductByIdQuery, useSaveOrUpdateProductMutation, useGetMaxDisplayOrderQuery, } from "@/store/backendSlice/productAPISlice";
+import {
+  useGetProductByIdQuery,
+  useSaveOrUpdateProductMutation,
+  useGetMaxDisplayOrderQuery,
+} from "@/store/backendSlice/productAPISlice";
 import { usePagePermission } from "../usePagePermission";
 import { validateFields } from "@/utils/validateFields";
 import styles from "./page.module.css";
@@ -20,7 +24,11 @@ export default function AddUpdProductData() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ProductID = searchParams.get("ID");
-  const { data: checkData, isSuccess } = useCheckLoginQuery(undefined, { refetchOnMountOrArgChange: true, pollingInterval: 180000, skipPollingIfUnfocused: true, });
+  const { data: checkData, isSuccess } = useCheckLoginQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 180000,
+    skipPollingIfUnfocused: true,
+  });
   const pagePermission = usePagePermission(checkData);
   const { data: maxOrderData } = useGetMaxDisplayOrderQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -34,7 +42,9 @@ export default function AddUpdProductData() {
 
   useEffect(() => {
     if (checkData?.loggedIn && pagePermission?.PageID !== 0) {
-      const requiredPermission = ProductID ? pagePermission.CanWrite : pagePermission.CanAdd;
+      const requiredPermission = ProductID
+        ? pagePermission.CanWrite
+        : pagePermission.CanAdd;
       if (requiredPermission !== 1) {
         toast.error(
           `You do not have permission to ${ProductID ? "edit" : "add"} product post`,
@@ -43,7 +53,10 @@ export default function AddUpdProductData() {
       }
     }
   }, [checkData, pagePermission, ProductID, router]);
-  const { data: productData } = useGetProductByIdQuery(ProductID, { skip: !ProductID, refetchOnMountOrArgChange: true, });
+  const { data: productData } = useGetProductByIdQuery(ProductID, {
+    skip: !ProductID,
+    refetchOnMountOrArgChange: true,
+  });
   const [saveOrUpdateProduct, { isLoading }] = useSaveOrUpdateProductMutation();
   const [formErrors, setFormErrors] = useState({});
   const {
@@ -66,7 +79,7 @@ export default function AddUpdProductData() {
   const [formData, setFormData] = useState({
     ProductName: "",
     ProductNameURL: "",
-    ProductTagline: "",            // naya
+    ProductTagline: "", // naya
     CategoryID: "",
     OccasionIDs: [],
     ProductColors: [],
@@ -86,33 +99,40 @@ export default function AddUpdProductData() {
     MetaSchema: "",
     ActiveStatus: false,
     DisplayOrder: 0,
-    DisplayOnExclusive: false,     // naya
-    DisplayOnHome: false,     // naya
+    DisplayOnExclusive: false, // naya
+    DisplayOnHome: false, // naya
   });
   const [productCode, setProductCode] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const [previewBanner, setPreviewBanner] = useState("");
-  const [previewBannerImages, setPreviewBannerImages] = useState(["", "", "", ""]);
+  const [previewBannerImages, setPreviewBannerImages] = useState([
+    "",
+    "",
+    "",
+    "",
+  ]);
   useEffect(() => {
     if (productData?.success) {
       const data = productData.data;
       setFormData({
         ProductName: data.ProductName || "",
         ProductNameURL: data.ProductNameURL || "",
-        ProductTagline: data.ProductTagline || "",                    // naya
-        ProductSmallDescription: data.ProductSmallDescription || "",                    // naya
+        ProductTagline: data.ProductTagline || "", // naya
+        ProductSmallDescription: data.ProductSmallDescription || "", // naya
         CategoryID: data.CategoryID == null ? "" : String(data.CategoryID),
-        OccasionIDs: Array.isArray(data.OccasionIDs) ? data.OccasionIDs.map(String) : [],
+        OccasionIDs: Array.isArray(data.OccasionIDs)
+          ? data.OccasionIDs.map(String)
+          : [],
         ProductColors: Array.isArray(data.ProductColors)
           ? data.ProductColors.map((color) => ({
-            ColorID: Number(color.ColorID),
-            ProductMRP: String(color.ProductMRP ?? 0),
-            ProductSalePrice: String(color.ProductSalePrice ?? 0),
-            ProductOldStock: String(color.ProductOldStock ?? 0),
-            ProductTotalStock: String(color.ProductTotalStock ?? 0),
-            ProductNewStock: "0",
-            ProductOutOfStock: String(color.ProductOutOfStock ?? 0),
-          }))
+              ColorID: Number(color.ColorID),
+              ProductMRP: String(color.ProductMRP ?? 0),
+              ProductSalePrice: String(color.ProductSalePrice ?? 0),
+              ProductOldStock: String(color.ProductOldStock ?? 0),
+              ProductTotalStock: String(color.ProductTotalStock ?? 0),
+              ProductNewStock: "0",
+              ProductOutOfStock: String(color.ProductOutOfStock ?? 0),
+            }))
           : [],
         ProductImage: null,
         ProductBannerImage: null,
@@ -130,20 +150,35 @@ export default function AddUpdProductData() {
         MetaSchema: data.MetaSchema || "",
         ActiveStatus: data.ActiveStatus === 1,
         DisplayOrder: data.DisplayOrder ?? 0,
-        DisplayOnExclusive: Number(data.DisplayOnExclusive) === 1,    // naya
-        DisplayOnHome: Number(data.DisplayOnHome) === 1,    // naya
+        DisplayOnExclusive: Number(data.DisplayOnExclusive) === 1, // naya
+        DisplayOnHome: Number(data.DisplayOnHome) === 1, // naya
       });
       setProductCode(data.ProductCode || "");
-      setPreviewImage(data.ProductImage ? `/OnlineImages/ProductImages/${data.ProductImage}` : "",);
-      setPreviewBanner(data.ProductBannerImage ? `/OnlineImages/ProductImages/${data.ProductBannerImage}` : "",);
+      setPreviewImage(
+        data.ProductImage
+          ? `/OnlineImages/ProductImages/${data.ProductImage}`
+          : "",
+      );
+      setPreviewBanner(
+        data.ProductBannerImage
+          ? `/OnlineImages/ProductImages/${data.ProductBannerImage}`
+          : "",
+      );
       setPreviewBannerImages([
-        data.ProductBannerImage1 ? `/OnlineImages/ProductImages/${data.ProductBannerImage1}` : "",
-        data.ProductBannerImage2 ? `/OnlineImages/ProductImages/${data.ProductBannerImage2}` : "",
-        data.ProductBannerImage3 ? `/OnlineImages/ProductImages/${data.ProductBannerImage3}` : "",
-        data.ProductBannerImage4 ? `/OnlineImages/ProductImages/${data.ProductBannerImage4}` : "",
+        data.ProductBannerImage1
+          ? `/OnlineImages/ProductImages/${data.ProductBannerImage1}`
+          : "",
+        data.ProductBannerImage2
+          ? `/OnlineImages/ProductImages/${data.ProductBannerImage2}`
+          : "",
+        data.ProductBannerImage3
+          ? `/OnlineImages/ProductImages/${data.ProductBannerImage3}`
+          : "",
+        data.ProductBannerImage4
+          ? `/OnlineImages/ProductImages/${data.ProductBannerImage4}`
+          : "",
       ]);
-    }
-    else if (!ProductID && maxOrderData?.maxOrder !== undefined) {
+    } else if (!ProductID && maxOrderData?.maxOrder !== undefined) {
       setFormData((prev) => ({
         ...prev,
         DisplayOrder: maxOrderData.maxOrder + 1,
@@ -157,7 +192,12 @@ export default function AddUpdProductData() {
     }));
   };
 
-  const generateSlug = (text) => text.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-");
+  const generateSlug = (text) =>
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-");
   const handleFileRename = (file, nameSuffix) => {
     const ext = file.name.split(".").pop();
     const slug = formData.ProductNameURL?.replace(/\s+/g, "-") || "product";
@@ -184,7 +224,9 @@ export default function AddUpdProductData() {
   };
 
   const handleSubmit = async () => {
-    const requiredPermission = ProductID ? pagePermission.CanWrite : pagePermission.CanAdd;
+    const requiredPermission = ProductID
+      ? pagePermission.CanWrite
+      : pagePermission.CanAdd;
     if (requiredPermission !== 1) {
       toast.error(
         `You do not have permission to ${ProductID ? "edit" : "add"} product post`,
@@ -192,35 +234,44 @@ export default function AddUpdProductData() {
       return;
     }
     if (areOccasionsLoading || occasionLoadError) {
-      toast.error("Occasion choices are unavailable. Please wait or refresh and try again.");
+      toast.error(
+        "Occasion choices are unavailable. Please wait or refresh and try again.",
+      );
       return;
     }
     if (areColorsLoading || colorLoadError) {
-      toast.error("Color choices are unavailable. Please wait or refresh and try again.");
+      toast.error(
+        "Color choices are unavailable. Please wait or refresh and try again.",
+      );
       return;
     }
     const invalidColorStock = formData.ProductColors.some((color) => {
-      return [
-        color.ProductMRP,
-        color.ProductSalePrice,
-        color.ProductNewStock,
-      ].some((value) => value === "" || !Number.isInteger(Number(value)) || Number(value) < 0) ||
-        [
-          color.ProductMRP,
-          color.ProductSalePrice,
-          color.ProductNewStock,
-        ].some((value) => Number(value) > 2147483647) ||
-        !["0", "1"].includes(String(color.ProductOutOfStock));
+      return (
+        [color.ProductMRP, color.ProductSalePrice, color.ProductNewStock].some(
+          (value) =>
+            value === "" ||
+            !Number.isInteger(Number(value)) ||
+            Number(value) < 0,
+        ) ||
+        [color.ProductMRP, color.ProductSalePrice, color.ProductNewStock].some(
+          (value) => Number(value) > 2147483647,
+        ) ||
+        !["0", "1"].includes(String(color.ProductOutOfStock))
+      );
     });
     if (invalidColorStock) {
-      toast.error("Enter valid non-negative whole-number prices and stock additions for each selected color.");
+      toast.error(
+        "Enter valid non-negative whole-number prices and stock additions for each selected color.",
+      );
       return;
     }
     const invalidSalePrice = formData.ProductColors.some(
-      (color) => Number(color.ProductSalePrice) >= Number(color.ProductMRP),
+      (color) => Number(color.ProductSalePrice) > Number(color.ProductMRP),
     );
     if (invalidSalePrice) {
-      toast.error("Sale price must be less than MRP for every selected color.");
+      toast.error(
+        "Sale price cannot be greater than MRP for every selected color.",
+      );
       return;
     }
     const errors = validateFields(formData, validationRules);
@@ -235,10 +286,17 @@ export default function AddUpdProductData() {
         data.append("ProductImage", handleFileRename(value, ""));
       } else if (key === "ProductBannerImage" && value instanceof File) {
         data.append("ProductBannerImage", handleFileRename(value, "-banner"));
-      } else if (/^ProductBannerImage[1-4]$/.test(key) && value instanceof File) {
+      } else if (
+        /^ProductBannerImage[1-4]$/.test(key) &&
+        value instanceof File
+      ) {
         const index = Number(key.slice(-1));
         data.append(key, handleFileRename(value, `-banner-${index}`));
-      } else if (key === "ActiveStatus" || key === "DisplayOnExclusive" || key === "DisplayOnHome") {
+      } else if (
+        key === "ActiveStatus" ||
+        key === "DisplayOnExclusive" ||
+        key === "DisplayOnHome"
+      ) {
         data.append(key, value ? "1" : "0");
       } else if (typeof value === "string" || typeof value === "number") {
         data.append(key, value.toString());
@@ -283,7 +341,8 @@ export default function AddUpdProductData() {
       ["link", "image", "video"],
       ["fullScreen", "showBlocks", "codeView"],
       ["preview", "print"],
-    ], minHeight: "200px",
+    ],
+    minHeight: "200px",
   };
   return (
     <main className={`${styles.page} add_update container`}>
@@ -291,9 +350,16 @@ export default function AddUpdProductData() {
         <div className={styles.formHeader}>
           <div>
             <h1>{ProductID ? "Update product" : "Create a product"}</h1>
-            <p className={styles.subtitle}>Add your article details, images, and search metadata.</p>
+            <p className={styles.subtitle}>
+              Add your article details, images, and search metadata.
+            </p>
           </div>
-          <Link href="/legacy-of-marwar-admin/manage-product" className={styles.headerBack}>Back to products</Link>
+          <Link
+            href="/legacy-of-marwar-admin/manage-product"
+            className={styles.headerBack}
+          >
+            Back to products
+          </Link>
         </div>
         <div className="form-group-row">
           <div className="form-group">
@@ -315,8 +381,14 @@ export default function AddUpdProductData() {
                 </option>
               ))}
             </select>
-            {categoryLoadError && <p className="error">Unable to load categories. Refresh and try again.</p>}
-            {formErrors.CategoryID && <p className="error">{formErrors.CategoryID}</p>}
+            {categoryLoadError && (
+              <p className="error">
+                Unable to load categories. Refresh and try again.
+              </p>
+            )}
+            {formErrors.CategoryID && (
+              <p className="error">{formErrors.CategoryID}</p>
+            )}
           </div>
           <div className="form-group">
             <label>Product Title*</label>
@@ -363,7 +435,10 @@ export default function AddUpdProductData() {
             <input
               id="productCode"
               type="text"
-              value={productCode || (ProductID ? "" : "Generated automatically on save")}
+              value={
+                productCode ||
+                (ProductID ? "" : "Generated automatically on save")
+              }
               readOnly
             />
 
@@ -390,7 +465,9 @@ export default function AddUpdProductData() {
               maxLength={255}
               placeholder="e.g. Handcrafted 925 sterling silver"
               value={formData.ProductSmallDescription ?? ""}
-              onChange={(e) => handleInput("ProductSmallDescription", e.target.value)}
+              onChange={(e) =>
+                handleInput("ProductSmallDescription", e.target.value)
+              }
             />
           </div>
         </div>
@@ -403,7 +480,9 @@ export default function AddUpdProductData() {
             <span>Select any number</span>
           </div>
           {occasionLoadError ? (
-            <p className="error">Unable to load occasions. Refresh and try again.</p>
+            <p className="error">
+              Unable to load occasions. Refresh and try again.
+            </p>
           ) : areOccasionsLoading ? (
             <p className={styles.fieldHint}>Loading occasions...</p>
           ) : occasions.length === 0 ? (
@@ -422,7 +501,9 @@ export default function AddUpdProductData() {
                           ...previous,
                           OccasionIDs: event.target.checked
                             ? [...previous.OccasionIDs, occasionID]
-                            : previous.OccasionIDs.filter((id) => id !== occasionID),
+                            : previous.OccasionIDs.filter(
+                                (id) => id !== occasionID,
+                              ),
                         }));
                       }}
                     />
@@ -443,17 +524,24 @@ export default function AddUpdProductData() {
             <span>Set prices per color, then enter any stock to add.</span>
           </div>
           {colorLoadError ? (
-            <p className="error">Unable to load colors. Refresh and try again.</p>
+            <p className="error">
+              Unable to load colors. Refresh and try again.
+            </p>
           ) : areColorsLoading ? (
             <p className={styles.fieldHint}>Loading colors...</p>
           ) : colors.length === 0 ? (
-            <p className={styles.fieldHint}>No colors are available. Add colors before configuring product variants.</p>
+            <p className={styles.fieldHint}>
+              No colors are available. Add colors before configuring product
+              variants.
+            </p>
           ) : (
             <>
               <div className={styles.occasionGrid}>
                 {colors.map((color) => {
                   const colorID = Number(color.ColorID);
-                  const selected = formData.ProductColors.some((item) => item.ColorID === colorID);
+                  const selected = formData.ProductColors.some(
+                    (item) => item.ColorID === colorID,
+                  );
                   return (
                     <label className={styles.occasionOption} key={colorID}>
                       <input
@@ -464,24 +552,28 @@ export default function AddUpdProductData() {
                             ...previous,
                             ProductColors: event.target.checked
                               ? [
-                                ...previous.ProductColors,
-                                {
-                                  ColorID: colorID,
-                                  ProductMRP: "0",
-                                  ProductSalePrice: "0",
-                                  ProductOldStock: "0",
-                                  ProductTotalStock: "0",
-                                  ProductNewStock: "0",
-                                  ProductOutOfStock: "0",
-                                },
-                              ]
-                              : previous.ProductColors.filter((item) => item.ColorID !== colorID),
+                                  ...previous.ProductColors,
+                                  {
+                                    ColorID: colorID,
+                                    ProductMRP: "0",
+                                    ProductSalePrice: "0",
+                                    ProductOldStock: "0",
+                                    ProductTotalStock: "0",
+                                    ProductNewStock: "0",
+                                    ProductOutOfStock: "0",
+                                  },
+                                ]
+                              : previous.ProductColors.filter(
+                                  (item) => item.ColorID !== colorID,
+                                ),
                           }));
                         }}
                       />
                       <span
                         className={styles.colorSwatch}
-                        style={{ backgroundColor: color.ColorCode || "#ffffff" }}
+                        style={{
+                          backgroundColor: color.ColorCode || "#ffffff",
+                        }}
                       />
                       <span>
                         {color.ColorName}
@@ -494,13 +586,20 @@ export default function AddUpdProductData() {
               {formData.ProductColors.length > 0 && (
                 <div className={styles.productColorList}>
                   {formData.ProductColors.map((productColor) => {
-                    const color = colors.find((item) => Number(item.ColorID) === productColor.ColorID);
+                    const color = colors.find(
+                      (item) => Number(item.ColorID) === productColor.ColorID,
+                    );
                     return (
-                      <fieldset className={styles.productColorCard} key={productColor.ColorID}>
+                      <fieldset
+                        className={styles.productColorCard}
+                        key={productColor.ColorID}
+                      >
                         <legend>
                           <span
                             className={styles.colorSwatch}
-                            style={{ backgroundColor: color?.ColorCode || "#ffffff" }}
+                            style={{
+                              backgroundColor: color?.ColorCode || "#ffffff",
+                            }}
                           />
                           {color?.ColorName || `Color #${productColor.ColorID}`}
                         </legend>
@@ -512,7 +611,10 @@ export default function AddUpdProductData() {
                             ["ProductOldStock", "Last", true],
                             ["ProductNewStock", "New Stock", false],
                           ].map(([field, label, readOnly]) => (
-                            <label className={styles.productColorField} key={field}>
+                            <label
+                              className={styles.productColorField}
+                              key={field}
+                            >
                               <span>{label}</span>
                               <input
                                 type="number"
@@ -526,10 +628,11 @@ export default function AddUpdProductData() {
                                   const value = event.target.value;
                                   setFormData((previous) => ({
                                     ...previous,
-                                    ProductColors: previous.ProductColors.map((item) =>
-                                      item.ColorID === productColor.ColorID
-                                        ? { ...item, [field]: value }
-                                        : item,
+                                    ProductColors: previous.ProductColors.map(
+                                      (item) =>
+                                        item.ColorID === productColor.ColorID
+                                          ? { ...item, [field]: value }
+                                          : item,
                                     ),
                                   }));
                                 }}
@@ -544,10 +647,11 @@ export default function AddUpdProductData() {
                                 const value = event.target.value;
                                 setFormData((previous) => ({
                                   ...previous,
-                                  ProductColors: previous.ProductColors.map((item) =>
-                                    item.ColorID === productColor.ColorID
-                                      ? { ...item, ProductOutOfStock: value }
-                                      : item,
+                                  ProductColors: previous.ProductColors.map(
+                                    (item) =>
+                                      item.ColorID === productColor.ColorID
+                                        ? { ...item, ProductOutOfStock: value }
+                                        : item,
                                   ),
                                 }));
                               }}
@@ -570,7 +674,9 @@ export default function AddUpdProductData() {
           <div className={styles.uploadColumn}>
             <div className="form-group">
               <label>Thumbnail Image*</label>
-              <p className={styles.fieldHint}>Main image shown with your article.</p>
+              <p className={styles.fieldHint}>
+                Main image shown with your article.
+              </p>
 
               <input
                 type="file"
@@ -592,7 +698,11 @@ export default function AddUpdProductData() {
               />
 
               {previewImage && (
-                <img src={previewImage} alt="Thumbnail preview" className={styles.imagePreview} />
+                <img
+                  src={previewImage}
+                  alt="Thumbnail preview"
+                  className={styles.imagePreview}
+                />
               )}
               {formErrors.ProductImage && (
                 <p className="error">{formErrors.ProductImage}</p>
@@ -603,7 +713,9 @@ export default function AddUpdProductData() {
           <div className={styles.uploadColumn}>
             <div className="form-group">
               <label>Thumbnail Image 2*</label>
-              <p className={styles.fieldHint}>Wide image used at the top of the article.</p>
+              <p className={styles.fieldHint}>
+                Wide image used at the top of the article.
+              </p>
               <input
                 type="file"
                 accept="image/*"
@@ -619,7 +731,11 @@ export default function AddUpdProductData() {
                 }}
               />
               {previewBanner && (
-                <img src={previewBanner} alt="Banner preview" className={styles.bannerPreview} />
+                <img
+                  src={previewBanner}
+                  alt="Banner preview"
+                  className={styles.bannerPreview}
+                />
               )}
             </div>
           </div>
@@ -630,7 +746,14 @@ export default function AddUpdProductData() {
             return (
               <div className={styles.uploadColumn} key={fieldName}>
                 <div className="form-group">
-                  <label> {imageNumber == 3 ? "Home Image" : imageNumber == 4 ? "Model Image" : `Image ${imageNumber + 2}`}</label>
+                  <label>
+                    {" "}
+                    {imageNumber == 3
+                      ? "Home Image"
+                      : imageNumber == 4
+                        ? "Model Image"
+                        : `Image ${imageNumber + 2}`}
+                  </label>
                   <input
                     type="file"
                     accept="image/*"
@@ -659,9 +782,7 @@ export default function AddUpdProductData() {
           })}
         </div>
         <div className={`form-group ${styles.descriptionGroup}`}>
-          <label>
-            Description
-          </label>
+          <label>Description</label>
 
           <div className={styles.editorFrame}>
             <SunEditor
@@ -684,7 +805,9 @@ export default function AddUpdProductData() {
               width="100%"
               height="200px"
               setContents={formData.SpecificationDescription || ""}
-              onChange={(content) => handleInput("SpecificationDescription", content)}
+              onChange={(content) =>
+                handleInput("SpecificationDescription", content)
+              }
               setOptions={editorOptions}
             />
           </div>
@@ -698,7 +821,9 @@ export default function AddUpdProductData() {
               width="100%"
               height="200px"
               setContents={formData.ReturnPolicyDescription || ""}
-              onChange={(content) => handleInput("ReturnPolicyDescription", content)}
+              onChange={(content) =>
+                handleInput("ReturnPolicyDescription", content)
+              }
               setOptions={editorOptions}
             />
           </div>
@@ -712,7 +837,9 @@ export default function AddUpdProductData() {
               width="100%"
               height="200px"
               setContents={formData.ShippingPolicyDescription || ""}
-              onChange={(content) => handleInput("ShippingPolicyDescription", content)}
+              onChange={(content) =>
+                handleInput("ShippingPolicyDescription", content)
+              }
               setOptions={editorOptions}
             />
           </div>
@@ -748,7 +875,9 @@ export default function AddUpdProductData() {
               type="checkbox"
               id="chkDisplayOnExclusive"
               checked={formData.DisplayOnExclusive}
-              onChange={(e) => handleInput("DisplayOnExclusive", e.target.checked)}
+              onChange={(e) =>
+                handleInput("DisplayOnExclusive", e.target.checked)
+              }
             />
             <label htmlFor="chkDisplayOnExclusive">Display on Exclusive</label>
           </div>
@@ -812,11 +941,22 @@ export default function AddUpdProductData() {
           </div>
         </section>
         <div className={styles.formActions}>
-          <Link href="/legacy-of-marwar-admin/manage-product" className={styles.cancelButton}>
+          <Link
+            href="/legacy-of-marwar-admin/manage-product"
+            className={styles.cancelButton}
+          >
             Cancel
           </Link>
-          <button className={`submit-btn ${styles.saveButton}`} onClick={handleSubmit} disabled={isLoading}>
-            {isLoading ? "Saving..." : ProductID ? "Save changes" : "Publish product"}
+          <button
+            className={`submit-btn ${styles.saveButton}`}
+            onClick={handleSubmit}
+            disabled={isLoading}
+          >
+            {isLoading
+              ? "Saving..."
+              : ProductID
+                ? "Save changes"
+                : "Publish product"}
           </button>
         </div>
       </div>
