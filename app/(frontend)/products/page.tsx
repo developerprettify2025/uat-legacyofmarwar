@@ -66,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Home() {
   const ProductID = "0";
   const Heading = "Our Products";
-  const TagLine = "Elegant silver earrings crafted to add a subtle sparkle to every look.";
+  const TagLine = "";
   const Image = "/images/other/product-banner.jpg";
   const Url = "/products";
   return <ProductListingPage id={ProductID} heading={Heading} tagLine={TagLine} image={Image} url={Url} />;
