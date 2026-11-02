@@ -1,7 +1,14 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 type FeaturedProductItem = {
+  ProductID: number;
+  CategoryID: number;
+  CategoryName: string;
+  CategoryNameURL: string;
   linkHref: string;
   imgSrc: string;
   title: string;
@@ -13,6 +20,30 @@ export default function FeaturedProduct({
 }: {
   data: FeaturedProductItem[];
 }) {
+  const categories = useMemo(() => {
+    return Array.from(
+      new Map(
+        data.map((item) => [
+          item.CategoryID,
+          {
+            CategoryID: item.CategoryID,
+            CategoryName: item.CategoryName,
+          },
+        ]),
+      ).values(),
+    );
+  }, [data]);
+  const [selectedCategoryID, setSelectedCategoryID] = useState<number | null>(
+    null,
+  );
+
+  const activeCategoryID = selectedCategoryID ?? categories[0]?.CategoryID;
+  const filteredProducts = useMemo(() => {
+    return data.filter(
+      (item) => String(item.CategoryID) === String(activeCategoryID),
+    );
+  }, [data, activeCategoryID]);
+
   return (
     <section className="home-featured-product">
       <div className="upper_sec">
@@ -36,23 +67,34 @@ export default function FeaturedProduct({
             alt="tree"
           />
         </div>
+
         <ul className="tab-nav">
-          <li className="active">Necklace</li>
-          <li>Earrings</li>
+          {categories.map((category) => (
+            <li
+              key={category.CategoryID}
+              className={
+                String(category.CategoryID) === String(activeCategoryID)
+                  ? "active"
+                  : ""
+              }
+              onClick={() => setSelectedCategoryID(category.CategoryID)}
+            >
+              {category.CategoryName}
+            </li>
+          ))}
         </ul>
       </div>
+
       <div className="grid">
-        {data?.map(({ linkHref, imgSrc, title, desc }) => {
-          return (
-            <Link className="featured-card" href={linkHref} key={linkHref}>
-              <Image src={imgSrc} alt={title} width={1200} height={1200} />
-              <figcaption>
-                <h3>{title}</h3>
-                <p>{desc}</p>
-              </figcaption>
-            </Link>
-          );
-        })}
+        {filteredProducts.map(({ ProductID, linkHref, imgSrc, title, desc }) => (
+          <Link className="featured-card" href={linkHref} key={ProductID}>
+            <Image src={imgSrc} alt={title} width={1200} height={1200} />
+            <figcaption>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </figcaption>
+          </Link>
+        ))}
       </div>
     </section>
   );
