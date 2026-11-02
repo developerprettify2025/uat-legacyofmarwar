@@ -23,7 +23,6 @@ export default function MoreProducts({ relatedProducts }: MoreProductsProps) {
     mrp: `₹ ${Number(item.ProductMRP ?? item.ProductSalePrice ?? 0).toLocaleString("en-IN")}.00`,
     isWishlisted: Number(item.IsWishlisted ?? 0),
     itemID: Number(item.ItemID ?? 0),
-    // extra fields used only for filtering / sorting
     _price: Number(item.ProductSalePrice ?? 0),
     _category: item.CategoryName ?? "",
     _color: String(item.ColorName ?? "")
@@ -31,6 +30,9 @@ export default function MoreProducts({ relatedProducts }: MoreProductsProps) {
       .toLowerCase(),
     desc: item.ProductTagline,
   }));
+  if (productItem.length === 0) {
+    return null;
+  }
   return (
     <section>
       <div className="more_products sec-pad-all">
