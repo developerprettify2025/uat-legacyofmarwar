@@ -11,6 +11,7 @@ export default function BlogListingPage() {
     isLoading,
     isError,
   } = useGetAllActiveBlogsQuery(undefined);
+  
   const blogs = blogResult ?? [];
   isLoading ? <Loading /> : null;
   console.log(blogs);
