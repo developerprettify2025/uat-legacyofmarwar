@@ -27,7 +27,7 @@ function wrapEmail(subject, greeting, mainContent) {
                     <tr>
                         <td style="width:50%;vertical-align:middle;">
                             <a href="https://www.legacyofmarwar.com" target="_blank">
-                                <img src="https://www.legacyofmarwar.com/images/logo-dark.png" alt="Legacy of Marwar"
+                                <img src="https://uat.legacyofmarwar.com/images/logo-dark.png" alt="Legacy of Marwar"
                                     height="60" style="display:block;height:60px;border:0;">
                             </a>
                         </td>
@@ -233,6 +233,48 @@ function generateEmailTemplate(emailType, data) {
           ${itemRows}
         </table>
         <p style="margin:0;line-height:22px;">We will update you as your order is processed and shipped.</p>
+      `,
+    );
+  }
+
+  if (emailType === "admin_new_order") {
+    const itemRows = (data.items || [])
+      .map(
+        (item) => `
+          <tr>
+            <td style="padding:8px;border:1px solid #e4d5b8;color:#5a5149;">${escapeHtml(item.ProductName)}${item.ColorName ? ` (${escapeHtml(item.ColorName)})` : ""}</td>
+            <td style="padding:8px;border:1px solid #e4d5b8;text-align:center;color:#5a5149;">${escapeHtml(item.ProductQuantity)}</td>
+            <td style="padding:8px;border:1px solid #e4d5b8;text-align:right;color:#5a5149;">₹ ${Number(item.ProductTotalAmount || 0).toLocaleString("en-IN")}</td>
+          </tr>`,
+      )
+      .join("");
+
+    return wrapEmail(
+      `New order received #${data.OrderNo} - Legacy of Marwar`,
+      "Hi Team,",
+      `
+        <p style="margin:0 0 16px;line-height:22px;">A new customer order has been placed.</p>
+        ${detailTable([
+          ["Order number", escapeHtml(data.OrderNo)],
+          ["Customer", escapeHtml(data.CustomerName || "Not provided")],
+          ["Email", escapeHtml(data.CustomerEmailID || "Not provided")],
+          ["Phone", escapeHtml(data.CustomerPhoneNo || "Not provided")],
+          ["Order status", escapeHtml(data.OrderStatus || "Not provided")],
+          ["Payment mode", escapeHtml(data.PaymentOption || "Not provided")],
+          ["Payment status", escapeHtml(data.TransactionStatus || "Not provided")],
+          ["Transaction ID", escapeHtml(data.TransactionID || "Not available")],
+          ["Shipping address", escapeHtml(data.ShippingAddress || "Not provided")],
+          ["Order total", `₹ ${Number(data.OrderTotalAmount || 0).toLocaleString("en-IN")}`],
+        ])}
+        <h3 style="margin:20px 0 8px;color:#2b2118;">Order items</h3>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:8px 0 16px;">
+          <tr>
+            <td style="padding:8px;border:1px solid #e4d5b8;background-color:#faf1e2;font-weight:600;color:#2b2118;">Item</td>
+            <td style="padding:8px;border:1px solid #e4d5b8;background-color:#faf1e2;font-weight:600;text-align:center;color:#2b2118;">Qty</td>
+            <td style="padding:8px;border:1px solid #e4d5b8;background-color:#faf1e2;font-weight:600;text-align:right;color:#2b2118;">Amount</td>
+          </tr>
+          ${itemRows}
+        </table>
       `,
     );
   }

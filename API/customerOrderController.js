@@ -40,8 +40,12 @@ async function sendOrderConfirmationEmail(OrderNo) {
   const orders = await query(
     db,
     `SELECT O.OrderNo, O.CustomerOrderListID, O.OrderTotalAmount,
-            C.CustomerName, C.CustomerEmailID,
-            S.OrderShippingAddressName, S.OrderShippingAddressEmailID
+            O.OrderStatus, O.PaymentOption, O.TransactionID, O.TransactionStatus,
+            C.CustomerName, C.CustomerEmailID, C.CustomerPhoneNo,
+            S.OrderShippingAddressName, S.OrderShippingAddressEmailID,
+            S.OrderShippingAddressPhoneNo, S.OrderShippingAddressFullAddress,
+            S.OrderShippingAddressLocality, S.OrderShippingAddressCity,
+            S.OrderShippingAddressState, S.OrderShippingAddressPinCode
      FROM mst_customerorderdata O
      LEFT JOIN mst_customerdata C ON C.CustomerID = O.CustomerID
      LEFT JOIN mst_ordershippingaddressdata S ON S.OrderNo = O.OrderNo
@@ -52,9 +56,6 @@ async function sendOrderConfirmationEmail(OrderNo) {
   );
   if (!orders.length) return;
   const order = orders[0];
-  const recipient = order.CustomerEmailID || order.OrderShippingAddressEmailID;
-  if (!recipient) return;
-
   const items = await query(
     db,
     `SELECT ProductName, ColorName, ProductQuantity, ProductTotalAmount
@@ -64,12 +65,69 @@ async function sendOrderConfirmationEmail(OrderNo) {
     [OrderNo],
   );
 
-  await sendEmail("order_confirmation", recipient, {
+  const emailData = {
     CustomerName: order.CustomerName || order.OrderShippingAddressName,
+    CustomerEmailID: order.CustomerEmailID || order.OrderShippingAddressEmailID,
+    CustomerPhoneNo: order.CustomerPhoneNo || order.OrderShippingAddressPhoneNo,
     OrderNo: order.OrderNo,
     OrderTotalAmount: order.OrderTotalAmount,
+    OrderStatus: order.OrderStatus,
+    PaymentOption: order.PaymentOption,
+    TransactionID: order.TransactionID,
+    TransactionStatus: order.TransactionStatus,
+    ShippingAddress: [
+      order.OrderShippingAddressFullAddress,
+      order.OrderShippingAddressLocality,
+      order.OrderShippingAddressCity,
+      order.OrderShippingAddressState,
+      order.OrderShippingAddressPinCode,
+    ]
+      .filter(Boolean)
+      .join(", "),
     items,
-  });
+  };
+  const customerRecipient =
+    order.CustomerEmailID || order.OrderShippingAddressEmailID;
+  const adminRecipient = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+  const notifications = [];
+
+  if (customerRecipient) {
+    notifications.push(
+      sendEmail("order_confirmation", customerRecipient, emailData).then(
+        (result) => {
+          if (!result.success) {
+            console.error(
+              `Customer order confirmation email failed for order #${OrderNo}:`,
+              result.error,
+            );
+          }
+        },
+      ),
+    );
+  } else {
+    console.error(
+      `Customer order confirmation skipped for #${OrderNo}: no email address.`,
+    );
+  }
+
+  if (adminRecipient) {
+    notifications.push(
+      sendEmail("admin_new_order", adminRecipient, emailData).then((result) => {
+        if (!result.success) {
+          console.error(
+            `Admin order notification email failed for order #${OrderNo}:`,
+            result.error,
+          );
+        }
+      }),
+    );
+  } else {
+    console.error(
+      `Admin order notification skipped for #${OrderNo}: ADMIN_EMAIL and SMTP_USER are not configured.`,
+    );
+  }
+
+  await Promise.all(notifications);
 }
 
 exports.getOrderFormData = (req, res) => {
