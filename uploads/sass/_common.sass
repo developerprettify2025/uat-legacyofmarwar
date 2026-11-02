@@ -552,6 +552,8 @@ img, video
             fill: $btncolor
         &:hover
             color: $white
+            img
+                filter: none
             path
                 fill: $white
     &.secondary-border
@@ -1411,6 +1413,8 @@ div
         @include media(540)
             padding-right: 0
     &.discover_collection
+        &.earrings
+            padding-bottom: 20px
         overflow: hidden
         z-index: 1
         @include before(url("/images/home/discover-bg.jpg"))
@@ -1426,7 +1430,7 @@ div
             @include media(768)
                 margin: 40px auto 0
             @include media(540)
-                margin: 30px auto 0
+                margin: 30px auto 
             .icon
                 width: 112px
                 margin: 0 auto 10px

@@ -119,7 +119,83 @@
                             width: 30%
 
 .home-featured-product
-    background: #F5EBD7
+    // background: #F5EBD7
+    z-index: 1
+    .upper_sec
+        position: relative
+        padding: 60px 0 
+        @include media(991)
+            padding: 50px 0
+        @include media(768)
+            padding: 40px 0
+        @include media(540)
+            padding: 20px 0 30px
+        @include before(url("/images/home/discover-bg.jpg"))
+        &::before
+            background-repeat: no-repeat
+            background-size: cover
+            z-index: -1
+        .subheading
+            text-align: center
+            margin-bottom: 30px
+            @include media(768)
+                margin-bottom: 20px
+            @include media(540)
+                margin-bottom: 15px
+            .icon
+                width: 112px
+                margin: 0 auto 10px
+                @include media(991) 
+                    width: 100px
+                @include media(540)
+                    width: 80px
+                    margin: 0 auto 5px
+            h4
+                font-size: 36px
+                font-weight: 400
+                @include media(991) 
+                    font-size: 32px
+                @include media(768)
+                    font-size: 22px
+                @include media(540)
+                    font-size: 20px
+                    max-width: 180px
+                    margin: 0 auto
+        .tree
+            width: 150px
+            line-height: 0
+            position: absolute
+            right: 5%
+            bottom: 0
+            transform: translate(5%, 5px)
+            @include media(991) 
+                width: 120px
+            @include media(768)
+                width: 100px
+                right: 3%
+            @include media(540)
+                width: 60px
+                right: 2%
+        .tab-nav
+            display: flex
+            align-items: center
+            justify-content: center
+            gap: 35px
+            @include media(768)
+                flex: 0 1 100%
+                justify-content: center
+            @include media(540)
+                gap: 20px
+            li
+                position: relative
+                transition: .5s ease
+                cursor: pointer
+                font-weight: 500
+                font-size: 14px
+                text-transform: uppercase
+                color: #00000080
+                &.active
+                    color: $black
     .grid
         display: grid
         grid-template-columns: repeat(2, 1fr)

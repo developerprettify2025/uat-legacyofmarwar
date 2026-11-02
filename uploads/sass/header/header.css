@@ -1463,6 +1463,9 @@ img, video {
 .btn.primary-border:hover {
   color: var(--white);
 }
+.btn.primary-border:hover img {
+  filter: none;
+}
 .btn.primary-border:hover path {
   fill: var(--white);
 }
@@ -2656,6 +2659,9 @@ div:has(> .product-not-found) {
     padding-right: 0;
   }
 }
+.product_listing_slider.discover_collection.earrings {
+  padding-bottom: 20px;
+}
 .product_listing_slider.discover_collection {
   overflow: hidden;
   z-index: 1;
@@ -2697,7 +2703,7 @@ div:has(> .product-not-found) {
 }
 @media only screen and (max-width: 540px) {
   .product_listing_slider.discover_collection .subheading {
-    margin: 30px auto 0;
+    margin: 30px auto;
   }
 }
 .product_listing_slider.discover_collection .subheading .icon {

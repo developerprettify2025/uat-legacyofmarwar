@@ -149,6 +149,64 @@ export default function HomePage() {
     };
   }, [products]);
 
+  const earringsData = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Map(
+        products.map((product: any) => [
+          product.CategoryID,
+          {
+            CategoryID: product.CategoryID,
+            CategoryName: product.CategoryName,
+            CategoryNameURL: product.CategoryNameURL,
+            CategoryVideo: product.CategoryVideo,
+          },
+        ]),
+      ).values(),
+    );
+
+    return {
+      classname: "discover_collection earrings",
+      heading: `<span class='italic'>Adaa</span> - The Earring Collection`,
+      mediaSrc: "/images/home/collection.mp4",
+      linkHref: "/products",
+
+      tavNav: uniqueCategories.map((category: any) => ({
+        label: category.CategoryName,
+        url: `/products/${category.CategoryNameURL}`,
+
+        videoSrc: category.CategoryVideo
+          ? `/OnlineImages/CategoryImages/${category.CategoryVideo}`
+          : "/images/home/collection.mp4",
+
+        productItem: products
+          .filter(
+            (product: any) =>
+              String(product.CategoryID) === String(category.CategoryID),
+          )
+          .map((product: any) => ({
+            sno: product.ProductID,
+            ProductID: product.ProductID,
+            linkHref: `/${product.ProductNameURL}`,
+
+            imgSrc: product.ProductImage
+              ? `/OnlineImages/ProductImages/${product.ProductImage}`
+              : "/images/other/ring1.png",
+            imghoverSrc: product.ProductBannerImage4
+              ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
+              : "/images/other/ring1.png",
+            title: product.ProductName,
+
+            sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString(
+              "en-IN",
+            )}.00`,
+            isWishlisted: Number(product.IsWishlisted ?? 0),
+            itemID: Number(product.ItemID ?? 0),
+            desc: product.ProductTagline,
+          })),
+      })),
+    };
+  }, [products]);
+
   const specialNewOccasionsData = useMemo(() => {
     const uniqueOccasions = Array.from(
       new Map(
@@ -255,8 +313,11 @@ export default function HomePage() {
         linkHref="/products"
       />
 
+      {earringsData.tavNav.length > 0 && (
+        <ProductListingSlider data={earringsData} isLegacy={false} />
+      )}
       {discoverCollectionData.tavNav.length > 0 && (
-        <ProductListingSlider data={discoverCollectionData} />
+        <ProductListingSlider data={discoverCollectionData} isLegacy={false} />
       )}
 
       {/* {categories.length > 0 && <DiscoverCategory data={categories} />} */}

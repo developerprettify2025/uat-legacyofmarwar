@@ -15,6 +15,32 @@ export default function FeaturedProduct({
 }) {
   return (
     <section className="home-featured-product">
+      <div className="upper_sec">
+        <div className="subheading">
+          <div className="icon">
+            <Image
+              src="/images/home/discover-elephant.png"
+              width={112}
+              height={102}
+              alt="elephant"
+              unoptimized
+            />
+          </div>
+          <h4>A Marwar Elegance</h4>
+        </div>
+        <div className="tree">
+          <Image
+            src="/images/home/discover-tree.png"
+            width={150}
+            height={225}
+            alt="tree"
+          />
+        </div>
+        <ul className="tab-nav">
+          <li className="active">Necklace</li>
+          <li>Earrings</li>
+        </ul>
+      </div>
       <div className="grid">
         {data?.map(({ linkHref, imgSrc, title, desc }) => {
           return (
