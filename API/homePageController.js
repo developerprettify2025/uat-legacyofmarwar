@@ -282,8 +282,8 @@ exports.getAllDataOfProductDetails = async (req, res) => {
   // Product details (one row, colors come from sqlColor)
   const sqlProductDetails = `SELECT pd.*, cd.CategoryName, cd.CategoryNameURL, cd.CategoryImage, cd.CategoryBannerImage, cd.CategoryVideo, ${wishlistColumn}, ${CustomerID} as ItemID FROM ${sqlView} and pd.ProductID=? ORDER BY pd.DisplayOrder ASC LIMIT 1 `;
 
-  // Related products (every product except the current one)
-  const sqlReatedProduct = `SELECT pd.ProductID, pd.CategoryID, cd.CategoryName, cd.CategoryNameURL, cd.CategoryVideo, pd.ProductName, pd.ProductNameURL, pd.ProductTagline, pd.ProductImage, pd.ProductBannerImage4, MIN(pcd.ProductSalePrice) AS ProductSalePrice, MIN(pcd.ProductMRP) AS ProductMRP, GROUP_CONCAT(DISTINCT cod.ColorName) AS ColorName, ${wishlistColumn}, ${CustomerID} as ItemID FROM ${sqlView} and pd.ProductID<>? GROUP BY pd.ProductID, pd.CategoryID, cd.CategoryName, cd.CategoryNameURL, cd.CategoryVideo, pd.ProductName, pd.ProductNameURL, pd.ProductTagline, pd.ProductImage, pd.ProductBannerImage4, pd.DisplayOrder ORDER BY pd.DisplayOrder ASC LIMIT 10 `;
+  // Related products exclude the current item and stay in its category.
+  const sqlReatedProduct = `SELECT pd.ProductID, pd.CategoryID, cd.CategoryName, cd.CategoryNameURL, cd.CategoryVideo, pd.ProductName, pd.ProductNameURL, pd.ProductTagline, pd.ProductImage, pd.ProductBannerImage4, MIN(pcd.ProductSalePrice) AS ProductSalePrice, MIN(pcd.ProductMRP) AS ProductMRP, GROUP_CONCAT(DISTINCT cod.ColorName) AS ColorName, ${wishlistColumn}, ${CustomerID} as ItemID FROM ${sqlView} AND pd.CategoryID = (SELECT currentProduct.CategoryID FROM mst_productdata currentProduct WHERE currentProduct.ProductID = ? LIMIT 1) AND pd.ProductID <> ? GROUP BY pd.ProductID, pd.CategoryID, cd.CategoryName, cd.CategoryNameURL, cd.CategoryVideo, pd.ProductName, pd.ProductNameURL, pd.ProductTagline, pd.ProductImage, pd.ProductBannerImage4, pd.DisplayOrder ORDER BY pd.DisplayOrder ASC LIMIT 10 `;
 
   // Color-wise price / stock of this product
   const sqlColor = ` SELECT * FROM ${sqlView} and pd.ProductID=? ORDER BY cod.ColorName ASC `;
@@ -291,7 +291,7 @@ exports.getAllDataOfProductDetails = async (req, res) => {
   try {
     const [productRows, relatedProducts, colors] = await Promise.all([
       executeQuery(sqlProductDetails, [CustomerID, ProductID]),
-      executeQuery(sqlReatedProduct, [CustomerID, ProductID]),
+      executeQuery(sqlReatedProduct, [CustomerID, ProductID, ProductID]),
       executeQuery(sqlColor, [CustomerID, ProductID]),
     ]);
 
