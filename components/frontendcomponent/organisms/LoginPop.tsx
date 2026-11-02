@@ -97,7 +97,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     // move to the next input after typing a digit
     if (value && index < length - 1) {
       inputRefs.current[index + 1]?.focus();
-    } 
+    }
   };
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace") {
@@ -147,6 +147,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const MOBILE_REGEX = /^[6-9]\d{9}$/;
 
+  // (not used now: login is email only. Kept for when phone login returns)
   const normalizeMobile = (input: string) => {
     let digits = input.replace(/\D/g, "");
     if (digits.length === 12 && digits.startsWith("91"))
@@ -162,6 +163,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
   };
   const MOCK_OTP = "1234"; // phone login still uses a local OTP until SMS is wired
 
+  // (not used now: login is email only. Kept for when phone login returns)
   const parseIdentifier = (rawInput: any) => {
     const value = rawInput.trim();
     const rawValue = value.replace(/^\+91\s?/, "");
@@ -187,44 +189,41 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     return { type: "phone", value: `+91 ${digits}`, error: null };
   };
 
+  // CHANGED: email only. Strips spaces, lowercases, max 100 characters.
   const handleMobileChange = (e: any) => {
-    const { value } = parseIdentifier(e.target.value);
+    const value = String(e.target.value ?? "")
+      .replace(/\s/g, "")
+      .toLowerCase()
+      .slice(0, 100);
     setMobileNo(value);
   };
 
+  // CHANGED: email only. Phone numbers are rejected.
   const handleContinue = async () => {
-    const value = mobileNo;
-    if (!value) {
-      toast.error("Enter mobile number or email.");
+    const email = mobileNo.trim().toLowerCase();
+
+    if (!email) {
+      toast.error("Enter your email address.");
       return;
     }
-
-    const isEmail = value.includes("@");
-    const email = value.toLowerCase();
-    const mobile = normalizeMobile(value);
-
-    if (isEmail && !EMAIL_REGEX.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
       toast.error("Enter a valid email address.");
-      return;
-    }
-    if (!isEmail && !MOBILE_REGEX.test(mobile)) {
-      toast.error("Enter a valid 10-digit mobile number.");
       return;
     }
 
     const payload = {
-      CustomerPhoneNo: isEmail ? "" : mobile,
-      CustomerEmailID: isEmail ? email : "",
+      CustomerPhoneNo: "",
+      CustomerEmailID: email,
     };
 
     try {
       setIdentifier(payload);
       const result = await checkUserLogin(payload).unwrap();
       setIsNewUser(result.code === USER_EXISTS_CODE);
-      if (isEmail) {
-        await sendOtp({ CustomerEmailID: email }).unwrap();
-        toast.success("OTP sent to your email!");
-      }
+
+      await sendOtp({ CustomerEmailID: email }).unwrap();
+      toast.success("OTP sent to your email!");
+
       verifiedOtpRef.current = null; // fresh OTP, nothing verified yet
       setOtp(Array(length).fill(""));
       setOtpError(false);
@@ -392,12 +391,13 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           <h4>Login or Signup</h4>
         </div>
         <div className="form">
+          {/* CHANGED: email only input */}
           <Input
-            type="text"
-            name="text"
+            type="email"
+            name="email"
             value={mobileNo}
             onChange={handleMobileChange}
-            placeholder="+91 Mobile Number / Email"
+            placeholder="Enter your Email"
             id="user"
           />
           <Button

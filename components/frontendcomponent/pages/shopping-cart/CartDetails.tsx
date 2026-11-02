@@ -242,21 +242,29 @@ export default function CartDetails() {
   );
   // selling price ka total (coupon se pehle)
   const totalSp = summary.totalMRP;
+  const discountOnMrp = Math.max(0, totalMrp - totalSp);
+  const couponDiscount = Number(summary.couponDiscount) || 0;
 
   const checkoutItems: CheckoutPricing[] = [
     { id: "mrp", label: "Total MRP", amount: totalMrp, type: "add" },
-    {
-      id: "discount",
-      label: "Discount on MRP",
-      amount: Math.max(0, totalMrp - totalSp),
-      type: "subtract",
-    },
+    ...(discountOnMrp > 0
+      ? [
+          {
+            id: "discount",
+            label: "Discount on MRP",
+            amount: discountOnMrp,
+            type: "subtract" as const,
+          },
+        ]
+      : []),
+
     {
       id: "coupon",
       label: "Coupon Discount",
       amount: summary.couponDiscount,
       type: "subtract",
     },
+
     {
       id: "shipping",
       label: "Shipping Fee",
@@ -265,7 +273,6 @@ export default function CartDetails() {
       freeLabel: "Free",
     },
   ];
-
   const handleChange = (
     e: SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
