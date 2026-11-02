@@ -13,7 +13,14 @@ import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import { useModal } from "@/hooks/useModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useCheckUserLoginMutation, useSignupCustomerMutation, useLoginByOtpMutation, useCheckUserValidMutation, useSendOtpMutation, useVerifyOtpMutation, } from "@/store/backendSlice/customerAPISlice";
+import {
+  useCheckUserLoginMutation,
+  useSignupCustomerMutation,
+  useLoginByOtpMutation,
+  useCheckUserValidMutation,
+  useSendOtpMutation,
+  useVerifyOtpMutation,
+} from "@/store/backendSlice/customerAPISlice";
 
 import { login } from "@/store/slice/authSlice";
 import toast from "react-hot-toast";
@@ -36,9 +43,11 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
   const [signupCustomer, { isLoading: isSigningUp }] =
     useSignupCustomerMutation();
   const [loginByOtp, { isLoading: isLoggingIn }] = useLoginByOtpMutation();
-  const [checkUserValid, { isLoading: isCheckingValid }] = useCheckUserValidMutation();
+  const [checkUserValid, { isLoading: isCheckingValid }] =
+    useCheckUserValidMutation();
   const [sendOtp, { isLoading: isSendingOtp }] = useSendOtpMutation();
-  const [verifyEmailOtp, { isLoading: isVerifyingEmailOtp }] = useVerifyOtpMutation();
+  const [verifyEmailOtp, { isLoading: isVerifyingEmailOtp }] =
+    useVerifyOtpMutation();
   const [customerName, setCustomerName] = useState("");
   const [isNewUser, setIsNewUser] = useState(false);
   const [otpError, setOtpError] = useState(false);
@@ -46,12 +55,21 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     CustomerPhoneNo: "",
     CustomerEmailID: "",
   });
-  const isLoading = isCheckingLogin || isSigningUp || isLoggingIn || isCheckingValid || isSendingOtp || isVerifyingEmailOtp;
+  const isLoading =
+    isCheckingLogin ||
+    isSigningUp ||
+    isLoggingIn ||
+    isCheckingValid ||
+    isSendingOtp ||
+    isVerifyingEmailOtp;
 
   const { closeModal } = useModal();
   const { isModal } = useAppSelector((state) => state.modal);
   const [otp, setOtp] = useState<string[]>(Array(length).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  // Remembers the OTP that was already verified successfully, so a retry
+  // (e.g. after a signup/login failure) never re-verifies a consumed OTP.
+  const verifiedOtpRef = useRef<string | null>(null);
   const [loginActive, setLoginActive] = useState<boolean>(true);
   const [formData, setFormData] = useState<userData>({
     user: "",
@@ -79,7 +97,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     // move to the next input after typing a digit
     if (value && index < length - 1) {
       inputRefs.current[index + 1]?.focus();
-    }
+    } 
   };
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace") {
@@ -170,7 +188,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
   };
 
   const handleMobileChange = (e: any) => {
-    const { value, error } = parseIdentifier(e.target.value);
+    const { value } = parseIdentifier(e.target.value);
     setMobileNo(value);
   };
 
@@ -194,7 +212,10 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       return;
     }
 
-    const payload = { CustomerPhoneNo: isEmail ? "" : mobile, CustomerEmailID: isEmail ? email : "", };
+    const payload = {
+      CustomerPhoneNo: isEmail ? "" : mobile,
+      CustomerEmailID: isEmail ? email : "",
+    };
 
     try {
       setIdentifier(payload);
@@ -204,6 +225,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
         await sendOtp({ CustomerEmailID: email }).unwrap();
         toast.success("OTP sent to your email!");
       }
+      verifiedOtpRef.current = null; // fresh OTP, nothing verified yet
       setOtp(Array(length).fill(""));
       setOtpError(false);
       setLoginActive(false);
@@ -219,6 +241,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     }
     try {
       await sendOtp({ CustomerEmailID: identifier.CustomerEmailID }).unwrap();
+      verifiedOtpRef.current = null; // new OTP issued, reset
       setOtp(Array(length).fill(""));
       setOtpError(false);
       toast.success("OTP sent to your email!");
@@ -226,32 +249,51 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       toast.error(`Failed to resend OTP. ${getErrorMessage(error)}`);
     }
   };
+
   const handleVerifyOtp = async () => {
     const finalOtp = otp.join("").trim();
     setOtpError(false);
+
+    // 1) Validate everything locally BEFORE touching the backend,
+    //    so a valid OTP is never consumed by an incomplete form.
     if (!/^\d{4}$/.test(finalOtp)) {
       setOtpError(true);
       toast.error("Please enter the complete 4-digit OTP.");
       return;
     }
-    try {
+
+    const name = customerName.trim();
+    if (isNewUser && !name) {
+      toast.error("Please enter your name.");
+      return;
+    }
+
+    // 2) Verify the OTP (skip if this exact OTP was already verified)
+    if (verifiedOtpRef.current !== finalOtp) {
       if (identifier.CustomerEmailID) {
-        await verifyEmailOtp({
-          CustomerEmailID: identifier.CustomerEmailID,
-          otp: finalOtp,
-        }).unwrap();
+        try {
+          await verifyEmailOtp({
+            CustomerEmailID: identifier.CustomerEmailID,
+            otp: finalOtp,
+          }).unwrap();
+          verifiedOtpRef.current = finalOtp;
+        } catch (error) {
+          setOtpError(true);
+          toast.error(`Invalid OTP. ${getErrorMessage(error)}`);
+          return;
+        }
       } else if (finalOtp !== MOCK_OTP) {
         setOtpError(true);
         toast.error("Please enter valid OTP.");
         return;
+      } else {
+        verifiedOtpRef.current = finalOtp;
       }
+    }
 
-      if (isNewUser === true) {
-        const name = customerName.trim();
-        if (!name) {
-          toast.error("Please enter your name.");
-          return;
-        }
+    // 3) Signup (new users) and login. Errors here are NOT OTP errors.
+    try {
+      if (isNewUser) {
         const result = await signupCustomer({
           CustomerName: name,
           CustomerPhoneNo: identifier.CustomerPhoneNo,
@@ -270,10 +312,8 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       }
       await loginAndDispatch(finalOtp);
       closeModal();
-      return;
     } catch (error) {
-      setOtpError(true);
-      toast.error(`Verification failed. ${getErrorMessage(error)}`);
+      toast.error(`Login failed. ${getErrorMessage(error)}`);
     }
   };
 
@@ -362,7 +402,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           />
           <Button
             classname="solid-primary"
-            buttonText={isLoading ? "Please wait..." : mobileNo.includes("@") ? "Continue" : "Continue"}
+            buttonText={isLoading ? "Please wait..." : "Continue"}
             onClick={handleContinue}
             disabled={isLoading}
           />
@@ -421,7 +461,10 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
         <button
           type="button"
           className="back-to-login"
-          onClick={() => setLoginActive(true)}
+          onClick={() => {
+            verifiedOtpRef.current = null;
+            setLoginActive(true);
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -440,7 +483,14 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           </svg>
           Back
         </button>
-        <form action="" className="otp-verify-wrap">
+        <form
+          action=""
+          className="otp-verify-wrap"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleVerifyOtp();
+          }}
+        >
           <p className="message">
             Please enter the OTP sent to <span>{displayIdentifier}</span>
           </p>
@@ -490,6 +540,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
             classname="solid-primary"
             buttonText={isLoading ? "Please wait..." : "Verify Otp"}
             onClick={() => void handleVerifyOtp()}
+            disabled={isLoading}
           />
           <p className="register">
             Not recieved your code?{" "}
