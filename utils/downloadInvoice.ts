@@ -1,8 +1,85 @@
 const LETTERHEAD_URL = "/letterhead.jpg"; // public/letterhead.jpg
 
-const GST_DIVISOR = 1.03; // price me 3% GST included hai
-const SGST_RATE = 0.015; // 1.5%
-const CGST_RATE = 0.015; // 1.5%
+// ---------- business config ----------
+const BUSINESS_NAME = "ANAAYAH CREATIVES & DESIGNS";
+const HSN_CODE = "711311";
+const SELLER_STATE_CODE = "07"; // seller Delhi ka hai
+
+const GST_RATE = 0.03; // 3% (price me already included)
+const GST_DIVISOR = 1 + GST_RATE; // 1.03
+
+// ---------- GST state codes ----------
+const STATE_CODES: Record<string, string> = {
+  "jammu and kashmir": "01",
+  "himachal pradesh": "02",
+  punjab: "03",
+  chandigarh: "04",
+  uttarakhand: "05",
+  haryana: "06",
+  delhi: "07",
+  rajasthan: "08",
+  "uttar pradesh": "09",
+  bihar: "10",
+  sikkim: "11",
+  "arunachal pradesh": "12",
+  nagaland: "13",
+  manipur: "14",
+  mizoram: "15",
+  tripura: "16",
+  meghalaya: "17",
+  assam: "18",
+  "west bengal": "19",
+  jharkhand: "20",
+  odisha: "21",
+  chhattisgarh: "22",
+  "madhya pradesh": "23",
+  gujarat: "24",
+  "dadra and nagar haveli and daman and diu": "26",
+  maharashtra: "27",
+  karnataka: "29",
+  goa: "30",
+  lakshadweep: "31",
+  kerala: "32",
+  "tamil nadu": "33",
+  puducherry: "34",
+  "andaman and nicobar islands": "35",
+  telangana: "36",
+  "andhra pradesh": "37",
+  ladakh: "38",
+};
+
+// alag-alag spelling / purane naam bhi chalenge
+const STATE_ALIASES: Record<string, string> = {
+  "new delhi": "delhi",
+  "nct of delhi": "delhi",
+  "delhi ncr": "delhi",
+  orissa: "odisha",
+  uttaranchal: "uttarakhand",
+  pondicherry: "puducherry",
+  "jammu and kashmir": "jammu and kashmir",
+  "j and k": "jammu and kashmir",
+  "dadra and nagar haveli": "dadra and nagar haveli and daman and diu",
+  "daman and diu": "dadra and nagar haveli and daman and diu",
+  "andaman and nicobar": "andaman and nicobar islands",
+  "andaman nicobar islands": "andaman and nicobar islands",
+  "chattisgarh": "chhattisgarh",
+};
+
+const normalizeState = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+// state ke naam se GST state code nikalo, na mile to "" return hoga
+const getStateCode = (state?: string | null): string => {
+  if (!state) return "";
+  const key = normalizeState(state);
+  const name = STATE_ALIASES[key] ?? key;
+  return STATE_CODES[name] ?? "";
+};
 
 // 2 decimal tak round
 const r2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
@@ -62,105 +139,171 @@ export async function downloadInvoice(order: any) {
   // page 1 ka background
   drawLetterhead();
 
+  // ---------- state / tax type ----------
+  const buyerState = String(order.OrderShippingAddressState || "").trim();
+  const buyerStateCode = getStateCode(buyerState);
+  // buyer Delhi (07) ka ho to CGST + SGST, warna IGST
+  const isIntraState = buyerStateCode
+    ? buyerStateCode === SELLER_STATE_CODE
+    : buyerState.toLowerCase().includes("delhi");
+  const taxHead = isIntraState ? "GST" : "IGST";
+
   // ---------- calculation ----------
   const rawItems: any[] = order.items ?? [];
 
-  // har product ki price me se GST nikalo: base = price / 1.03
-  const items = rawItems.map((it) => ({
-    ...it,
-    unitBase: r2(Number(it.ProductSalePrice || 0) / GST_DIVISOR),
-    totalBase: r2(Number(it.ProductTotalAmount || 0) / GST_DIVISOR),
-  }));
+  const items = rawItems.map((it) => {
+    const lineTotal = r2(Number(it.ProductTotalAmount || 0)); // GST included
+    const lineBase = r2(lineTotal / GST_DIVISOR);
+    return {
+      ...it,
+      unitBase: r2(Number(it.ProductSalePrice || 0) / GST_DIVISOR),
+      lineBase,
+      lineTax: r2(lineTotal - lineBase),
+      lineTotal,
+    };
+  });
 
-  const subTotal = r2(items.reduce((s, i) => s + i.totalBase, 0));
+  const subTotal = r2(items.reduce((s, i) => s + i.lineBase, 0));
+  const itemsInclusive = r2(items.reduce((s, i) => s + i.lineTotal, 0));
 
-  // coupon bhi tax-inclusive hai, isliye usse bhi base me convert karo
+  // coupon bhi tax-inclusive hai
   const coupon = Number(order.CouponValue || 0);
   const couponBase = r2(coupon / GST_DIVISOR);
 
   const taxable = r2(subTotal - couponBase);
-  const sgst = r2(taxable * SGST_RATE);
-  const cgst = r2(taxable * CGST_RATE);
+  // tax = (inclusive total - taxable), isse invoice hamesha exact add hota hai
+  const totalTax = r2(itemsInclusive - coupon - taxable);
+  const sgst = r2(totalTax / 2);
+  const cgst = r2(totalTax - sgst);
 
   const shipping = Number(order.TotalShippingAmount || 0);
-  const exactTotal = r2(taxable + sgst + cgst + shipping);
+  const exactTotal = r2(taxable + totalTax + shipping);
   const grandTotal = Math.round(exactTotal); // nearest whole rupee
-  const roundOff = r2(grandTotal - exactTotal); // can be + or -
+  const roundOff = r2(grandTotal - exactTotal);
 
-  // ---------- header (logo letterhead me hai, sirf INVOICE title) ----------
+  // ---------- header (logo letterhead me hai) ----------
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
   doc.setTextColor(30);
-  doc.text("INVOICE", pageW - M, 60, { align: "right" });
+  doc.text("TAX INVOICE", pageW - M, 60, { align: "right" });
 
-  doc.setDrawColor(...gold);
-  doc.setLineWidth(1);
-  doc.line(M, 100, pageW - M, 100);
+  doc.setFontSize(9);
+  doc.text(BUSINESS_NAME, pageW - M, 78, { align: "right" });
 
-  // ---------- order info (left) ----------
+  // ---------- invoice info (left) ----------
   doc.setFontSize(10);
+  const placeOfSupply = buyerState
+    ? `${buyerState}${buyerStateCode ? ` (State Code ${buyerStateCode})` : ""}`
+    : "-";
+
   const info: [string, string][] = [
-    ["Order No", String(order.OrderNo ?? "-")],
-    ["Order Date", fmtDate(order.OrderDate)],
-    ["Txn ID", String(order.TransactionID || "-")],
-    ["Payment", String(order.TransactionStatus || "-")],
+    ["Invoice No:", String(order.InvoiceNo ?? order.OrderNo ?? "-")],
+    ["Invoice Date:", fmtDate(order.OrderDate)],
+    ["Order No:", String(order.OrderNo ?? "-")],
+    ["Txn ID:", String(order.TransactionID || "-")],
+    ["Payment:", String(order.TransactionStatus || "-")],
+    ["Place of Supply:", placeOfSupply],
+    ["Reverse Charge:", "No"],
   ];
-  let y = 130;
+  let y = 124;
   info.forEach(([k, v]) => {
     doc.setFont("helvetica", "bold");
     doc.setTextColor(30);
-    doc.text(`${k}:`, M, y);
+    doc.text(k, M, y);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(70);
-    doc.text(v, M + 75, y);
-    y += 16;
+    doc.text(v, M + 90, y);
+    y += 15;
   });
 
-  // ---------- ship to (right) ----------
-  const addr = [
-    order.OrderShippingAddressFullAddress,
-    order.OrderShippingAddressLocality,
-    [order.OrderShippingAddressCity, order.OrderShippingAddressState]
+  // ---------- bill to (right) ----------
+  const addr =
+    [
+      order.OrderShippingAddressFullAddress,
+      order.OrderShippingAddressLocality,
+      order.OrderShippingAddressCity,
+      order.OrderShippingAddressState,
+    ]
       .filter(Boolean)
-      .join(", "),
-    order.OrderShippingAddressPinCode,
-  ]
-    .filter(Boolean)
-    .join(", ");
+      .join(", ") +
+    (order.OrderShippingAddressPinCode
+      ? ` - ${order.OrderShippingAddressPinCode}`
+      : "");
 
   const rightX = pageW / 2 + 20;
+  let ry = 124;
+
   doc.setFont("helvetica", "bold");
   doc.setTextColor(30);
-  doc.text("Bill To", rightX, 130);
+  doc.text("Bill To", rightX, ry);
+  ry += 15;
+
   doc.setFont("helvetica", "normal");
   doc.setTextColor(70);
-  doc.text(String(order.OrderShippingAddressName || ""), rightX, 146);
-  const addrLines = doc.splitTextToSize(addr, pageW - M - rightX);
-  doc.text(addrLines, rightX, 160);
-  const phoneY = 160 + addrLines.length * 12 + 4;
+  doc.text(String(order.OrderShippingAddressName || ""), rightX, ry);
+  ry += 13;
+
+  const addrLines: string[] = doc.splitTextToSize(addr, pageW - M - rightX);
+  addrLines.forEach((l) => {
+    doc.text(l, rightX, ry);
+    ry += 13;
+  });
+
+  doc.text(
+    `State: ${buyerState || "-"}${buyerStateCode ? `    State Code: ${buyerStateCode}` : ""}`,
+    rightX,
+    ry,
+  );
+  ry += 13;
+
+  doc.text(
+    `GSTIN: ${order.CustomerGSTIN || order.OrderShippingAddressGSTIN || "Unregistered"}`,
+    rightX,
+    ry,
+  );
+  ry += 13;
+
+  doc.text("Delivery Address: Same as above", rightX, ry);
+  ry += 13;
+
   if (order.OrderShippingAddressPhoneNo) {
-    doc.text(`Mobile: ${order.OrderShippingAddressPhoneNo}`, rightX, phoneY);
+    doc.text(`Mobile: ${order.OrderShippingAddressPhoneNo}`, rightX, ry);
+    ry += 13;
   }
 
-  // ---------- items table (GST nikalne ke baad ki price) ----------
+  // ---------- items table ----------
+  const colAlign = ["left", "left", "left", "left", "center", "center", "right"];
+
   autoTable(doc, {
-    startY: Math.max(y, phoneY) + 20,
+    startY: Math.max(y, ry) + 8,
     margin: { left: M, right: M, top: TOP, bottom: BOTTOM },
-    head: [["#", "Product", "Price (excl. GST)", "Qty", "Amount"]],
+    head: [
+      ["#", "Product", "HSN", "Qty", "Price (excl. GST)", `${taxHead} @ 3%`, "Amount"],
+    ],
     body: items.map((it, i) => [
       i + 1,
-      it.ColorName ? `${it.ProductName}\nColor: ${it.ColorName}` : it.ProductName,
+      it.ProductName,
+      HSN_CODE,
+      `${it.ProductQuantity} PCS`,
       rs(it.unitBase),
-      it.ProductQuantity,
-      rs(it.totalBase),
+      rs(it.lineTax),
+      rs(it.lineTotal),
     ]),
     styles: { fontSize: 9, cellPadding: 6, textColor: 50 },
     headStyles: { fillColor: gold, textColor: 255 },
     columnStyles: {
       0: { cellWidth: 28 },
-      2: { halign: "right" },
-      3: { halign: "center", cellWidth: 40 },
-      4: { halign: "right" },
+      2: { cellWidth: 50 },
+      3: { cellWidth: 45 },
+      4: { halign: "center" },
+      5: { halign: "center" },
+      6: { halign: "right" },
+    },
+    // header ko bhi column ki alignment ke hisaab se set karo
+    didParseCell: (data: any) => {
+      if (data.section === "head") {
+        data.cell.styles.halign = colAlign[data.column.index];
+      }
     },
     // table agar dusre page par jaye to wahan bhi letterhead lage
     willDrawPage: (data: any) => {
@@ -172,7 +315,7 @@ export async function downloadInvoice(order: any) {
   let sy = (doc as any).lastAutoTable.finalY + 24;
 
   // summary ke liye jagah kam ho to nayi page (letterhead ke saath)
-  const summaryHeight = 160;
+  const summaryHeight = 170;
   if (sy + summaryHeight > pageH - BOTTOM) {
     doc.addPage();
     drawLetterhead();
@@ -197,18 +340,21 @@ export async function downloadInvoice(order: any) {
     );
     line("Taxable Amount", rs(taxable));
   }
-  line("SGST (1.5%)", rs(sgst));
-  line("CGST (1.5%)", rs(cgst));
+  if (isIntraState) {
+    line("SGST (1.5%)", rs(sgst));
+    line("CGST (1.5%)", rs(cgst));
+  } else {
+    line("IGST (3%)", rs(totalTax));
+  }
   line("Shipping", shipping > 0 ? rs(shipping) : "Free");
+  if (roundOff !== 0) {
+    line("Round Off", `${roundOff > 0 ? "+" : "-"} ${rs(Math.abs(roundOff))}`);
+  }
 
   doc.setDrawColor(200);
   doc.line(labelX, sy - 8, pageW - M, sy - 8);
   sy += 4;
-  line(
-    "Total Amount",
-    `Rs. ${grandTotal.toLocaleString("en-IN")}`,
-    true,
-  );
+  line("Total Amount", `Rs. ${grandTotal.toLocaleString("en-IN")}`, true);
 
   // ---------- note (footer ke upar, letterhead ke contact details se alag) ----------
   doc.setFont("helvetica", "normal");

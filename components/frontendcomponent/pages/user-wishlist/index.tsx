@@ -52,7 +52,7 @@ export default function WishlistPage() {
               ) : (
                 <NotFound
                   desc="No Wishlist found"
-                  className="not-found2 wishlist-not-found"
+                  className="wishlist-not-found"
                 />
               )}
             </div>

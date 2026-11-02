@@ -257,7 +257,9 @@ export default function Footer() {
 
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    return isMobile ? `https://wa.me/${phone}?text=${message}` : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
+    return isMobile
+      ? `https://wa.me/${phone}?text=${message}`
+      : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
   };
 
   return (
@@ -504,7 +506,7 @@ export default function Footer() {
             </div>
             <figure className="payment">
               <Image
-                src="/images/home/payment.png"
+                src="/images/home/payment-method.png"
                 width={350}
                 height={45}
                 alt="payments"
