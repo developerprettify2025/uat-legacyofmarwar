@@ -64,9 +64,9 @@ function wrapEmail(subject, greeting, mainContent) {
                             style="width:55%;vertical-align:top;text-align:right;font-size:13px;line-height:20px;color:#f3e6d3;">
                             <p style="margin:0 0 6px;color:#ffffff;font-weight:700;font-size:14px;">Registered Head Office</p>
                             <p style="margin:0;color:#f3e6d3;">
-                                ANAAYAH CREATIVES &amp; DESIGNS<br>
-                                Flat No 258, 3rd Floor, C A Apartments,<br>
-                                Paschim Vihar, New Delhi 110063
+                               Flat No. 258, 3rd Floor, <br>
+                               CA Apartments, Paschim Vihar, <br>
+                                New Delhi - 110063
                             </p>
                         </td>
                     </tr>
@@ -90,14 +90,14 @@ function detailTable(rows) {
   return `
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:16px 0 0;">
       ${rows
-      .map(
-        ([label, value]) => `
+        .map(
+          ([label, value]) => `
         <tr>
           <td style="padding:8px;border:1px solid #e4d5b8;background-color:#faf1e2;font-weight:600;width:35%;color:#2b2118;">${escapeHtml(label)}</td>
           <td style="padding:8px;border:1px solid #e4d5b8;color:#5a5149;">${value}</td>
         </tr>`,
-      )
-      .join("")}
+        )
+        .join("")}
     </table>
   `;
 }
@@ -159,14 +159,19 @@ function generateEmailTemplate(emailType, data) {
           A new user has just registered on <strong>Legacy of Marwar</strong>.
         </p>
         ${detailTable([
-        ["Name", escapeHtml(data.CustomerName)],
-        ["Email", escapeHtml(data.CustomerEmailID)],
-        ["Phone", escapeHtml(data.CustomerPhoneNo)],
-        ["Registered On", escapeHtml(
-          data.RegisteredDate ||
-          new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-        )],
-      ])}
+          ["Name", escapeHtml(data.CustomerName)],
+          ["Email", escapeHtml(data.CustomerEmailID)],
+          ["Phone", escapeHtml(data.CustomerPhoneNo)],
+          [
+            "Registered On",
+            escapeHtml(
+              data.RegisteredDate ||
+                new Date().toLocaleString("en-IN", {
+                  timeZone: "Asia/Kolkata",
+                }),
+            ),
+          ],
+        ])}
       `,
     );
   }
@@ -178,11 +183,11 @@ function generateEmailTemplate(emailType, data) {
       `
         <p style="margin:0 0 16px;line-height:22px;">Thank you for contacting <strong>Legacy of Marwar</strong>. We have received your enquiry and our team will get back to you shortly.</p>
         ${detailTable([
-        ["Name", escapeHtml(data.FullName)],
-        ["Email", escapeHtml(data.EmailID)],
-        ["Phone", escapeHtml(data.PhoneNo)],
-        ["Message", escapeHtml(data.Message)],
-      ])}
+          ["Name", escapeHtml(data.FullName)],
+          ["Email", escapeHtml(data.EmailID)],
+          ["Phone", escapeHtml(data.PhoneNo)],
+          ["Message", escapeHtml(data.Message)],
+        ])}
       `,
     );
   }
@@ -194,15 +199,15 @@ function generateEmailTemplate(emailType, data) {
       ` 
         <p style="margin:0;line-height:22px;"><strong>${escapeHtml(data.FullName)}</strong> submitted a new enquiry.</p>
         ${detailTable([
-        ["Name", escapeHtml(data.FullName)],
-        ["Email", escapeHtml(data.EmailID)],
-        ["Phone", escapeHtml(data.PhoneNo)],
-        ["Enquiry Type", escapeHtml(data.EnquiryType)],
-        ["Enquiry For", escapeHtml(data.EnquiryFor)],
-        ["Page", escapeHtml(data.PageName)],
-        ["Message", escapeHtml(data.Message)],
-        ["Received", escapeHtml(data.PostedDate)],
-      ])}
+          ["Name", escapeHtml(data.FullName)],
+          ["Email", escapeHtml(data.EmailID)],
+          ["Phone", escapeHtml(data.PhoneNo)],
+          ["Enquiry Type", escapeHtml(data.EnquiryType)],
+          ["Enquiry For", escapeHtml(data.EnquiryFor)],
+          ["Page", escapeHtml(data.PageName)],
+          ["Message", escapeHtml(data.Message)],
+          ["Received", escapeHtml(data.PostedDate)],
+        ])}
       `,
     );
   }
@@ -216,7 +221,8 @@ function generateEmailTemplate(emailType, data) {
             <td style="padding:8px;border:1px solid #e4d5b8;text-align:center;color:#5a5149;">${escapeHtml(item.ProductQuantity)}</td>
             <td style="padding:8px;border:1px solid #e4d5b8;text-align:right;color:#5a5149;">₹ ${Number(item.ProductTotalAmount || 0).toLocaleString("en-IN")}</td>
           </tr>`,
-      ).join("");
+      )
+      .join("");
 
     return wrapEmail(
       `Order confirmed #${data.OrderNo} - Legacy of Marwar`,
@@ -261,10 +267,19 @@ function generateEmailTemplate(emailType, data) {
           ["Phone", escapeHtml(data.CustomerPhoneNo || "Not provided")],
           ["Order status", escapeHtml(data.OrderStatus || "Not provided")],
           ["Payment mode", escapeHtml(data.PaymentOption || "Not provided")],
-          ["Payment status", escapeHtml(data.TransactionStatus || "Not provided")],
+          [
+            "Payment status",
+            escapeHtml(data.TransactionStatus || "Not provided"),
+          ],
           ["Transaction ID", escapeHtml(data.TransactionID || "Not available")],
-          ["Shipping address", escapeHtml(data.ShippingAddress || "Not provided")],
-          ["Order total", `₹ ${Number(data.OrderTotalAmount || 0).toLocaleString("en-IN")}`],
+          [
+            "Shipping address",
+            escapeHtml(data.ShippingAddress || "Not provided"),
+          ],
+          [
+            "Order total",
+            `₹ ${Number(data.OrderTotalAmount || 0).toLocaleString("en-IN")}`,
+          ],
         ])}
         <h3 style="margin:20px 0 8px;color:#2b2118;">Order items</h3>
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:8px 0 16px;">
@@ -279,13 +294,17 @@ function generateEmailTemplate(emailType, data) {
     );
   }
 
-  return wrapEmail("Legacy of Marwar", "Hi,", "<p style=\"margin:0;line-height:22px;\">No content</p>");
+  return wrapEmail(
+    "Legacy of Marwar",
+    "Hi,",
+    '<p style="margin:0;line-height:22px;">No content</p>',
+  );
 }
-
 async function sendEmail(emailType, recipientEmail, data) {
   if (!recipientEmail) {
     return { success: false, error: "Missing recipient email" };
   }
+
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -297,13 +316,17 @@ async function sendEmail(emailType, recipientEmail, data) {
       },
       tls: { rejectUnauthorized: false },
     });
+
     const emailContent = generateEmailTemplate(emailType, data);
+
     await transporter.sendMail({
       from: `"Legacy of Marwar" <${process.env.SMTP_USER}>`,
       to: recipientEmail,
+      cc: "trishla@legacyofmarwar.com",
       subject: emailContent.subject,
       html: emailContent.html,
     });
+
     return { success: true };
   } catch (error) {
     console.error("Send email error:", error);
