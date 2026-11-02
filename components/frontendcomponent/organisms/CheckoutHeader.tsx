@@ -8,6 +8,8 @@ export default function CheckoutHeader() {
   let addressPage = pathname.startsWith("/shipping-address");
   let paymentPage = pathname.startsWith("/check-out");
   
+
+  
   return (
     <section>
       <div className="checkout_header">
