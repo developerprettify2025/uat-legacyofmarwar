@@ -75,9 +75,9 @@ export default function HomePage() {
       classname: "discover_collection",
       heading:
         index === 0
-          ? "Sandook - Our First Collection "
+          ? " Adaa - The Earring Collection"
           : index === 1
-            ? "Adaa - The Earring Collection"
+            ? "Sandook - Our First Collection"
             : `${category.CategoryName} Collection`,
       mediaSrc: `/OnlineImages/CategoryImages/${category.CategoryVideo}`,
       linkHref: "/products",
