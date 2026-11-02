@@ -62,7 +62,6 @@ export default function HomePage() {
   const media = homePageData?.media ?? [];
   const categoryProductSections = useMemo(() => {
     const categories = new Map<string, any>();
-
     products.forEach((product: any) => {
       const categoryKey = String(product.CategoryID);
       if (!categories.has(categoryKey)) {
@@ -74,14 +73,13 @@ export default function HomePage() {
         });
       }
     });
-
     return Array.from(categories.values()).map((category: any, index) => ({
       classname: "discover_collection",
       heading:
         index === 0
-          ? "Adaa - The Earring Collection"
+          ? "Sandook - Our First Collection "
           : index === 1
-            ? "Sandook - Our First Collection"
+            ? "Adaa - The Earring Collection"
             : `${category.CategoryName} Collection`,
       mediaSrc: "/images/home/collection.mp4",
       linkHref: "/products",
@@ -89,9 +87,7 @@ export default function HomePage() {
         {
           label: category.CategoryName,
           url: `/products/${category.CategoryNameURL}`,
-          videoSrc: category.CategoryVideo
-            ? `/OnlineImages/CategoryImages/${category.CategoryVideo}`
-            : "/images/home/collection.mp4",
+          videoSrc: "/images/home/collection.mp4",
           productItem: products
             .filter(
               (product: any) =>
