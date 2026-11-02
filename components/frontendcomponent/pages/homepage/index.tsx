@@ -19,38 +19,7 @@ import Loading from "@/app/loading";
 import { useSelector } from "react-redux";
 import SilverStory from "./SilverStory";
 
-const featuredProductData = [
-  {
-    linkHref: "/images/home/nec",
-    imgSrc: "/images/home/necklace.png",
-    title: "Jharokha",
-    desc: "A silver window onto Marwar",
-  },
-  {
-    linkHref: "/product-listing/2",
-    imgSrc: "/images/home/necklace.png",
-    title: " Jharokha",
-    desc: "A silver window onto Marwar",
-  },
-  {
-    linkHref: "/product-listing/3",
-    imgSrc: "/images/home/necklace.png",
-    title: "Jharokha",
-    desc: "A silver window onto Marwar",
-  },
-  {
-    linkHref: "/product-listing/4",
-    imgSrc: "/images/home/necklace.png",
-    title: "Jharokha",
-    desc: "A silver window onto Marwar",
-  },
-  {
-    linkHref: "/product-listing/4",
-    imgSrc: "/images/home/necklace.png",
-    title: "Jharokha",
-    desc: "A silver window onto Marwar",
-  },
-];
+
 
 export default function HomePage() {
   const {
@@ -89,6 +58,7 @@ export default function HomePage() {
   const onlyProducts = homePageData?.onlyProducts ?? [];
   const occasions = homePageData?.occasions ?? [];
   const homeProducts = homePageData?.homeProducts ?? [];
+  console.log('the homeProducts', homeProducts);
   const media = homePageData?.media ?? [];
   console.log(products);
   const discoverCollectionData = useMemo(() => {
@@ -265,34 +235,57 @@ export default function HomePage() {
     };
   }, [occasions]);
 
-  const featuredProductData = useMemo(() => {
-    return homeProducts.map((product: any) => ({
-      sno: product.ProductID,
-      ProductID: product.ProductID,
+ const featuredProductData = useMemo(() => {
+  return homeProducts.map((product: any) => ({
+    sno: product.ProductID,
+    ProductID: product.ProductID,
+    CategoryID: product.CategoryID,
+    CategoryName: product.CategoryName,
+    CategoryNameURL: product.CategoryNameURL,
+    ColorName: product.ColorName,
 
-      linkHref: product.ProductNameURL
-        ? `/${product.ProductNameURL}`
-        : "/products",
-
-      imgSrc: product.ProductImage
+    linkHref: product.ProductNameURL
+      ? `/${product.ProductNameURL}`
+      : "/products",
+    imgSrc: product.ProductImage
+      ? `/OnlineImages/ProductImages/${product.ProductImage}`
+      : "/images/other/ring1.png",
+    imghoverSrc: product.ProductBannerImage4
+      ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
+      : product.ProductImage
         ? `/OnlineImages/ProductImages/${product.ProductImage}`
         : "/images/other/ring1.png",
+    title: product.ProductName,
+    sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString("en-IN")}.00`,
+    isWishlisted: Number(product.IsWishlisted ?? 0),
+    itemID: Number(product.ItemID ?? 0),
+    desc: product.ProductTagline ?? "",
+  }));
+}, [homeProducts]);
 
-      imghoverSrc: product.ProductBannerImage4
-        ? `/OnlineImages/ProductImages/${product.ProductBannerImage4}`
-        : "/images/other/ring1.png",
+const homeProductsByCategory = useMemo(() => {
+  const uniqueCategories = Array.from(
+    new Map(
+      homeProducts.map((p: any) => [
+        p.CategoryID,
+        {
+          CategoryID: p.CategoryID,
+          CategoryName: p.CategoryName,
+          CategoryNameURL: p.CategoryNameURL,
+        },
+      ]),
+    ).values(),
+  );
 
-      title: product.ProductName,
+  return uniqueCategories.map((category: any) => ({
+    label: category.CategoryName,
+    url: `/products/${category.CategoryNameURL}`,
 
-      sp: `₹ ${Number(product.ProductSalePrice ?? 0).toLocaleString(
-        "en-IN",
-      )}.00`,
-
-      isWishlisted: Number(product.IsWishlisted ?? 0),
-      itemID: Number(product.ItemID ?? 0),
-      desc: product.ProductTagline ?? "",
-    }));
-  }, [homeProducts]);
+    productItem: featuredProductData.filter(
+      (item: any) => String(item.CategoryID) === String(category.CategoryID),
+    ),
+  }));
+}, [homeProducts, featuredProductData]);
 
   if (isLoading) {
     return <Loading />;
