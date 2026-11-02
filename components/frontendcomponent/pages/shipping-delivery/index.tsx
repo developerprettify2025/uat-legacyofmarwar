@@ -10,68 +10,68 @@ export default function ShippingDeliveryPage() {
             <h1>Delivery & Shipping Information</h1>
 
             <p>
-              At Legacy Of Marwar(By ANAAYAH CREATIVES & DESIGNS), we are
-              committed to delivering your orders quickly and securely. We
-              understand the importance of receiving your uniforms on time, and
-              we work diligently to provide a smooth, efficient delivery
-              experience for all our customers.
+              At Legacy of Marwar (by Anaayah Creatives & Designs), we are
+              committed to delivering your orders safely and securely. We
+              understand how special it is to receive a handcrafted piece of
+              jewellery, and we work diligently to provide a smooth and seamless
+              delivery experience for all our customers.
             </p>
 
             <h3>Order Processing Time</h3>
             <p>
-              Once your order is placed, our team will work efficiently to
-              process it. Processing time depends on the order quantity and
-              customization requirements. If there are any delays, we will
-              notify you promptly. During the order processing, you will also
-              see your estimated delivery time.
+              Once your order is placed, our team carefully inspects, polishes
+              and packs your piece before dispatch. Orders are usually processed
+              within 2-3 business days. If there are any delays, we will notify
+              you promptly.
             </p>
 
             <h3>Shipping Costs</h3>
             <p>
-              Shipping charges are based on the weight, dimensions of your
-              order, and the delivery location. The exact shipping cost will be
-              displayed at checkout before you finalize your order.
-              Occasionally, we offer promotions such as free shipping or
-              discounted rates—be sure to check our website for current offers.
+              We offer free shipping on all orders across India. There are no
+              additional delivery charges at checkout.
             </p>
 
             <h3>Delivery Time</h3>
             <p>
-              We make every effort to meet the estimated delivery times.
-              However, factors such as weather conditions, carrier delays, or
-              unforeseen circumstances may affect delivery. We recommend placing
-              your order well in advance to avoid any potential delays,
-              especially during peak seasons.
+              Once dispatched, orders are usually delivered within 5-7 business
+              days, depending on your location. Tracking details will be shared
+              with you so you can follow your order’s journey. We make every
+              effort to meet estimated delivery times; however, factors such as
+              weather conditions, courier delays or unforeseen circumstances may
+              affect delivery. We recommend placing your order in advance,
+              especially during festive and peak seasons.
             </p>
 
             <h3>Our Delivery Partners</h3>
             <p>
-              We are proud to work with reputable delivery partners, including
-              DTCT, Delhivery, and Safex, to ensure your orders reach you on
-              time and with care.
+              We work with trusted and reputed courier partners to ensure your
+              jewellery reaches you safely, securely and with care.
             </p>
 
             <h3>Address Accuracy</h3>
             <p>
-              Please ensure that the delivery address you provide is accurate
-              and complete. Legacy Of Marwar(By ANAAYAH CREATIVES & DESIGNS) is
-              not responsible for delays or non-delivery due to incorrect or
-              incomplete shipping information. If you realize there is an error
-              in your address after placing the order, please contact our
-              customer support team immediately to update the details.
+              Please ensure that the delivery address and contact number you
+              provide are accurate and complete. Legacy of Marwar (by Anaayah
+              Creatives & Designs) is not responsible for delays or non-delivery
+              due to incorrect or incomplete shipping information. If you
+              realise there is an error in your address after placing the order,
+              please contact us immediately so we can update the details before
+              dispatch.
             </p>
 
             <h3>Packaging</h3>
             <p>
-              All orders are carefully packaged to ensure that your items arrive
-              in perfect condition.
+              Every piece is carefully packed in our signature Legacy of Marwar
+              packaging, so it arrives in perfect condition, ready to be
+              treasured or gifted. Please check that your package is sealed and
+              intact on delivery. If it appears tampered with or damaged, kindly
+              do not accept it and contact us right away.
             </p>
 
             <h3>Contact Us</h3>
             <p>
-              If you have any questions about shipping, delivery times, or need
-              assistance tracking your order, please don’t hesitate to reach out
-              to our customer service team at{" "}
+              If you have any questions about shipping, delivery times or
+              tracking your order, please don’t hesitate to reach out to us at{" "}
               <Link href="tel:+919811887651">9811887651</Link>. We are here to
               help!
             </p>

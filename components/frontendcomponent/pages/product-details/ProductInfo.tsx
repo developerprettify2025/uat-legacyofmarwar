@@ -462,6 +462,7 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                     </p>
                   )} */}
                 </div>
+                <p className="gst">GST Included.</p>
                 <p className="disclm">
                   {productdata?.ProductSmallDescription || ""}
                 </p>
@@ -551,16 +552,11 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                   </button>
                 </div>
                 <div className="btn_wrap">
-                  {/* <div className="peacock_btn">
+                  <div className="peacock_btn">
                     <Button
                       classname="primary-border"
                       buttonText="Make it Yours"
-                      onClick={() =>
-                        openModal("enquiryPop", {
-                          productName: productdata?.ProductName || "",
-                          enquiryFor: productdata?.ProductName || "",
-                        })
-                      }
+                      onClick={handleBuyNow}
                     />
                     <Image
                       className="btn-peacock"
@@ -569,8 +565,8 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                       height={50}
                       alt="btn-vector"
                     ></Image>
-                  </div> */}
-                  <Button
+                  </div>
+                  {/* <Button
                     classname="solid-primary"
                     buttonText="buy now"
                     onClick={handleBuyNow}
@@ -579,7 +575,7 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                     classname="primary-border"
                     buttonText="add to bag"
                     onClick={handleAddToBag}
-                  />
+                  /> */}
                   {/* <Button
                     classname="primary-border try-on"
                     buttonText="try on"

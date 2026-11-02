@@ -11,47 +11,60 @@ export default function ReturnExchangePage() {
 
             <h3>Return Policy</h3>
             <p>
-              We at Legacy Of Marwar(By ANAAYAH CREATIVES & DESIGNS) strive to
-              provide quality products and the best possible experience while
-              you shop with us online. There is no option to return orders as
-              the goods are customized according to your specific needs and
-              designs, and are non-usable by anyone else.
+              We at Legacy of Marwar (by Anaayah Creatives & Designs) strive to
+              provide exceptional quality and the best possible experience while
+              you shop with us. As each piece is handcrafted and one of a kind,
+              we do not accept returns.
             </p>
             <p>
-              However, if there is a manufacturing defect, complete assistance
-              will be provided to you for correcting the same.
+              However, if you receive a piece with a manufacturing defect, or if
+              it arrives damaged, we will provide complete assistance to resolve
+              it.
             </p>
 
             <h3>Exchange Policy</h3>
             <p>Exchanges will be processed under the following conditions:</p>
             <ul>
+              <li>You receive a different piece from the one you ordered.</li>
+              <li>The piece has a manufacturing defect.</li>
+              <li>The piece arrives damaged in transit.</li>
               <li>
-                Order confirmation of one size and delivery of another size.
+                The issue must be reported within 24 Hrs of delivery, along with
+                an unboxing video and photos of the product and packaging.
               </li>
               <li>
-                Order confirmation of one color and delivery of another color.
-              </li>
-              <li>Manufacturing defect.</li>
-              <li>Exchange must be requested within 15 days of purchase.</li>
-              <li>
-                The goods must be in their new condition, with original
-                packaging, tag, and invoice.
+                The piece must be unused and in its original condition, with its
+                original packaging, tags and invoice.
               </li>
             </ul>
+            <p>
+              As every piece is one of a kind, an identical replacement may not
+              always be possible. In such cases, you may choose another piece of
+              equal value, a store credit valid for 6 months, or a full refund
+              to your original payment method.
+            </p>
             <p>
               Exchanges will not be processed under the following conditions:
             </p>
             <ul>
-              <li>Items that have been worn or washed.</li>
               <li>
-                Late delivery due to unfortunate events such as natural
-                disasters, courier service strikes, or similar circumstances.
+                Pieces that have been worn, altered, resized or damaged after
+                delivery.
+              </li>
+              <li>
+                Natural tarnishing of silver, or minor variations in finish,
+                stones or colour, which are characteristic of handcrafted
+                jewellery.
+              </li>
+              <li>Change of mind after purchase.</li>
+              <li>
+                Delays in delivery due to unforeseen events such as natural
+                disasters, courier strikes or similar circumstances.
               </li>
             </ul>
             <p>
-              For any other queries, please drop a call at{" "}
-              <Link href="tel:+919811887651">+919811887651</Link> or send an
-              email to{" "}
+              For any other queries, please call us at{" "}
+              <Link href="tel:+919811887651">+919811887651</Link> or email{" "}
               <Link href="mailto:trishla@legacyofmarwar.com">
                 trishla@legacyofmarwar.com
               </Link>

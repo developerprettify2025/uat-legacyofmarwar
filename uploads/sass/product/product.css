@@ -524,11 +524,17 @@ section .detail-product-wrap .colB .product_info_wrap .price_wrap .mrp {
   font-family: var(--euclidflex);
   text-decoration: line-through;
 }
+section .detail-product-wrap .colB .product_info_wrap .gst {
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.6980392157);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
 section .detail-product-wrap .colB .product_info_wrap .disclm {
   font-weight: 300;
   color: rgba(0, 0, 0, 0.6980392157);
   font-size: 14px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 @media only screen and (max-width: 768px) {
   section .detail-product-wrap .colB .product_info_wrap .disclm {
