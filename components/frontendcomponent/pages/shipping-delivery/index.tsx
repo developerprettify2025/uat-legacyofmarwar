@@ -71,7 +71,7 @@ export default function ShippingDeliveryPage() {
             <h3>Contact Us</h3>
             <p>
               If you have any questions about shipping, delivery times or
-              tracking your order, please don’t hesitate to reach out to us at
+              tracking your order, please don’t hesitate to reach out to us at{" "}
               <Link href="tel:+919811887651">9811887651</Link>. We are here to
               help!
             </p>

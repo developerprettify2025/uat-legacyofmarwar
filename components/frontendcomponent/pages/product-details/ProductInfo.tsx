@@ -462,6 +462,7 @@ export default function ProductInfo({ productInfo, id }: ProductInfoProps) {
                     </p>
                   )} */}
                 </div>
+                <p className="gst">GST Included.</p>
                 <p className="disclm">
                   {productdata?.ProductSmallDescription || ""}
                 </p>
