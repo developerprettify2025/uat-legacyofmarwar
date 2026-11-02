@@ -96,8 +96,8 @@ export default function ProductListingSlider({
           <div className="main_wrapper">
             <figure className="display_media">
               <video
-                key={activeCategory?.videoSrc || data.mediaSrc}
-                src={activeCategory?.videoSrc || data.mediaSrc}
+                key={activeCategory?.videoSrc}
+                src={activeCategory?.videoSrc}
                 autoPlay
                 muted
                 loop
