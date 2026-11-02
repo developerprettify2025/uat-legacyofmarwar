@@ -474,7 +474,7 @@ export default function Footer() {
                 <Button
                   linkHref="/contact-us"
                   classname="white"
-                  buttonText="Make it Yours"
+                  buttonText="Contact Us"
                 ></Button>
               </div>
             </div>
