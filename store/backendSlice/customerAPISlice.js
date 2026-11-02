@@ -116,6 +116,14 @@ export const customerAPISlice = createApi({
         body: data,
       }),
     }),
+    googleAuth: builder.mutation({
+      query: (data) => ({
+        url: "/google-auth",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Customer", id: "LIST" }],
+    }),
   }),
 });
 
@@ -130,4 +138,5 @@ export const {
   useVerifyOtpMutation,
   useLoginByOtpMutation,
   useCheckUserValidMutation,
+  useGoogleAuthMutation,
 } = customerAPISlice;

@@ -9,6 +9,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import type { SyntheticEvent, SubmitEvent } from "react";
+import { signIn } from "next-auth/react";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import { useModal } from "@/hooks/useModal";
@@ -48,6 +49,7 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
   const [sendOtp, { isLoading: isSendingOtp }] = useSendOtpMutation();
   const [verifyEmailOtp, { isLoading: isVerifyingEmailOtp }] =
     useVerifyOtpMutation();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [isNewUser, setIsNewUser] = useState(false);
   const [otpError, setOtpError] = useState(false);
@@ -61,7 +63,8 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
     isLoggingIn ||
     isCheckingValid ||
     isSendingOtp ||
-    isVerifyingEmailOtp;
+    isVerifyingEmailOtp ||
+    isGoogleLoading;
 
   const { closeModal } = useModal();
   const { isModal } = useAppSelector((state) => state.modal);
@@ -196,6 +199,21 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
       .toLowerCase()
       .slice(0, 100);
     setMobileNo(value);
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await signIn(
+        "google",
+        { callbackUrl: window.location.href },
+        { prompt: "select_account" },
+      );
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      toast.error("Unable to start Google sign-in. Please try again.");
+      setIsGoogleLoading(false);
+    }
   };
 
   // CHANGED: email only. Phone numbers are rejected.
@@ -411,9 +429,11 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
           <p>OR</p>
         </div>
         <div className="btm-social-wrp">
-          <Link
-            href="javascript:void(0);"
+          <button
+            type="button"
             className="btn primary-border google-btn"
+            onClick={() => void handleGoogleLogin()}
+            disabled={isLoading}
           >
             <svg
               width="17"
@@ -427,8 +447,10 @@ export default function LoginPop({ length = 4, onComplete }: OtpInputProps) {
                 fill="#000"
               ></path>
             </svg>
-            Google
-          </Link>
+            {isGoogleLoading
+              ? "Connecting..."
+              : "Google"}
+          </button>
           <Link
             href="javascript:void(0);"
             className="btn primary-border facebook-btn"

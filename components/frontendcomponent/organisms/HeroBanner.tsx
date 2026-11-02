@@ -76,6 +76,7 @@ export default function HeroBanner({
                         alt="banner image"
                         width={1920}
                         height={1080}
+                        unoptimized
                       />
                     </figure>
                   </SwiperSlide>
@@ -116,6 +117,7 @@ export default function HeroBanner({
             width={1280}
             height={700}
             alt={heading}
+            unoptimized
           ></Image>
         )}
         <div className="banner-wrapper">

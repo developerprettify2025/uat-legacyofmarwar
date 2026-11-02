@@ -31,4 +31,5 @@ router.post("/send-otp", customerController.sendOtpController);
 router.post("/verify-otp", customerController.verifyOtpController);
 router.post("/login-by-otp", customerController.getCustomerByMobileOrEmail);
 router.post("/check-valid", customerController.checkUserValidByCustomerID);
+router.post("/google-auth", customerController.googleAuth);
 module.exports = router;

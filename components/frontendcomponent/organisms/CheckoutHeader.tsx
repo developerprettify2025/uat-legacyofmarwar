@@ -7,6 +7,9 @@ export default function CheckoutHeader() {
   let cartPage = pathname.startsWith("/shopping-cart");
   let addressPage = pathname.startsWith("/shipping-address");
   let paymentPage = pathname.startsWith("/check-out");
+  
+
+  
   return (
     <section>
       <div className="checkout_header">

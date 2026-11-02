@@ -17,6 +17,8 @@ interface ContactFormData {
   message: string;
 }
 
+
+
 interface FormErrors {
   name?: string;
   phone?: string;
