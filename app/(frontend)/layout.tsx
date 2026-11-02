@@ -6,6 +6,7 @@ import { ReduxProvider } from "@/store/ReduxProvider";
 import PageLoader from "@/components/frontendcomponent/organisms/PageLoader";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "@/context/CartContext";
+import FrontendProviders from "@/components/frontendcomponent/organisms/FrontendProviders";
 
 const antiga = localFont({
   src: "../../public/font/Antiga-Regular.woff",
@@ -86,47 +87,49 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ReduxProvider>
-          <Toaster
-            position="top-center"
-            reverseOrder={true}
-            toastOptions={{
-              duration: 2000,
-              style: {
-                background: "rgba(0,0,0,0.85)",
-                color: "#fff",
-                padding: "8px 12px",
-                borderRadius: "4px",
-                fontSize: "13px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                backdropFilter: "blur(6px)",
-              },
-              success: {
+          <FrontendProviders>
+            <Toaster
+              position="top-center"
+              reverseOrder={true}
+              toastOptions={{
+                duration: 2000,
                 style: {
-                  background: "rgba(34, 197, 94, 0.9)",
+                  background: "rgba(0,0,0,0.85)",
+                  color: "#fff",
+                  padding: "8px 12px",
                   borderRadius: "4px",
+                  fontSize: "13px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  backdropFilter: "blur(6px)",
                 },
-                iconTheme: {
-                  primary: "#fff",
-                  secondary: "#15803d",
+                success: {
+                  style: {
+                    background: "rgba(34, 197, 94, 0.9)",
+                    borderRadius: "4px",
+                  },
+                  iconTheme: {
+                    primary: "#fff",
+                    secondary: "#15803d",
+                  },
                 },
-              },
-              error: {
-                style: {
-                  background: "rgba(239, 68, 68, 0.9)",
-                  borderRadius: "4px",
+                error: {
+                  style: {
+                    background: "rgba(239, 68, 68, 0.9)",
+                    borderRadius: "4px",
+                  },
+                  iconTheme: {
+                    primary: "#fff",
+                    secondary: "#b91c1c",
+                  },
                 },
-                iconTheme: {
-                  primary: "#fff",
-                  secondary: "#b91c1c",
-                },
-              },
-            }}
-          />
-          <CartProvider>
-            <MainTemplate>
-              <PageLoader>{children}</PageLoader>
-            </MainTemplate>
-          </CartProvider>
+              }}
+            />
+            <CartProvider>
+              <MainTemplate>
+                <PageLoader>{children}</PageLoader>
+              </MainTemplate>
+            </CartProvider>
+          </FrontendProviders>
         </ReduxProvider>
       </body>
     </html>

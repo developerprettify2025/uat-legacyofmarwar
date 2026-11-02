@@ -565,3 +565,184 @@ exports.verifyOtpController = (req, res) => {
     message: "OTP verified successfully.",
   });
 };
+
+exports.googleAuth = async (req, res) => {
+  const idToken =
+    typeof req.body.idToken === "string" ? req.body.idToken.trim() : "";
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+
+  if (!idToken || idToken.length > 10000) {
+    return res.status(400).json({
+      success: false,
+      message: "A valid Google sign-in token is required.",
+    });
+  }
+  if (!googleClientId) {
+    console.error("Google authentication is missing GOOGLE_CLIENT_ID.");
+    return res.status(500).json({
+      success: false,
+      message: "Google authentication is not configured.",
+    });
+  }
+
+  let connection;
+  let transactionStarted = false;
+  try {
+    const tokenInfoResponse = await fetch(
+      "https://oauth2.googleapis.com/tokeninfo",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ id_token: idToken }),
+      },
+    );
+    if (!tokenInfoResponse.ok) {
+      return res.status(401).json({
+        success: false,
+        message: "Google sign-in could not be verified.",
+      });
+    }
+
+    const identity = await tokenInfoResponse.json();
+    const email = String(identity.email || "")
+      .trim()
+      .toLowerCase();
+    const googleId = String(identity.sub || "").trim();
+    const emailVerified =
+      identity.email_verified === true || identity.email_verified === "true";
+    const tokenExpiry = Number(identity.exp);
+    const validIssuer = [
+      "accounts.google.com",
+      "https://accounts.google.com",
+    ].includes(identity.iss);
+
+    if (
+      identity.aud !== googleClientId ||
+      !validIssuer ||
+      !emailVerified ||
+      !googleId ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      !Number.isFinite(tokenExpiry) ||
+      tokenExpiry <= Math.floor(Date.now() / 1000)
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "Google sign-in could not be verified.",
+      });
+    }
+
+    connection = await db.promise().getConnection();
+    await connection.beginTransaction();
+    transactionStarted = true;
+
+    const [matchingCustomers] = await connection.query(
+      `SELECT CustomerID, CustomerName, CustomerEmailID, CustomerPhoneNo,
+              CustomerImage, GoogleLoginID, FacebookLoginID, ActiveStatus,
+              PostedDate, UpdatedOn
+       FROM mst_customerdata
+       WHERE GoogleLoginID = ? OR LOWER(CustomerEmailID) = ?
+       LIMIT 2 FOR UPDATE`,
+      [googleId, email],
+    );
+
+    if (matchingCustomers.length > 1) {
+      await connection.rollback();
+      transactionStarted = false;
+      return res.status(409).json({
+        success: false,
+        message: "This Google account matches multiple customer accounts.",
+      });
+    }
+
+    let customerID;
+    let isNewUser = false;
+    const customer = matchingCustomers[0];
+    if (customer) {
+      if (Number(customer.ActiveStatus) !== 1) {
+        await connection.rollback();
+        transactionStarted = false;
+        return res.status(403).json({
+          success: false,
+          message: "Your account is inactive. Please contact support.",
+        });
+      }
+
+      if (customer.GoogleLoginID && customer.GoogleLoginID !== googleId) {
+        await connection.rollback();
+        transactionStarted = false;
+        return res.status(409).json({
+          success: false,
+          message: "This email is already linked to another Google account.",
+        });
+      }
+
+      customerID = customer.CustomerID;
+      if (!customer.GoogleLoginID) {
+        await connection.query(
+          `UPDATE mst_customerdata
+           SET GoogleLoginID = ?, UpdatedBy = 'GoogleAuth', UpdatedOn = NOW()
+           WHERE CustomerID = ?`,
+          [googleId, customerID],
+        );
+      }
+    } else {
+      const customerName =
+        String(identity.name || "").trim() || email.split("@")[0];
+      const [insertResult] = await connection.query(
+        `INSERT INTO mst_customerdata
+          (CustomerName, CustomerEmailID, CustomerPhoneNo, GoogleLoginID,
+           FacebookLoginID, ActiveStatus)
+         VALUES (?, ?, NULL, ?, NULL, 1)`,
+        [customerName, email, googleId],
+      );
+      customerID = insertResult.insertId;
+      isNewUser = true;
+    }
+
+    const [customerRows] = await connection.query(
+      `SELECT cd.CustomerID, cd.CustomerName, cd.CustomerPhoneNo,
+              cd.CustomerEmailID, cd.CustomerImage, cd.GoogleLoginID,
+              cd.FacebookLoginID, cd.ActiveStatus, cd.PostedDate,
+              cd.UpdatedOn,
+              (SELECT COUNT(1) FROM mst_customerwishlistdata w
+               WHERE w.CustomerID = cd.CustomerID) AS TotalWishlist
+       FROM mst_customerdata cd
+       WHERE cd.CustomerID = ?
+       LIMIT 1`,
+      [customerID],
+    );
+
+    if (!customerRows.length) {
+      throw new Error("Google account was linked but customer data was not found.");
+    }
+
+    await connection.commit();
+    transactionStarted = false;
+
+    return res.json({
+      success: true,
+      data: customerRows[0],
+      isNewUser,
+      message: isNewUser
+        ? "Account registered successfully!"
+        : "Login successful!",
+    });
+  } catch (error) {
+    if (connection && transactionStarted) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error("Google authentication rollback failed:", rollbackError);
+      }
+    }
+    console.error("Google authentication error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Google authentication failed. Please try again.",
+    });
+  } finally {
+    connection?.release();
+  }
+};
