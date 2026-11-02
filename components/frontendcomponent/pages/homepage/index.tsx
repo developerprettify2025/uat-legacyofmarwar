@@ -18,6 +18,7 @@ import {
 import Loading from "@/app/loading";
 import { useSelector } from "react-redux";
 import SilverStory from "./SilverStory";
+import SpecialOccasions from "./SpecialOccasions";
 
 const featuredProductData = [
   {
@@ -90,7 +91,7 @@ export default function HomePage() {
   const occasions = homePageData?.occasions ?? [];
   const homeProducts = homePageData?.homeProducts ?? [];
   const media = homePageData?.media ?? [];
-  console.log(products);
+  console.log("All Products", products);
   const discoverCollectionData = useMemo(() => {
     const uniqueCategories = Array.from(
       new Map(
@@ -105,6 +106,7 @@ export default function HomePage() {
         ]),
       ).values(),
     );
+    console.log("Unique Categoruies", uniqueCategories);
 
     return {
       classname: "discover_collection",
@@ -333,7 +335,7 @@ export default function HomePage() {
       <SilverStory />
 
       {specialNewOccasionsData.tavNav.length > 0 && (
-        <ProductListingSlider data={specialNewOccasionsData} />
+        <SpecialOccasions data={specialNewOccasionsData} />
       )}
 
       {media.length > 0 && <FollowSocialMedia data={media} info={pageInfo} />}
